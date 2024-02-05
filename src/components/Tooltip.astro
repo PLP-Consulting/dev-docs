@@ -1,12 +1,12 @@
 ---
-import type { Position } from "@adjust/components";
+// import type { Position } from "@adjust/components";
 import BuildTooltip from "@components/atlas/BuildTooltip";
 
 export interface Props {
-  position: Position;
+//  position: Position;
 }
 
-const { position } = Astro.props as Props;
+// const { position } = Astro.props as Props;
 
 let content = "";
 let toolTipContent = "";
@@ -26,7 +26,8 @@ if (Astro.slots.has("default")) {
 }
 ---
 
-<BuildTooltip position={position} client:only="react">
+<!-- BuildTooltip position={position} client:only="react" -->
+<BuildTooltip client:only="react">
   <Fragment set:html={body} name="children" />
   <Fragment set:html={toolTipContent} slot="content" />
 </BuildTooltip>

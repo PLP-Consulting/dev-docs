@@ -1,6 +1,6 @@
 import { type FC, useState } from "react";
 import classNames from "classnames";
-import { Icon } from "@adjust/components";
+// import { Icon } from "@adjust/components";
 
 import type { CategoryEntry } from "src/utils/helpers/navigation/types";
 
@@ -43,9 +43,11 @@ const LeftSidebarItem: FC<{
           {isChilds ? (
             <>
               {isOpen ? (
-                <Icon name="ChevronDown" size="small" />
+<p>⥥</p>
+//                <Icon name="ChevronDown" size="small" />
               ) : (
-                <Icon name="ChevronRight" size="small" />
+<p>⥤</p>
+//                <Icon name="ChevronRight" size="small" />
               )}
             </>
           ) : null}

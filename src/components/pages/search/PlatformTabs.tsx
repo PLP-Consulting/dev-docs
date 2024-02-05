@@ -1,4 +1,4 @@
-import { Tabs } from "@adjust/components";
+// import { Tabs } from "@adjust/components";
 import { useEffect, useState } from "react";
 
 import { getSearchParams, setSearchParams } from "./utils";
@@ -28,7 +28,8 @@ const PlatformTabs = () => {
   }, []);
 
   return (
-    <Tabs items={categoryItems} value={selectedTab} onChange={onTabChange} />
+<p>Tabs OMITTED</p>
+// <Tabs items={categoryItems} value={selectedTab} onChange={onTabChange} />
   );
 };
 

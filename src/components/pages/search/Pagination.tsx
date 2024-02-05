@@ -1,7 +1,6 @@
 import type { FC } from "react";
 import classNames from "classnames";
 import { useHits } from "react-instantsearch";
-import { Icon } from "@adjust/components";
 
 import { getSearchParams, setSearchParams } from "./utils";
 
@@ -44,7 +43,9 @@ const Pagination: FC<PaginationProps> = ({ canRefine }) => {
             )}
             onClick={() => onPageChange(page - 1)}
           >
-            <Icon name="ChevronLeft" size="small" color={iconLeftColor} />
+{/* removed by PLP 2/5/24  */}
+{/* <Icon name="ChevronLeft" size="small" color={iconLeftColor} /> */}
+<p>⥢</p>
           </span>
           <span className="text-base-sm font-medium flex items-center h-full">
             Page {page} of {totalPages}
@@ -59,7 +60,9 @@ const Pagination: FC<PaginationProps> = ({ canRefine }) => {
             )}
             onClick={() => onPageChange(page + 1)}
           >
-            <Icon name="ChevronRight" size="small" color={iconRightColor} />
+{/* removed by PLP 2/5/24 */}
+{/* <Icon name="ChevronRight" size="small" color={iconRightColor} /> */}
+<p>⥤</p>
           </span>
         </div>
       )}

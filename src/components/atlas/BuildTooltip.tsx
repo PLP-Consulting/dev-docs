@@ -1,20 +1,25 @@
-import { type Position, Tooltip } from "@adjust/components";
+// import { type Position, Tooltip } from "@adjust/components";
 import type { FC, ReactNode, ReactElement } from "react";
 
 const BuildTooltip: FC<{
   content: ReactNode;
   children: ReactElement;
-  position?: Position;
+//  position?: Position;
 }> = (props) => {
   return (
     <>
+{/*
       <Tooltip
         position={props.position ? props.position : "top"}
+        position="top"
         zIndex={100}
         content={<div style={{ maxWidth: "fit-content" }}>{props.content}</div>}
       >
+*/}
         <span className="underline decoration-dashed">{props.children}</span>
+{/*
       </Tooltip>
+*/}
     </>
   );
 };

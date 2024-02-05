@@ -1,6 +1,6 @@
 /** @jsxImportSource react */
-import { TableV2, Input } from "@adjust/components";
-import type { TableColumnTypes } from "@adjust/components";
+// import { TableV2, Input } from "@adjust/components";
+// import type { TableColumnTypes } from "@adjust/components";
 import { type FC, useState } from "react";
 import { toSnakeCase } from "@components/utils/convertCase";
 
@@ -34,7 +34,7 @@ const BuildTable: FC<{
 
   // Initialize blank arrays to hold our data
 
-  let columns: TableColumnTypes[] = [];
+//  let columns: TableColumnTypes[] = [];
   let data: ColumnCell[] = [];
 
   // Store visual properties as an object
@@ -48,6 +48,7 @@ const BuildTable: FC<{
     const listItems = el.querySelectorAll("body > ul > li > ul");
     listItems.forEach((value, key) => {
       // The first row is always the header, so we create the columns array with these values
+/*
       if (key === 0) {
         for (let i = 0; i < value.children.length; i++) {
           columns.push({
@@ -66,13 +67,14 @@ const BuildTable: FC<{
           });
         }
       }
+*/
       // Loop through each list after the first one to fill out the table
       if (key > 0) {
         // Initialize an empty object
         var row: ColumnCell = {};
         for (let i = 0; i < value.children.length; i++) {
           // Add the accessor at the same position as the list item
-          let accessor: string = columns[i].accessor.toString();
+//          let accessor: string = columns[i].accessor.toString();
           // Create a new value pair and add it to the object
           row[accessor] = value.children[i].innerHTML;
         }
@@ -88,6 +90,7 @@ const BuildTable: FC<{
     // Loop through each selector
     headerItems.forEach((value) => {
       // Take the value of each header element.
+/*
       for (let i = 0; i < value.children.length; i++) {
         columns.push({
           // Take the written title as a header
@@ -106,6 +109,7 @@ const BuildTable: FC<{
           alignHeader: value.children[i].getAttribute("align") as Alignment,
         });
       }
+*/
     }),
       // Take the value of each table body  element.
       bodyItems.forEach((value) => {
@@ -113,7 +117,7 @@ const BuildTable: FC<{
         var row: ColumnCell = {};
         for (let i = 0; i < value.children.length; i++) {
           // Add the accessor at the same position as the list item
-          let accessor: string = columns[i].accessor.toString();
+//          let accessor: string = columns[i].accessor.toString();
           // Create a new value pair and add it to the object
           row[accessor] = value.children[i].innerHTML;
         }
@@ -126,6 +130,8 @@ const BuildTable: FC<{
     <div className="overflow-auto">
       {props.search && (
         <div className="px-[15px] pt-[25px] pb-[35px]">
+<p>INPUT OMITTED</p>
+{/* commented out by PLP 2/5/24
           <Input
             label="Search"
             type="search"
@@ -137,8 +143,11 @@ const BuildTable: FC<{
               setSearchTerm(e.target.value);
             }}
           />
+*/}
         </div>
       )}
+<p>TABLE OMITTED</p>
+{/* commented out by PLP 2/5/24
       <TableV2
         data={data}
         columns={columns}
@@ -148,6 +157,7 @@ const BuildTable: FC<{
         height={props.height}
         autoRowsHeight
       />
+*/}
     </div>
   );
 };

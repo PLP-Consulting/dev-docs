@@ -1,7 +1,7 @@
 ---
 import { getLanguageFromURL, LOCALE_NAMES } from "@i18n/locales";
 import LanguageSwitch from "../LanguageSwitch";
-import { Icon } from "@adjust/components";
+// import { Icon } from "@adjust/components";
 
 import "./footer.css";
 
@@ -20,9 +20,6 @@ const currentLang = getLanguageFromURL(currentPage);
     hideIcon
     isFooter
   />
-  <Icon
-    client:only="react"
-    name="ChevronDown"
-    css={{ position: "absolute", right: "10px", top: "5px" }}
-  />
+  <p style="position:absolute; right:10px; top:5px">⥥</p>
+  <!-- Icon client:only="react" name="ChevronDown" css={{ position: "absolute", right: "10px", top: "5px" }} />
 </div>

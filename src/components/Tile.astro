@@ -1,13 +1,14 @@
 ---
-import { Tile as AtlasTile } from "@adjust/components";
-import type { IconName } from "@adjust/components";
+/* import { Tile as AtlasTile } from "@adjust/components"; */
+/* import type { IconName } from "@adjust/components"; */
 
 export interface Props {
   title: string;
-  icon?: IconName;
+/*  icon?: IconName; */
 }
 
-const { title, icon } = Astro.props as Props;
+/* const { title, icon } = Astro.props as Props; */
+const { title } = Astro.props as Props;
 
 let content = "";
 
@@ -16,6 +17,6 @@ if (Astro.slots.has("default")) {
 }
 ---
 
-<AtlasTile client:only="react" iconName={icon} title={title}>
+<!-- AtlasTile client:only="react" iconName={icon} title={title} -->
   <Fragment set:html={content} name="chidren" />
-</AtlasTile>
+<!-- /AtlasTile -->

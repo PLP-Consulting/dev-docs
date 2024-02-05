@@ -1,10 +1,10 @@
 ---
-import { Badge as AtlasBadge, IconName } from "@adjust/components";
+/* import { Badge as AtlasBadge, IconName } from "@adjust/components"; */
 // Icons must be supported by Atlas's Icon component.
 // https://atlas.adeven.com/docs/components/Icon#available-icons
 export interface Props {
   color?: string;
-  icon?: IconName;
+//  icon?: IconName;
 }
 
 const typeMap = new Map<string, BadgeColor>([
@@ -15,7 +15,8 @@ const typeMap = new Map<string, BadgeColor>([
   ["warning", "negative"],
 ]);
 
-const { color = "neutral", icon } = Astro.props as Props;
+// const { color = "neutral", icon } = Astro.props as Props;
+const { color = "neutral" } = Astro.props as Props;
 
 let content = "";
 
@@ -26,6 +27,6 @@ if (Astro.slots.has("default")) {
 }
 ---
 
-<AtlasBadge client:only="react" color={badgeColor} iconName={icon}>
+<!-- AtlasBadge client:only="react" color={badgeColor} iconName={icon} -->
   <Fragment set:html={content} slot="label" />
-</AtlasBadge>
+<!-- /AtlasBadge -->

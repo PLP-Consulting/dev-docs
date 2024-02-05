@@ -1,0 +1,84 @@
+---
+title: "Getting Started"
+description: "Inform Adjust of right to be forgotten (RTBF) requests using the GDPR API."
+category-title: Getting Started
+slug: en/api/getting-started
+---
+
+This guide shows you how to start monetizing your mobile app with MAX in seven easy steps, incorporating best practices to help you automate daily tasks and maximize revenue
+
+<Callout type="important">
+Review AppLovin’s [Account Best Practices](https://dash.applovin.com/documentation/mediation/ui-max/account/best-practices) to ensure your account setup is compliant with AppLovin’s policies and reduce the risk of disruption to your ad serving.
+</Callout>
+
+## Step 1. Create an Account
+To get started with MAX, open [dash.applovin.com](https://dash.applovin.com), click **Sign Up for a New Account**, and enter your account information. MAX then asks you to authenticate your account so you can complete the signup process.
+
+Some accounts may need to be approved by AppLovin to complete the account setup. If you encounter issues with setting up your account, visit the [New Account <abbr title="frequently asked questions">FAQ</abbr>](https://support.applovin.com/hc/en-us/sections/4403763509261-New-Accounts-).
+
+### Set Up Payment Information
+AppLovin pays you directly for impressions served from the AppLovin Exchange or AppLovin Bidding (AppDiscovery). Set up your payments in the [**Account > Payments > Info**](https://dash.applovin.com/o/billing/accounts/) section of the AppLovin dashboard. If you have questions about setting up payment or tax forms, please review the [AppLovin Monetization Payment <abbr title="frequently asked questions">FAQ</abbr>](https://support.applovin.com/hc/en-us/articles/4403801592461-FAQ-AppLovin-Monetization-Payment).
+
+### Add Your Developer Domain to MAX
+Add the developer website domain used in your app store listing and where your `app-ads.txt` file is hosted, to the Domain section within [**Account > General > Basic Info**](https://dash.applovin.com/o/account#basic_info). Include only the root domain (for example `developerwebsite.com`) in this field.
+
+This allows advertisers to find and validate your `app-ads.txt` file. Learn more at the [`app-ads.txt` Information](https://dash.applovin.com/documentation/mediation/ui-max/account/app-ads-txt-info) page in this documentation.
+
+## Step 2: Create an Ad Unit
+To create an ad unit, select [**MAX > Mediation > Manage > Ad Units**](https://dash.applovin.com/o/mediation/ad_units/) in the AppLovin dashboard.
+
+### Add Your App
+To add your app, first choose the platform (Android, FireOS, or iOS).
+
+Next, enter your app’s name and app store ID in the input box. If your app is live in an app store, it populates within the dropdown to be selected.
+
+If your app is not yet live, you can manually add it to MAX. To do this, click **Manually Add Your Package Name**, then type in your app’s package name, with the casing matching exactly what you have in your app code.
+
+### Add Your Ad Unit
+After you add your app, add your ad unit by selecting a format and giving your ad unit a name. <em>AppLovin strongly recommends that you use a single ad unit ID for each format within an app. This ensures an ad is always cached and avoids unnecessary app/user bandwidth usage.</em>
+
+After you add your app, you see the networks available to set up in the waterfall. If this is your first time setting up your account, bypass this for now—you will have an opportunity to build the waterfall later. If you are already monetizing with MAX, skip to [Step 6](#step6) below to learn how to set up the waterfall.
+
+You need your ad unit ID for the integration process. You can find it on the [**Ad Units**](https://dash.applovin.com/o/mediation/ad_units/) page.
+
+## Step 3: Integrate the AppLovin SDK and Networks
+MAX supports many networks across bidding and traditional connections. There are also custom options allowing you to work with unsupported networks. Before you integrate a network, you must create an account with the network, register your app/ad unit, and be approved to serve ads.
+
+<Callout type="note">
+Need help with creating a network account? Choose your platform in the contents navigation of this documentation and review the Mediated Network Guides.
+</Callout>
+
+
+### Stuff
+
+- list
+- formatting
+
+```http title="Endpoint" "/gdpr_forget_device"
+POST https://gdpr.adjust.com/gdpr_forget_device
+```
+
+<Table>
+| Parameter        | Data type | In    | Description                                                                                                  |
+| ---------------- | --------- | ----- | ------------------------------------------------------------------------------------------------------------ |
+| `app_token`\*    | String    | Query | The Adjust app token from the dashboard                                                                      |
+| `s2s`\*          | Boolean   | Query | Whether the call is a Server-to-Server (S2S) call. Value must be `1` (true)                                  |
+| `device_token`\* | String    | Query | ID of the device you want Adjust to forget. See [the table below](#device-ids) for a list of accepted values |
+</Table>
+
+
+<Table>
+| Parameter   | Description                      | Example                                |
+| ----------- | -------------------------------- | -------------------------------------- |
+| `idfa`      | iOS ID for advertisers           | `8C6CBCOD-5F43-4765-A6E6-84DFF3D24707` |
+| `idfv`      | iOS ID for vendors               | `CCB300A0-DE1B-4D48-BC7E-599E453B8DD4` |
+| `gps_adid`  | Google Play Store advertising ID | `38400000-8cf0-11bd-b23e-10b96e40000d` |
+| `fire_adid` | Fire OS advertising ID           | `63c5519b-7e66-7ee6-aa5d-3b290743811f` |
+| `win_adid`  | Windows advertising ID           | `107e8ea14329d4a2194ebbb6dc0c0fd7`     |
+| `adid`      | Adjust device ID                 | `18546f6171f67e29d1cb983322ad1329`     |
+</Table>
+
+```console title="cURL" "app_token=kwrqhymtnsr2&idfa=9C5CBC1D-4F42-4764-A5E6-84DAF3D24707"
+$ curl -X POST "https://gdpr.adjust.com/gdpr_forget_device?s2s=1&app_token=kwrqhymtnsr2&idfa=9C5CBC1D-4F42-4764-A5E6-84DAF3D24707"
+```
+
