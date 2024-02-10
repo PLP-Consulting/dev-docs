@@ -1,6 +1,6 @@
 ---
 title: "Getting Started"
-description: "Inform Adjust of right to be forgotten (RTBF) requests using the GDPR API."
+description: "How to start monetizing your mobile app with MAX in seven easy steps."
 category-title: Getting Started
 slug: en/api/getting-started
 ---
@@ -19,17 +19,17 @@ If you encounter difficulties with setting up your account, visit the [New Accou
 
 ### Set Up Payment Information
 AppLovin pays you directly for <Glossary>impressions</Glossary> served from the <Glossary>AppLovin Exchange</Glossary> or AppLovin Bidding (AppDiscovery).
-Set up your payment information in the [<UILabel>Account > Payments > Info</UILabel>](https://dash.applovin.com/o/billing/accounts/) section of the AppLovin dashboard.
+Set up your payment information in the [<UILabel>Account &gt; Payments &gt; Info</UILabel>](https://dash.applovin.com/o/billing/accounts/) section of the AppLovin dashboard.
 If you have questions about setting up payment or tax forms, please review the [AppLovin Monetization Payment <Abbr>FAQ</Abbr>](https://support.applovin.com/hc/en-us/articles/4403801592461-FAQ-AppLovin-Monetization-Payment).
 
 ### Add Your Developer Domain to MAX
-Add your website domain (the one that you use in your app store listing and where your <Glossary>`app-ads.txt` [app-ads.txt]</Glossary> file is hosted, to the <UILabel>Domain</UILabel> section within [<UILabel>Account > General > Basic Info</UILabel>](https://dash.applovin.com/o/account#basic_info).
+Add your website domain (the one that you use in your app store listing and where your <Glossary>`app-ads.txt` [app-ads.txt]</Glossary> file is hosted, to the <UILabel>Domain</UILabel> section within [<UILabel>Account &gt; General &gt; Basic Info</UILabel>](https://dash.applovin.com/o/account#basic_info).
 Include only the root domain (for example `mywebsite.com`) in this field.
 
 This allows advertisers to find and validate your `app-ads.txt` file. Learn more at the [`app-ads.txt` Information](https://dash.applovin.com/documentation/mediation/ui-max/account/app-ads-txt-info) page in this documentation.
 
 ## Step 2: Create an Ad Unit
-To create an ad unit, select [<UILabel>MAX > Mediation > Manage > Ad Units</UILabel>](https://dash.applovin.com/o/mediation/ad_units/) in the AppLovin dashboard.
+To create an ad unit, select [<UILabel>MAX &gt; Mediation &gt; Manage &gt; Ad Units</UILabel>](https://dash.applovin.com/o/mediation/ad_units/) in the AppLovin dashboard.
 
 ### Add Your App
 To add your app, first choose the platform (<Glossary>Android</Glossary>, Fire<Abbr>OS</Abbr>, or <Glossary>iOS</Glossary>).
@@ -65,7 +65,7 @@ Read the specific Integration instructions for your platform.
 These platform-specific instructions show you how to do the following:
 
 1. Add the <Abbr>SDK</Abbr> Key to initialize the AppLovin <Abbr>SDK</Abbr>.
-   You can find this key in the [<UILabel>Account > General > Keys</UILabel>](https://dash.applovin.com/o/account#keys) section of the AppLovin dashboard.
+   You can find this key in the [<UILabel>Account &gt; General &gt; Keys</UILabel>](https://dash.applovin.com/o/account#keys) section of the AppLovin dashboard.
 1. Initialize the <Abbr>SDK</Abbr> upon app startup to allow the AppLovin <Abbr>SDK</Abbr> enough time to cache ad assets.
    This results in a better user experience.
 1. Enable [Ad Review](https://dash.applovin.com/documentation/mediation/ad-review/creative-review) so you can monitor <Glossary>creatives</Glossary> from AppLovin and networks from the MAX Dashboard.
@@ -73,5 +73,202 @@ These platform-specific instructions show you how to do the following:
 
 ### Integrate Supported Networks
 
-## ⋮
+To <Glossary>mediate</Glossary> supported ad networks through MAX, download the networks’ <Abbr>SDK</Abbr>s directly from the networks and follow their integration instructions.
+You can find network adapters, supported <Abbr>SDK</Abbr> versions, and further instructions for each platform on the Preparing Mediated Networks page for your platform.
 
+### Integrate Unsupported (Custom) Networks
+
+You can mediate unsupported networks by means of a custom <Abbr>SDK</Abbr> connection.
+Because such networks are not officially supported, AppLovin is not able to troubleshoot issues you have with them.
+Work directly with the network to build network adapters by following the instructions at the Integrating Custom Networks page for your platform, and test thoroughly to ensure the connection works as expected.
+
+## Step 4: Test Your Integration
+
+After you integrate the AppLovin <Abbr>SDK</Abbr> and your networks, you can validate your integration before you go live with your app.
+MAX has many developer-friendly testing tools to help you test and launch successfully.
+
+<Callout type="note">
+If you encounter issues with your integration that MAX testing tools don’t address, contact your account team or [submit a ticket](https://support.applovin.com/hc/en-us/requests/new) to the AppLovin Support Team.
+Please include the demo app implementation, the MAX <Abbr>SDK</Abbr>’s [verbose logs](https://support.applovin.com/hc/en-us/articles/4413218413325-How-to-enable-verbose-logging-in-the-AppLovin-SDK), and your Mediation Debugger screenshot.
+</Callout>
+
+### Demo App
+
+The Demo App shows you how to integrate MAX into your mobile apps.
+You can use the demo app code as a blueprint for your integration.
+
+You also can integrate network <Abbr>SDK</Abbr>s and can monitor the <Glossary>callbacks [event callbacks]</Glossary> that MAX makes to your app that notify you of events for each ad format.
+This helps you verify that you have completed the integration successfully.
+
+Use [test mode](https://dash.applovin.com/o/mediation/test_modes) in parallel with this Demo App to load and show ads during the testing process.
+Learn more at the MAX Demo App documentation page for your platform.
+
+### Mediation Debugger
+
+Mediation Debugger is an AppLovin <Abbr>SDK</Abbr> feature that validates and displays the status of all ad networks that MAX mediates.
+Use it with test or live ads to check if your network is successfully integrated before your app goes live.
+
+You can incorporate this feature into your debug builds or live apps to help your <Abbr>QA</Abbr> team confirm integration or identify issues.
+
+Learn more on the Mediation Debugger documentation page for your platform.
+
+### Test Mode
+
+You can use [Test Mode](https://dash.applovin.com/o/mediation/test_modes/), within the MAX Dashboard, to verify that you have successfully integrated specific ad networks.
+Test mode ensures that you get network fill when you are testing.
+To use Test Mode, enter the <Glossary>Identifier for Advertisers</Glossary> (<Abbr>IDFA</Abbr>) or <Glossary>Google Advertising Identifier</Glossary> (<Abbr>GAID</Abbr>) from your test device and select a network to receive test ads from that network.
+
+<Callout type="note">
+Test Mode can take up to twenty minutes the first time you activate it.
+However, each subsequent network change should be instant.
+</Callout>
+
+Do not use Test Mode with live traffic as some networks will detect that you are testing and will no-fill those ad requests.
+Use the Mediation Debugger along with Test Mode to ensure that you can successfully launch your app with MAX.
+
+Learn more at the Test Mode documentation page for your platform.
+
+### Creative Debugger
+
+Creative Debugger captures ad creative details for AppLovin and your networks and allows you to report problematic ads to MAX.
+AppLovin recommends that you incorporate Creative Debugger into your test environments, <Abbr>QA</Abbr> processes, and support ticket systems so you can easily identify and report these ads.
+
+Learn more at the Creative Debugger documentation page for your platform.
+
+### Pre-Launch Checklist
+
+Use [this quick checklist](prelaunch-checklist) to validate your MAX integration before you launch your app.
+
+## Step 5: Connect Your Networks
+
+After you successfully validate your integration, return to the MAX Dashboard and connect your networks.
+This allows you to pull in network data for <Glossary>real-time bidding</Glossary> for supported bidding networks and <Glossary>CPM</Glossary> updating for most supported traditional networks.
+
+### Supported Networks
+
+Select [<UILabel>MAX &gt; Mediation &gt; Manage &gt; Networks</UILabel>](https://dash.applovin.com/o/mediation/networks/) in the AppLovin dashboard. Connect all the networks that you want to mediate.
+Then click <UILabel>Connect</UILabel>, enter the requested network credentials or <Abbr>API</Abbr> key, and click <UILabel>Save</UILabel>.
+
+The status icon is a green checkmark when you successfully connect the network.
+The icon is red or yellow if you must take further action.
+
+AppLovin demand is enabled by default and you do not need to do anything to connect it.
+
+### Custom Networks
+
+To integrate a custom <Abbr>SDK</Abbr> network, scroll to the bottom of the <UILabel>Networks</UILabel> page and click [<UILabel>Click here to add a Custom Network</UILabel>](https://dash.applovin.com/o/mediation/networks/580541/customNetwork/create).
+Then add your network tag or adapter class name.
+Custom networks are not eligible for <Glossary>in-app bidding</Glossary> or Auto-<Abbr>CPM</Abbr>.
+
+You still must activate your networks within your ad unit waterfall.
+The next section of this page explains that process.
+Learn more at the Enable Networks documentation page for your platform.
+
+## Step 6: Set Up Your Waterfall
+
+Configure a waterfall for each ad unit.
+Both bidding and traditional networks compete by the highest <Abbr>CPM</Abbr> to serve an impression.
+This competition maximizes your revenue, ensuring you are paid the most money for each ad opportunity.
+
+<Callout type="related">
+If you want to manage your waterfall programmatically, review [the Ad Unit Management <Abbr>API</Abbr> documentation](https://dash.applovin.com/documentation/mediation/features/ad-unit-automation-api).
+</Callout>
+
+### Default Waterfall
+
+The Default Waterfall is your primary waterfall for monetization.
+After you set up your ad partners, MAX automates waterfall management through a combination of in-app bidding and <Abbr>CPM</Abbr> updating.
+
+To set up your default waterfall, select [<UILabel>MAX &gt; Mediation &gt; Manage &gt; Ad Units</UILabel>](https://dash.applovin.com/o/mediation/ad_units/) in the AppLovin dashboard, select an ad unit, then scroll down to the <UILabel>Default Waterfall</UILabel>.
+This waterfall includes all supported networks, categorized either as Bidder Networks or Other (traditionally-mediated) Networks.
+Only enable those networks for which you successfully integrated the <Abbr>SDK</Abbr> and which you connected to MAX.
+
+1. Expand the desired network by clicking the down-arrow to the right of the network name.
+   Add the required network <Abbr>ID</Abbr>s, then toggle <UILabel>Status</UILabel> to on.
+    * For non-bidding networks, set a <Abbr>CPM</Abbr> price.
+      Manually enter the floor price or historical <Abbr>CPM</Abbr> of the network.
+      If you have Auto <Abbr>CPM</Abbr> enabled, it will update automatically to align with the network-reported <Abbr>CPM</Abbr>.
+      Use the Network Comparison report to validate the MAX <Abbr>CPM</Abbr> Price and Network <Abbr>CPM</Abbr> price match.
+1. Add custom <Abbr>SDK</Abbr> or direct sold instances to the waterfall if applicable.
+1. Click <UILabel>Save</UILabel>.
+
+### Custom Waterfalls
+
+Advanced MAX users can also use custom waterfalls.
+These allow you to use advanced <Glossary>targeting [contextual ad targeting]</Glossary> and waterfall <Glossary>segmentation</Glossary> to filter ads to specific audiences.
+For example, you can use these waterfalls to tailor monetization for users with <Glossary>Limit Ad Tracking</Glossary> (<Abbr>LAT</Abbr>) enabled or high-value users with strong <Glossary>ad engagement</Glossary>.
+Ineligible traffic continues to use the Default Waterfall configuration.
+
+Learn more about how to use of advanced targeting and waterfall segmentation at [the Waterfall Management and Cloning documentation page](https://dash.applovin.com/documentation/mediation/features/waterfall-segmentation).
+
+To create a custom waterfall, click <UILabel>Create New Waterfall</UILabel> at the top of the <UILabel>Default Waterfall</UILabel>.
+Name your custom waterfall and select its device targeting (if applicable).
+
+MAX copies your network configurations from the Default Waterfall as the basis for your custom waterfall.
+You can then customize them.
+
+### Best Practices
+
+- Use at least six networks with strong global demand (such as Google or Meta) to mediate, in addition to AppLovin, when you begin to establish baseline revenue and performance.
+- Prioritize bidding networks whenever possible to reduce manual waterfall maintenance and <Glossary>latency</Glossary>.
+- As you scale, you will find that <Abbr>CPM</Abbr>s can vary depending on the geographical mix of your app.
+  Identify the biggest revenue opportunities based on those countries and ad networks with strong regional demand (AppLovin account teams are happy to help you).
+  Build geo-based waterfalls that target those networks to specific countries.
+- Use the [Network Comparison](https://dash.applovin.com/o/mediation/network_comparison_report) report to validate that network <Abbr>CPM</Abbr>s are aligned with <Abbr>CPM</Abbr>s reported in MAX.
+  This ensures that networks compete with accurate information in the unified auction and you do not lose money.
+- Always [A/B test](https://dash.applovin.com/documentation/mediation/features/ab-test) new partners or pricing in the waterfall before you push changes to your entire audience.
+  By <Glossary>A/B testing</Glossary> first, you validate whether the change will have positive results.
+  This helps you optimize your waterfall with confidence.
+- To maximize the number of bidders from the AppLovin Exchange who compete for your ad inventory, add AppLovin to your `app-ads.txt` file.
+  To learn more about how to set up `app-ads.txt`, see
+  [the <Abbr>IAB</Abbr> Supply Chain Validation documentation page](https://dash.applovin.com/documentation/mediation/ui-max/account/app-ads-txt-info).
+
+## Step 7: Analyze Performance
+
+Several tools and reports available in MAX, in the <UILabel>Analyze</UILabel> section, help you analyze performance.
+You can download reports directly from the MAX dashboard, or you can schedule them to be emailed to you on a regular basis.
+
+AppLovin also offers reporting <Abbr>API</Abbr>s for MAX revenue and <Glossary>user-level data [user-level attribution]</Glossary> that you can integrate with your <Glossary>MMP</Glossary> of choice.
+To learn more, read [the Revenue Reporting <Abbr>API</Abbr> documentation page](https://dash.applovin.com/documentation/mediation/reporting-api/max-ad-revenue).
+
+All MAX dashboard reports allow you to save reporting views so you can retrieve them quickly later.
+A best practice when you save reports is to use preset time <em>periods</em> instead of using a custom date <em>range</em> to populate most recent data.
+
+With the reports’ Compare Mode you can compare current performance against historical data and can visualize trends.
+
+### Performance Reporting
+
+Use this report to understand revenue performance at a glance.
+The charts help you visualize revenue trends and identify areas that are helping or hindering growth.
+For deeper analysis, try using <UILabel>Advanced Reporting</UILabel> or <UILabel>User Activity Reporting</UILabel>.
+
+### Advanced Reporting
+
+<UILabel>Advanced Reporting</UILabel> gives you deeper insights into your app inventory.
+Use this report to analyze the performance of your waterfall and find opportunities such as new or optimized pricing in a certain country, or to see which networks are under-performing and may need to be removed.
+In addition to saving this report, you can also schedule it to be emailed to you and others on a regular basis.
+
+You can add columns to the reports by clicking the checkmark next to a report filter or by adding a value in the filter field.
+Depending on the combination of filters you include in the report, you see different metrics populate.
+
+Here are a few ways you can look at Advanced Reporting:
+
+Ad Inventory Performance
+: Add <UILabel>Application</UILabel>, <UILabel>Ad Unit Name</UILabel>, and <UILabel>Ad Type</UILabel> to view <Glossary>ad inventory</Glossary> performance including total impressions, revenue, and display rate, which is the percentage of time a cached ad is displayed.
+
+Network Performance
+: Add <UILabel>Network</UILabel> to the report to view network performance by ad unit.
+  In addition to top-level metrics like impressions and <Abbr>CPM</Abbr>, you see two new metrics:
+  <Glossary>fill rate</Glossary> and win rate.
+  Fill rate shows how often a network can fill an ad and win rate is how often a bidding network wins an auction against other bidding networks.
+
+Waterfall Performance
+: Add <UILabel>Waterfall</UILabel> to your report and filter to one ad unit name to view the performance of any active waterfalls for an ad unit.
+  Add <UILabel>Country</UILabel> to the report for a more granular view.
+  Use this view to analyze waterfall performance and identify opportunities to improve yield.
+
+### User Activity Report
+
+Use the <UILabel>User Activity</UILabel> report to understand ad engagement for each ad format.
+You can track the number of <Glossary>daily active users</Glossary>, <Glossary>ARPDAU</Glossary>, and impressions users see.
+This tool is ideal for anyone who doesn’t have a <Abbr>MMP</Abbr> to connect to the MAX user revenue reporting <Abbr>API</Abbr>.
