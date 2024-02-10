@@ -1,0 +1,48 @@
+---
+title: "Best Practices"
+description: "Use this quick checklist to validate your MAX integration before you launch your app."
+slug: en/api/max-dashboard/best-practices
+sidebar-label: Best Practices
+---
+AppLovin is committed to maintaining the highest standards of supply quality, and regularly checks to ensure that apps comply with the AppLovin [Terms of Use](https://www.applovin.com/terms/) and [Publisher Policies](https://www.applovin.com/policies-publishers/).
+AppLovin recommends that you follow the guidelines below which help you comply with these requirements, prevent your app inventory from being flagged as fraudulent, and reduce the risk of your account being suspended.
+
+If you have questions, contact [policy@applovin.com](mailto:policy@applovin.com?subject=Account%20Best%20Practices) or [submit a ticket](https://support.applovin.com/hc/en-us/requests/new) to the developer support team.
+
+## Before You Set Up Your Account
+
+- Make sure your app complies with the AppLovin [Terms of Use](https://www.applovin.com/terms/) and [Publisher Policies](https://www.applovin.com/policies-publishers/).
+- Your [primary account email](https://support.applovin.com/hc/en-us/articles/11493225495437) listed with MAX must be the same email address listed in the app store.
+
+## Integration Best Practices
+- Avoid automating ad requests through scripts, bots, or other non-human entities.
+- Avoid <Glossary>banner</Glossary> refresh rates less than ten seconds, to give users a chance to engage with the ad.
+- Make sure your ads don’t draw unnatural attention, mislead users, or appear in places that may cause invalid clicks.
+  If AppLovin finds a large amount of invalid activity in your app(s), you may be at risk for account suspension.
+- When you are testing, do not click on your own ads or use any means to inflate <Glossary>impressions</Glossary> and/or clicks artificially.
+  There are a variety of [testing tools](../../max/getting-started#step-4-test-your-integration) you can use to validate your integration without creating artificial traffic.
+- Update to the latest [AppLovin <Abbr>SDK</Abbr>s](../../max/getting-started#download-and-integrate-the-applovin-sdk) to take advantage of improvements and bug fixes.
+- Double-check your ad implementations.
+  Make sure they are free from programming errors and that you are sending ad requests in a timely manner.
+  If you send repetitive requests for the same impressions, AppLovin may throttle your requests, which may put your account at risk of suspension.
+
+## Account Best Practices
+- Your app should be live in a valid app store.
+  Check that the correct package name is present in the <Abbr>UI</Abbr> for each app on the [<UILabel>Manage &gt; Ad Units</UILabel>](https://dash.applovin.com/o/mediation/ad_units) page.
+- Minimize the number of active AppLovin accounts that you use.
+  Make sure your primary account email address is valid, ideally using your company domain and the email listed in the app store.
+  You may be asked to verify ownership of the app from the email listed in the app store.
+- Use accurate <Glossary>CPM</Glossary> prices for your networks within MAX that reflect the actual <Abbr>CPM</Abbr> paid to you by the <Glossary>network</Glossary>.
+  The best way to do this is to enable [auto <Abbr>CPM</Abbr>](https://dash.applovin.com/documentation/mediation/ui-max/networks/auto-cpm) for non-bidding networks and/or to prioritize using <Glossary>bidding</Glossary> networks, which automates the updating of <Abbr>CPM</Abbr> prices for you.
+  You can verify <Abbr>CPM</Abbr>s are properly reported within MAX with the [network comparison](https://dash.applovin.com/documentation/mediation/ui-max/reports/network-comparison) report.
+- [Create an `app-ads.txt` file](https://dash.applovin.com/documentation/mediation/ui-max/account/app-ads-txt-info) with AppLovin and your network partners’ line items included so that buyers can verify those ad sources are authorized to sell your inventory.
+  Add your developer website root domain to the Domain field within the [<UILabel>Account &gt; Basic info</UILabel>](https://dash.applovin.com/o/account?r=2#basic_info) page.
+- Do not <Glossary>mediate</Glossary> MAX within an internal or third party mediation.
+  As the AppLovin [Publisher Policies](https://www.applovin.com/policies-publishers/) make clear, this is unauthorized use of MAX that will lead to account suspension.
+
+## Live App Best Practices
+
+- Discourage users from repeatedly clicking the ads on your app, to avoid invalid clicks.
+- Do not encourage users through misleading or deceptive tactics to click on ads.
+  Examples include (but aren’t limited to) directly asking for users to support your app, offering rewards to users for clicking ads, or promising to raise money for third parties for such behavior.
+- Partner with a traffic monitoring company such as DoubleVerify to help you identify fraudulent behavior and maintain traffic quality.
