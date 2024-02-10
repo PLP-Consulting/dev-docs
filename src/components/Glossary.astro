@@ -1,0 +1,22 @@
+---
+import type { AstroIntegration } from "astro";
+let content = "";
+const regex = /^([^\[]*)\[([^\]]*)\][^\[]*\[([^\]]*)\]/;
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.slice(1); // remove the first "/"
+
+if (Astro.slots.has("default")) {
+  content = await Astro.slots.render("default");
+}
+
+const match = content.match(regex)!
+const body = match[1].trim()
+const page = 'https://www.applovin.com/glossary/' + match[2] + '/'
+const title = match[3]
+
+if (!body) console.log("ERROR: Glossary body missing in " + currentPath);
+if (!match[2]) console.log("ERROR: Glossary page missing in " + currentPath);
+if (!title) console.log("WARNING: Glossary title missing in " + currentPath);
+---
+{title ? <a class="glossary" href={page} title={title}><Fragment set:html={body} /></a>
+       : <a class="glossary" href={page}><Fragment set:html={body} /></a>}

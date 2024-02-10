@@ -1,7 +1,9 @@
 ---
-import BuildTooltip from "./atlas/BuildTooltip";
-
+const pathname = new URL(Astro.request.url).pathname;
+const currentPath = pathname.slice(1); // remove the first "/"
 let content = "";
+let body = "";
+let title = "";
 const regex = /(^.*?(?=\())\(([^\)]+)\)/;
 
 if (Astro.slots.has("default")) {
@@ -9,11 +11,16 @@ if (Astro.slots.has("default")) {
 }
 
 const match = content.match(regex)!
-const body = match[1].trim()
-const title = match[2]
+if (!match) {
+  console.log("ERROR: abbreviation malformed in " + currentPath + " (" + content + ")");
+} else {
+  body = match[1].trim()
+  title = match[2]
+}
+
+if (!body) console.log("ERROR: abbreviation missing in " + currentPath);
+if (!title) console.log("WARNING: abbreviation explanation missing in " + currentPath);
 ---
 
-<BuildTooltip client:only="react">
-  <Fragment set:html={body} name="children" />
-  <Fragment set:html={title} slot="content" />
-</BuildTooltip>
+{ title ? <abbr title={title}><Fragment set:html={body} /></abbr>
+        : <abbr><Fragment set:html={body} /></abbr> }

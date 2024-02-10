@@ -40,6 +40,8 @@ export default defineConfig({
         "@components/Version.astro",
         "@components/FigmaEmbed/FigmaEmbed.astro",
         "@components/MinorVersion.astro",
+        "@components/Glossary.astro",
+        "@components/UILabel.astro",
       ],
     }),
     // Enable React for the Algolia search component.

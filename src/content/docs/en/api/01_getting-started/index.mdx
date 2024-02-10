@@ -5,80 +5,73 @@ category-title: Getting Started
 slug: en/api/getting-started
 ---
 
-This guide shows you how to start monetizing your mobile app with MAX in seven easy steps, incorporating best practices to help you automate daily tasks and maximize revenue
+This guide shows you how to start <Glossary>monetizing your mobile app [mobile-app-monetization] [Mobile app monetization is an umbrella term that describes the strategy and tactics…]</Glossary> with MAX in seven easy steps, incorporating best practices to help you automate daily tasks and maximize revenue.
 
 <Callout type="important">
 Review AppLovin’s [Account Best Practices](https://dash.applovin.com/documentation/mediation/ui-max/account/best-practices) to ensure your account setup is compliant with AppLovin’s policies and reduce the risk of disruption to your ad serving.
 </Callout>
 
 ## Step 1. Create an Account
-To get started with MAX, open [dash.applovin.com](https://dash.applovin.com), click **Sign Up for a New Account**, and enter your account information. MAX then asks you to authenticate your account so you can complete the signup process.
+To get started with MAX, open [dash.applovin.com](https://dash.applovin.com), click [<UILabel>Sign Up for a New Account</UILabel>](https://dash.applovin.com/signup), and enter your account information. MAX then asks you to authenticate your account so you can complete the signup process.
 
-Some accounts may need to be approved by AppLovin to complete the account setup. If you encounter issues with setting up your account, visit the [New Account <abbr title="frequently asked questions">FAQ</abbr>](https://support.applovin.com/hc/en-us/sections/4403763509261-New-Accounts-).
+AppLovin may need to approve your account before you can complete the account setup.
+If you encounter difficulties with setting up your account, visit the [New Account <Abbr>FAQ (frequently asked questions)</Abbr>](https://support.applovin.com/hc/en-us/sections/4403763509261-New-Accounts-).
 
 ### Set Up Payment Information
-AppLovin pays you directly for impressions served from the AppLovin Exchange or AppLovin Bidding (AppDiscovery). Set up your payments in the [**Account > Payments > Info**](https://dash.applovin.com/o/billing/accounts/) section of the AppLovin dashboard. If you have questions about setting up payment or tax forms, please review the [AppLovin Monetization Payment <abbr title="frequently asked questions">FAQ</abbr>](https://support.applovin.com/hc/en-us/articles/4403801592461-FAQ-AppLovin-Monetization-Payment).
+AppLovin pays you directly for <Glossary>impressions [impressions] [An impression is when a user on a device sees an advertisement…]</Glossary> served from the <Glossary>AppLovin Exchange [applovin-exchange-alx] [The AppLovin Exchange, or ALX, is AppLovin’s mobile, in-app RTB (real-time bidding) exchange…]</Glossary> or AppLovin Bidding (AppDiscovery).
+Set up your payment information in the [<UILabel>Account > Payments > Info</UILabel>](https://dash.applovin.com/o/billing/accounts/) section of the AppLovin dashboard.
+If you have questions about setting up payment or tax forms, please review the [AppLovin Monetization Payment <Abbr>FAQ (frequently asked questions)</Abbr>](https://support.applovin.com/hc/en-us/articles/4403801592461-FAQ-AppLovin-Monetization-Payment).
 
 ### Add Your Developer Domain to MAX
-Add the developer website domain used in your app store listing and where your `app-ads.txt` file is hosted, to the Domain section within [**Account > General > Basic Info**](https://dash.applovin.com/o/account#basic_info). Include only the root domain (for example `developerwebsite.com`) in this field.
+Add your website domain (the one that you use in your app store listing and where your <Glossary>`app-ads.txt` [authorized-sellers-for-apps-app-ads-txt] [Authorized Sellers for Apps, or app-ads.txt, is an IAB Tech Lab initiative that helps ensure…]</Glossary> file is hosted, to the <UILabel>Domain</UILabel> section within [<UILabel>Account > General > Basic Info</UILabel>](https://dash.applovin.com/o/account#basic_info).
+Include only the root domain (for example `mywebsite.com`) in this field.
 
 This allows advertisers to find and validate your `app-ads.txt` file. Learn more at the [`app-ads.txt` Information](https://dash.applovin.com/documentation/mediation/ui-max/account/app-ads-txt-info) page in this documentation.
 
 ## Step 2: Create an Ad Unit
-To create an ad unit, select [**MAX > Mediation > Manage > Ad Units**](https://dash.applovin.com/o/mediation/ad_units/) in the AppLovin dashboard.
+To create an ad unit, select [<UILabel>MAX > Mediation > Manage > Ad Units</UILabel>](https://dash.applovin.com/o/mediation/ad_units/) in the AppLovin dashboard.
 
 ### Add Your App
-To add your app, first choose the platform (Android, FireOS, or iOS).
+To add your app, first choose the platform (<Glossary>Android [android] [Android is a mobile operating system designed for touchscreen devices…]</Glossary>, Fire<Abbr>OS (operating system)</Abbr>, or <Glossary>iOS [ios] [iOS stands for iPhone Operating System, a mobile operating system…]</Glossary>).
 
-Next, enter your app’s name and app store ID in the input box. If your app is live in an app store, it populates within the dropdown to be selected.
+Next, enter your app’s name and app store <Abbr>ID (identifier)</Abbr> in the input box. If your app is live in an app store, it populates within the dropdown to be selected.
 
-If your app is not yet live, you can manually add it to MAX. To do this, click **Manually Add Your Package Name**, then type in your app’s package name, with the casing matching exactly what you have in your app code.
+If your app is live in an app store, it populates within the dropdown to be selected.
+If your app is not yet live, you can manually add it to MAX.
+To do this, click <UILabel>Manually Add Your Package Name</UILabel>, then type in your app’s package name, with the casing matching exactly what you have in your app code.
 
 ### Add Your Ad Unit
-After you add your app, add your ad unit by selecting a format and giving your ad unit a name. <em>AppLovin strongly recommends that you use a single ad unit ID for each format within an app. This ensures an ad is always cached and avoids unnecessary app/user bandwidth usage.</em>
+After you add your app, add your ad unit by selecting a format and giving your ad unit a name. <em>AppLovin strongly recommends that you use a single ad unit <Abbr>ID (identifier)</Abbr> for each format within an app. This ensures an ad is always cached and avoids unnecessary app/user bandwidth usage.</em>
 
-After you add your app, you see the networks available to set up in the waterfall. If this is your first time setting up your account, bypass this for now—you will have an opportunity to build the waterfall later. If you are already monetizing with MAX, skip to [Step 6](#step6) below to learn how to set up the waterfall.
+After you add your ad unit, you see the <Glossary>networks [ad-network] [An ad network is a provider of ad space…]</Glossary> available for your <Glossary>waterfall [waterfall] [A waterfall refers to the traditional programmatic method of ad buying…]</Glossary>.
+If this is the first time you are setting up your account, bypass this for now—you will have an opportunity to build the waterfall later.
+If you are already monetizing with MAX, skip to Step 6 below to learn how to set up the waterfall.
 
-You need your ad unit ID for the integration process. You can find it on the [**Ad Units**](https://dash.applovin.com/o/mediation/ad_units/) page.
+You need your ad unit <Abbr>ID (identifier)</Abbr> for the integration process.
+You can find it on the [<UILabel>Ad Units</UILabel>](https://dash.applovin.com/o/mediation/ad_units/) page.
 
-## Step 3: Integrate the AppLovin SDK and Networks
-MAX supports many networks across bidding and traditional connections. There are also custom options allowing you to work with unsupported networks. Before you integrate a network, you must create an account with the network, register your app/ad unit, and be approved to serve ads.
+## Step 3: Integrate the AppLovin <Abbr>SDK (software development kit)</Abbr> and Networks
+MAX supports many networks across bidding and traditional connections.
+Custom options also allow you to work with unsupported networks.
+Before you integrate a network, you must create an account with the network, register your app and ad unit, and be approved by the network to serve ads.
 
 <Callout type="note">
-Need help with creating a network account? Choose your platform in the contents navigation of this documentation and review the Mediated Network Guides.
+If you need help creating a network account, choose your platform in the contents navigation of this documentation and review its Mediated Network Guides.
 </Callout>
 
+### Download and Integrate the AppLovin <Abbr>SDK (software development kit)</Abbr>
 
-### Stuff
+Read the specific Integration instructions for your platform.
+These platform-specific instructions show you how to do the following:
 
-- list
-- formatting
+1. Add the <Abbr>SDK (software development kit)</Abbr> Key to initialize the AppLovin <Abbr>SDK (software development kit)</Abbr>.
+   You can find this key in the [<UILabel>Account > General > Keys</UILabel>](https://dash.applovin.com/o/account#keys) section of the AppLovin dashboard.
+1. Initialize the <Abbr>SDK (software development kit)</Abbr> upon app startup to allow the AppLovin <Abbr>SDK (software development kit)</Abbr> enough time to cache ad assets.
+   This results in a better user experience.
+1. Enable [Ad Review](https://dash.applovin.com/documentation/mediation/ad-review/creative-review) so you can monitor <Glossary>creatives [creatives-and-ads] [Creatives are the assets you use as part of a user acquisition strategy to attract new users…]</Glossary> from AppLovin and networks from the MAX Dashboard.
+1. Use the MAX Terms & Privacy Policy Flow to prompt acceptance of your Terms of Use and Privacy Policy, and, for <Abbr>iOS (iPhone Operating System)</Abbr>, enable the [App Transparency Tracking](https://developer.apple.com/documentation/apptrackingtransparency) (<Abbr>ATT (App Tracking Transparency)</Abbr>) prompt.
 
-```http title="Endpoint" "/gdpr_forget_device"
-POST https://gdpr.adjust.com/gdpr_forget_device
-```
+### Integrate Supported Networks
 
-<Table>
-| Parameter        | Data type | In    | Description                                                                                                  |
-| ---------------- | --------- | ----- | ------------------------------------------------------------------------------------------------------------ |
-| `app_token`\*    | String    | Query | The Adjust app token from the dashboard                                                                      |
-| `s2s`\*          | Boolean   | Query | Whether the call is a Server-to-Server (S2S) call. Value must be `1` (true)                                  |
-| `device_token`\* | String    | Query | ID of the device you want Adjust to forget. See [the table below](#device-ids) for a list of accepted values |
-</Table>
-
-
-<Table>
-| Parameter   | Description                      | Example                                |
-| ----------- | -------------------------------- | -------------------------------------- |
-| `idfa`      | iOS ID for advertisers           | `8C6CBCOD-5F43-4765-A6E6-84DFF3D24707` |
-| `idfv`      | iOS ID for vendors               | `CCB300A0-DE1B-4D48-BC7E-599E453B8DD4` |
-| `gps_adid`  | Google Play Store advertising ID | `38400000-8cf0-11bd-b23e-10b96e40000d` |
-| `fire_adid` | Fire OS advertising ID           | `63c5519b-7e66-7ee6-aa5d-3b290743811f` |
-| `win_adid`  | Windows advertising ID           | `107e8ea14329d4a2194ebbb6dc0c0fd7`     |
-| `adid`      | Adjust device ID                 | `18546f6171f67e29d1cb983322ad1329`     |
-</Table>
-
-```console title="cURL" "app_token=kwrqhymtnsr2&idfa=9C5CBC1D-4F42-4764-A5E6-84DAF3D24707"
-$ curl -X POST "https://gdpr.adjust.com/gdpr_forget_device?s2s=1&app_token=kwrqhymtnsr2&idfa=9C5CBC1D-4F42-4764-A5E6-84DAF3D24707"
-```
+## ⋮
 
