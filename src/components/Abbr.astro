@@ -5,21 +5,124 @@ let content = "";
 let body = "";
 let title = "";
 const regex = /(^.*?(?=\())\(([^\)]+)\)/;
+var abbreviations = [];
+
+abbreviations['3G']     = 'third generation';
+abbreviations['AC']     = 'additional consent';
+abbreviations['a.k.a.'] = 'also known as';
+abbreviations['ALX']    = 'AppLovin Exchange';
+abbreviations['API']    = 'application programming interface';
+abbreviations['APS']    = 'Amazon Publisher Services';
+abbreviations['ASIN']   = 'Amazon Standard Identification Number';
+abbreviations['ATP']    = 'Ad Technology Provider';
+abbreviations['ATS']    = 'App Transport Security';
+abbreviations['ATT']    = 'App Tracking Transparency';
+abbreviations['CCPA']   = 'California Consumer Privacy Act';
+abbreviations['CI/CD']  = 'continuous integration / continuous delivery';
+abbreviations['CMP']    = 'Consent Management Platform';
+abbreviations['COPPA']  = 'Children’s Online Privacy Protection Act';
+abbreviations['CPC']    = 'cost per click';
+abbreviations['CPE']    = 'cost per engagement';
+abbreviations['CPI']    = 'cost per install';
+abbreviations['CPM']    = 'cost per mille';
+abbreviations['CPP']    = 'cost per point';
+abbreviations['CSV']    = 'comma-separated values';
+abbreviations['CTA']    = 'call to action';
+abbreviations['CTV']    = 'Connected Television';
+abbreviations['DMA']    = 'Designated Market Area';
+abbreviations['DNT']    = 'do not track';
+abbreviations['dp']     = 'density-independent pixels';
+abbreviations['DPA']    = 'Data Processing Agreement';
+abbreviations['DSP']    = 'demand-side platform';
+abbreviations['DT']     = 'Digital Turbine';
+abbreviations['DV360']  = 'Display and Video 360';
+abbreviations['eCPM']   = 'effective cost per mille';
+abbreviations['EDGE']   = 'Enhanced Data rates for G.S.M. Evolution';
+abbreviations['EEA']    = 'European Economic Area';
+abbreviations['FAQ']    = 'frequently asked questions';
+abbreviations['GAID']   = 'Google Advertiser Identity';
+abbreviations['GDPR']   = 'General Data Protection Regulation';
+abbreviations['GIF']    = 'Graphics Interchange Format';
+abbreviations['GVL']    = 'Global Vendor List';
+abbreviations['HTML']   = 'Hypertext Markup Language';
+abbreviations['HTTP']   = 'Hypertext Transfer Protocol';
+abbreviations['HTTPS']  = 'Hypertext Transfer Protocol, Secure';
+abbreviations['IAB']    = 'Interactive Advertising Bureau';
+abbreviations['IABTL']  = 'Interactive Advertising Bureau Technology Laboratory';
+abbreviations['IAP']    = 'in-app purchase';
+abbreviations['IAS']    = 'Integral Ad Science';
+abbreviations['ID']     = 'identifier';
+abbreviations['IDE']    = 'integrated development environment';
+abbreviations['IDFA']   = 'identifier for advertisers';
+abbreviations['IDFV']   = 'identifier for vendors';
+abbreviations['IFA']    = 'identifier for advertisers';
+abbreviations['IO']     = 'insertion order';
+abbreviations['iOS']    = 'iPhone Operating System';
+abbreviations['IP']     = 'Internet Protocol';
+abbreviations['IPv4']   = 'Internet Protocol, version 4';
+abbreviations['IPv6']   = 'Internet Protocol, version 6';
+abbreviations['IVT']    = 'invalid traffic';
+abbreviations['JPEG']   = 'Joint Photographic Experts Group (graphics file type)';
+abbreviations['JPG']    = 'Joint Photographic Experts Group (graphics file type)';
+abbreviations['JSON']   = 'JavaScript Object Notation';
+abbreviations['LDU']    = 'Limited Data Use';
+abbreviations['LTE']    = 'Long-Term Evolution';
+abbreviations['MB']     = 'megabytes';
+abbreviations['MIME']   = 'Multipurpose Internet Mail Extensions';
+abbreviations['MMP']    = 'mobile measurement partner';
+abbreviations['MPX']    = 'MoPub Exchange';
+abbreviations['MRAID']  = 'Mobile Rich Media Ad Interface Definitions';
+abbreviations['MREC']   = 'medium rectangle';
+abbreviations['OM']     = 'Open Measurement';
+abbreviations['OMID']   = 'Open Measurement Interface Definition';
+abbreviations['OMSDK']  = 'Open Measurement Software Development Kit';
+abbreviations['ORMMA']  = 'Open Rich Media Mobile Advertising';
+abbreviations['oRTB']   = 'open real-time bidding';
+abbreviations['OS']     = 'operating system';
+abbreviations['PMP']    = 'private marketplace';
+abbreviations['PNG']    = 'Portable Network Graphic';
+abbreviations['POM']    = 'Project Object Model';
+abbreviations['px']     = 'pixels';
+abbreviations['REST']   = 'Representational State Transfer';
+abbreviations['ROAS']   = 'return on ad spend';
+abbreviations['RTB']    = 'real-time bidding';
+abbreviations['S2S']    = 'server-to-server';
+abbreviations['SDK']    = 'software development kit';
+abbreviations['SHA']    = 'secure hashing algorithm';
+abbreviations['SK']     = 'StoreKit';
+abbreviations['SSP']    = 'supply-side platform';
+abbreviations['TC']     = 'Transparency Consent';
+abbreviations['TCF']    = 'Transparency &amp; Consent Framework';
+abbreviations['UA']     = 'user agent';
+abbreviations['UI']     = 'user interface';
+abbreviations['UMP']    = 'User Messaging Platform';
+abbreviations['UPL']    = 'Unreal Plugin Language';
+abbreviations['URI']    = 'Universal Resource Identifier';
+abbreviations['URL']    = 'uniform resource locator';
+abbreviations['USA']    = 'United States of America';
+abbreviations['USD']    = 'United States dollar';
+abbreviations['UTC']    = 'Coordinated Universal Time';
+abbreviations['UUID']   = 'universally unique identifier';
+abbreviations['VAST']   = 'Video Ad Serving Template';
+abbreviations['VPAID']  = 'Video Player-Ad Interface Definition';
+abbreviations['XHTML']  = 'Extensible Hypertext Markup Language';
 
 if (Astro.slots.has("default")) {
   content = await Astro.slots.render("default");
 }
 
-const match = content.match(regex)!
+const match = content.match(regex);
+
 if (!match) {
-  console.log("ERROR: abbreviation malformed in " + currentPath + " (" + content + ")");
+  body = content;
+  title = abbreviations[body];
 } else {
-  body = match[1].trim()
-  title = match[2]
+  body = match[1].trim();
+  title = match[2];
 }
 
-if (!body) console.log("ERROR: abbreviation missing in " + currentPath);
-if (!title) console.log("WARNING: abbreviation explanation missing in " + currentPath);
+if (!body) console.log("ERROR: abbreviation missing in " + currentPath + " (" + content + ")" );
+if (!title) console.log("WARNING: abbreviation explanation missing in " + currentPath + " for " + body + " (" + content + ")" );
 ---
 
 { title ? <abbr title={title}><Fragment set:html={body} /></abbr>
