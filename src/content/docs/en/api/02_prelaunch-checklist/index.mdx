@@ -5,5 +5,51 @@ category-title: Pre-Launch Checklist
 slug: en/api/prelaunch-checklist
 ---
 
-TBD
+  Use this quick checklist to validate your MAX integration before you launch your app:
 
+1. Set the relevant privacy flags before you start requesting ads.
+   To learn more about privacy flags, see the Privacy—Consent, Age-Related Flags, and Data APIs page for your platform.
+1. Set up a listener for the AppLovin <Glossary>SDK</Glossary> initialized event before you initialize the <Abbr>SDK</Abbr>.
+   Set the <Abbr>SDK</Abbr> key and initialize the MAX <Abbr>SDK</Abbr> as soon as your app launches.
+   To learn more about the initialization process, see the Integration page for your platform.
+1. After you successfully initialize the AppLovin <Abbr>SDK</Abbr>, start loading ads for <Glossary>Interstitial</Glossary> and <Glossary>Rewarded</Glossary> ad formats.
+   This gives you time to catch the winning bid before you show an ad.
+   To learn more about Interstitial and Rewarded ads, see the Interstitial Ads and Rewarded Ads pages for your platform.
+1. When an Interstitial or Rewarded ad fails to load or fails to display, retry with exponentially higher delays up to a maximum delay.
+   If you fail to implement this retry logic, you may miss <Glossary>impression</Glossary> opportunities and may lower revenue.
+   To see sample code with this retry logic, see the Interstitial Ads and Rewarded Ads pages for your platform.
+1. When a user dismisses an Interstitial or Rewarded ad, load the next ad right away.
+   If you fail to implement this step, you may miss impression opportunities and may lower revenue.
+   To see sample code with this loading logic, see the Interstitial Ads and Rewarded Ads pages for your platform.
+1. Keep the <Glossary>banner</Glossary> unit on screen at all times in order to optimize performance for higher <Glossary>CPM</Glossary>s and better user experience.
+   MAX controls the refresh rate to give you optimal results.
+   If you hide the banner behind content, <Glossary>networks</Glossary> will invalidate impressions based on their <Glossary>viewability</Glossary> rules.
+   To learn more about banners and <Glossary>MRECs</Glossary>, see
+   the Banner &amp; MREC Ads pages for your platform.
+1. If you do not use MAX Unity Integration Manager, review the Preparing Mediated Networks page for your platform and use the Mediation Debugger feature to validate that you have all of the necessary configurations for each network.
+
+<Callout type="warning">
+To avoid problems, if you <Glossary>mediate</Glossary> a network <Abbr>SDK</Abbr> that you previously used for mediation (for example, if you transition from Google bidding and Google AdMob Mediation to MAX-mediated Google bidding and Google AdMob), create a new application <Abbr>ID</Abbr> or delete active Mediation Groups.
+If you reuse a mediator’s app <Abbr>ID</Abbr> this will cause crashes and discrepancies.
+</Callout>
+
+## Why Am I Not Seeing Any Ads?
+
+If you cannot get ads from the AppLovin <Abbr>SDK</Abbr>, review these common causes:
+
+- Most often, the problem is that advertiser demand is not strong for your country/geo and app category so AppLovin does not have ads available for you.
+  If this is the issue, you can get ads by using Test Mode.
+- Make sure your <Abbr>SDK</Abbr> key is correctly configured in your app’s `AndroidManifest` or `Info.plist` and that it matches the key in the dashboard exactly with no trailing spaces.
+- You set a frequency cap for the app in the <UILabel>Manage Apps</UILabel> section.
+  Try adjusting the frequency cap.
+- You are using rewarded videos but your device <Abbr>ID</Abbr> (Apple <Glossary>IDFA</Glossary> or <Glossary>Google Advertising ID</Glossary>) is disabled or missing.
+  Enable your device <Abbr>ID</Abbr> by disabling <UILabel>Opt out of interest based ads</UILabel> or <Glossary>Limit Ad Tracking</Glossary>.
+  For <Glossary>Android</Glossary>:
+  Make sure you’ve integrated the Google Play Services <Abbr>SDK</Abbr>.
+- You are using an old <Abbr>OS</Abbr> version:
+  Video ads are not supported on very old <Abbr>OS</Abbr> versions (<Glossary>iOS</Glossary> &lt; 5.0 or Android &lt; 4.0).
+  In general advertising demand may be low on older <Abbr>OS</Abbr> versions.
+  Try using an <Abbr>OS</Abbr> version that is less than two years old.
+
+If you still cannot get any ads, open a support ticket at AppLovin’s [Developer Support portal](https://support-developer.applovin.com/hc/en-us/requests/new).
+Please [enable verbose logs](https://support.applovin.com/hc/en-us/articles/11522288778125) and send the full logs from the app start, along with details on the ad type you are trying to integrate and other information that may be helpful in diagnosing the problem.
