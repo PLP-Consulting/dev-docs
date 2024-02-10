@@ -1,22 +1,373 @@
 ---
 import type { AstroIntegration } from "astro";
 let content = "";
-const regex = /^([^\[]*)\[([^\]]*)\][^\[]*\[([^\]]*)\]/;
+const regex = /^([^\[]*)\[([^\]]*)\][^\[]*\[([^\]]*)\]/;  // <Glossary>text [page] [title]</Glossary>
+const regex2 = /^([^\[]*)\[([^\]]*)\]/;                   // <Glossary>text [key]</Glossary>          (where key matches those in array below)
 const pathname = new URL(Astro.request.url).pathname;
 const currentPath = pathname.slice(1); // remove the first "/"
+/* note: key must be lowercase */
+var glossary = [];
+glossary['a/b tested'] = { "page":'ab-testing', "title":'A/B testing is a way for developers to conduct a controlled experiment…' };
+glossary['a/b testing'] = { "page":'ab-testing', "title":'A/B testing is a way for developers to conduct a controlled experiment…' };
+glossary['a/b test'] = { "page":'ab-testing', "title":'A/B testing is a way for developers to conduct a controlled experiment…' };
+glossary['a/b tests'] = { "page":'ab-testing', "title":'A/B testing is a way for developers to conduct a controlled experiment…' };
+glossary['active user'] = { "page":'active-user', "title":'An active user is a person who accesses an app for a period of time…' };
+glossary['active users'] = { "page":'active-user', "title":'An active user is a person who accesses an app for a period of time…' };
+glossary['ad engagement'] = { "page":'ad-engagement', "title":'Ad engagement refers to whether users are seeing and interacting with a mobile ad creative…' };
+glossary['ad exchange'] = { "page":'ad-exchange', "title":'Ad exchanges allow publishers a place to make ad inventory available to potential buyers…' };
+glossary['ad exchanges'] = { "page":'ad-exchange', "title":'Ad exchanges allow publishers a place to make ad inventory available to potential buyers…' };
+glossary['ad inventory'] = { "page":'ad-inventory', "title":'Ad inventory is the total amount of ad space a publisher has available for advertisers to buy at any given time…' };
+glossary['ad mediation'] = { "page":'ad-mediation', "title":'Ad mediation is a platform used by app developers to connect multiple ad networks to their app…' };
+glossary['ad network'] = { "page":'ad-network', "title":'An ad network is a provider of ad space…' };
+glossary['ad networks'] = { "page":'ad-network', "title":'An ad network is a provider of ad space…' };
+glossary['ad revenue attribution'] = { "page":'ad-revenue-attribution', "title":'Ad revenue attribution is measuring the profitability of user in-app actions…' };
+glossary['ad roas'] = { "page":'ad-roas', "title":'Ad ROAS (Advertising Return on Ad Spend) is an important metric for advertisers whose apps monetize with ads…' };
+glossary['ad stacking'] = { "page":'ad-stacking', "title":'Ad stacking is a type of mobile ad fraud…' };
+glossary['ad viewability'] = { "page":'mobile-ad-viewability-2', "title":'Mobile ad viewability is the concept of how visible ads on a mobile device are to users…' };
+glossary['ad viewer rate'] = { "page":'ad-viewer-rate', "title":'Ad-viewer rate, also commonly referred to as engagement rate is the percentage of daily active users who engage…' };
+glossary['alx'] = { "page":'applovin-exchange-alx', "title":'The AppLovin Exchange, or ALX, is AppLovin’s mobile, in-app RTB (real-time bidding) exchange…' };
+glossary['android'] = { "page":'android', "title":'Android is a mobile operating system designed for touchscreen devices…' };
+glossary['app-ads.txt'] = { "page":'authorized-sellers-for-apps-app-ads-txt', "title":'Authorized Sellers for Apps, or app-ads.txt, is an IAB Tech Lab initiative that helps ensure…' };
+glossary['app engagement'] = { "page":'app-engagement', "title":'App engagement is a set of metrics that measure user interactions with an app…' };
+glossary['applovin exchange'] = { "page":'applovin-exchange-alx', "title":'The AppLovin Exchange, or ALX, is AppLovin’s mobile, in-app RTB (real-time bidding) exchange…' };
+glossary['app monetization'] = { "page":'mobile-app-monetization', "title":'Mobile app monetization is an umbrella term that describes the strategy and tactics…' };
+glossary['app store analytics'] = { "page":'app-store-analytics', "title":'App store analytics are compiled user behavior data and metrics…' };
+glossary['app store optimization'] = { "page":'app-store-optimization', "title":'App store optimization (ASO) is the act of optimizing a mobile app…' };
+glossary['app tracking transparency'] = { "page":'att', "title":'AppTrackingTransparency (ATT) framework is Apple’s new IDFA opt-in mechanism…' };
+glossary['apptrackingtransparency'] = { "page":'att', "title":'AppTrackingTransparency (ATT) framework is Apple’s new IDFA opt-in mechanism…' };
+glossary['arpdau'] = { "page":'arpdau', "title":'Average Revenue Per Daily Active User (ARPDAU) is a KPI used to measure how well…' };
+glossary['arppu'] = { "page":'arppu', "title":'Average Revenue Per Paying User (ARPPU) measures the average of how much revenue is generated…' };
+glossary['att'] = { "page":'att', "title":'AppTrackingTransparency (ATT) framework is Apple’s new IDFA opt-in mechanism…' };
+glossary['attribution modeling'] = { "page":'attribution-modeling', "title":'Attribution modeling is the method advertisers use to determine the value of different channels…' };
+glossary['attribution'] = { "page":'attribution', "title":'Attribution is how mobile marketers know exactly what led users to their app…' };
+glossary['attribution window'] = { "page":'attribution-window', "title":'An attribution window, also called a conversion window, is a defined period of time…' };
+glossary['attribution windows'] = { "page":'attribution-window', "title":'An attribution window, also called a conversion window, is a defined period of time…' };
+glossary['authorized sellers for apps'] = { "page":'authorized-sellers-for-apps-app-ads-txt', "title":'Authorized Sellers for Apps, or app-ads.txt, is an IAB Tech Lab initiative that helps ensure…' };
+glossary['backfilled'] = { "page":'backfill', "title":'Backfill is ad inventory that has not been pre-sold or reserved…' };
+glossary['backfill'] = { "page":'backfill', "title":'Backfill is ad inventory that has not been pre-sold or reserved…' };
+glossary['backfills'] = { "page":'backfill', "title":'Backfill is ad inventory that has not been pre-sold or reserved…' };
+glossary['banner ad'] = { "page":'banner-ads', "title":'Banner ads are traditional graphic ads that often live in unobtrusive places…' };
+glossary['banner ads'] = { "page":'banner-ads', "title":'Banner ads are traditional graphic ads that often live in unobtrusive places…' };
+glossary['banner'] = { "page":'banner-ads', "title":'Banner ads are traditional graphic ads that often live in unobtrusive places…' };
+glossary['banners'] = { "page":'banner-ads', "title":'Banner ads are traditional graphic ads that often live in unobtrusive places…' };
+glossary['bidstream data'] = { "page":'bidstream-data', "title":'Bidstream data is passed from the publisher to the bidders through a real-time bidding (RTB) auction…' };
+glossary['board game'] = { "page":'mobile-board-games', "title":'A mobile board game adapts traditional board games to your mobile phone…' };
+glossary['board games'] = { "page":'mobile-board-games', "title":'A mobile board game adapts traditional board games to your mobile phone…' };
+glossary['cac'] = { "page":'cac', "title":'Customer Acquisition Cost (CAC) is an app business metric used to understand how much it costs to acquire a customer…' };
+glossary['card game'] = { "page":'card-games', "title":'Card games is a mobile game genre that can refer to a few different kinds…' };
+glossary['card games'] = { "page":'card-games', "title":'Card games is a mobile game genre that can refer to a few different kinds…' };
+glossary['casual game'] = { "page":'casual-games', "title":'Casual games are characterized by mass-market appeal…' };
+glossary['casual games'] = { "page":'casual-games', "title":'Casual games are characterized by mass-market appeal…' };
+glossary['churned'] = { "page":'churn', "title":'A “churned user” is a user who has stopped using an app…' };
+glossary['churn'] = { "page":'churn', "title":'A “churned user” is a user who has stopped using an app…' };
+glossary['click-injection'] = { "page":'click-injection', "title":'Click injection is a sophisticated form of click-spamming…' };
+glossary['click-spam'] = { "page":'click-spam', "title":'Click spam occurs when a fraudster executes clicks for users who haven’t made them…' };
+glossary['click-validation'] = { "page":'click-validation', "title":'Click validation requires ad partners to share impressions to confirm…' };
+glossary['cohort analysis'] = { "page":'cohort-analysis', "title":'Cohort analysis lets you view the full lifecycle of your users…' };
+glossary['cohort'] = { "page":'cohort', "title":'In mobile marketing, a cohort is a set of users grouped together by a common identifier…' };
+glossary['cohorts'] = { "page":'cohort', "title":'In mobile marketing, a cohort is a set of users grouped together by a common identifier…' };
+glossary['connected tv'] = { "page":'ctv', "title":'CTV, or Connected TV, is any television that can be used to stream video…' };
+glossary['contextual ad targeting'] = { "page":'contextual-ad-targeting', "title":'Contextual ad targeting is a type of advertising that uses information on the host…' };
+glossary['conversion modeling'] = { "page":'conversion-modeling', "title":'Conversion modeling refers to the use of machine learning to help estimate attribution…' };
+glossary['conversion'] = { "page":'conversion', "title":'A conversion is an action that is counted when someone interacts with an ad…' };
+glossary['conversion rate'] = { "page":'conversion-rate', "title":'A conversion rate is the percentage of users who have completed an action…' };
+glossary['conversions'] = { "page":'conversion', "title":'A conversion is an action that is counted when someone interacts with an ad…' };
+glossary['converted'] = { "page":'conversion', "title":'A conversion is an action that is counted when someone interacts with an ad…' };
+glossary['convert'] = { "page":'conversion', "title":'A conversion is an action that is counted when someone interacts with an ad…' };
+glossary['converts'] = { "page":'conversion', "title":'A conversion is an action that is counted when someone interacts with an ad…' };
+glossary['cost per action'] = { "page":'cpa', "title":'CPA or “cost per action” is an advertisement measurement and pricing model…' };
+glossary['cost per event'] = { "page":'cost-per-event-cpe', "title":'CPE or “cost per event” is a pricing model where advertisers pay for a specific action or event a user completes after clicking on their mobile ad…' };
+glossary['cost per install'] = { "page":'cpi', "title":'CPI or “cost per install” is when app advertisers pay a certain amount every time…' };
+glossary['cost per mille'] = { "page":'cpm-ecpm', "title":'Cost-Per-Mille (CPM) is a payment model used in mobile app and game advertising…' };
+glossary['cost per purchase'] = { "page":'cost-per-purchase-cpp', "title":'CPP or “cost per purchase” is the amount an advertiser pays for each purchase made by users who see or interact with their mobile ad…' };
+glossary['cpa'] = { "page":'cpa', "title":'CPA or “cost per action” is an advertisement measurement and pricing model…' };
+glossary['cpe'] = { "page":'cost-per-event-cpe', "title":'CPE or “cost per event” is a pricing model where advertisers pay for a specific action or event a user completes after clicking on their mobile ad…' };
+glossary['cpi'] = { "page":'cpi', "title":'CPI or “cost per install” is when app advertisers pay a certain amount every time…' };
+glossary['cpm'] = { "page":'cpm-ecpm', "title":'Cost-Per-Mille (CPM) is a payment model used in mobile app and game advertising…' };
+glossary['cpp'] = { "page":'cost-per-purchase-cpp', "title":'CPP or “cost per purchase” is the amount an advertiser pays for each purchase made by users who see or interact with their mobile ad…' };
+glossary['creative'] = { "page":'creatives-and-ads', "title":'Creatives are the assets you use as part of a user acquisition strategy to attract new users…' };
+glossary['creatives'] = { "page":'creatives-and-ads', "title":'Creatives are the assets you use as part of a user acquisition strategy to attract new users…' };
+glossary['ctv'] = { "page":'ctv', "title":'CTV, or Connected TV, is any television that can be used to stream video…' };
+glossary['customer acquisition cost'] = { "page":'cac', "title":'Customer Acquisition Cost (CAC) is an app business metric used to understand how much it costs to acquire a customer…' };
+glossary['daily active users'] = { "page":'dau', "title":'Daily Active Users (DAU) is the number of unique users that log in and start a session…' };
+glossary['dau'] = { "page":'dau', "title":'Daily Active Users (DAU) is the number of unique users that log in and start a session…' };
+glossary['deep linking'] = { "page":'deep-linking', "title":'Deep linking gives developers the ability to send users into a specific page…' };
+glossary['deep link'] = { "page":'deep-linking', "title":'Deep linking gives developers the ability to send users into a specific page…' };
+glossary['deep links'] = { "page":'deep-linking', "title":'Deep linking gives developers the ability to send users into a specific page…' };
+glossary['demand-side platform'] = { "page":'demand-side-platforms-dsp', "title":'Demand-side platforms, or DSPs, are platforms that manage multiple ad exchanges…' };
+glossary['demand-side platforms'] = { "page":'demand-side-platforms-dsp', "title":'Demand-side platforms, or DSPs, are platforms that manage multiple ad exchanges…' };
+glossary['down-funnel'] = { "page":'down-funnel-event', "title":'A down-funnel event is a significant user action that occurs at a late stage in the customer journey…' };
+glossary['downstream revenue'] = { "page":'downstream-revenue', "title":'Downstream revenue is revenue that is not gained at the point of sale…' };
+glossary['dsp'] = { "page":'demand-side-platforms-dsp', "title":'Demand-side platforms, or DSPs, are platforms that manage multiple ad exchanges…' };
+glossary['dsps'] = { "page":'demand-side-platforms-dsp', "title":'Demand-side platforms, or DSPs, are platforms that manage multiple ad exchanges…' };
+glossary['dual-screening'] = { "page":'dual-screening', "title":'Dual screening targets an audience simultaneously interacts with content on more than one device…' };
+glossary['dual-screen'] = { "page":'dual-screening', "title":'Dual screening targets an audience simultaneously interacts with content on more than one device…' };
+glossary['dual-screens'] = { "page":'dual-screening', "title":'Dual screening targets an audience simultaneously interacts with content on more than one device…' };
+glossary['dynamic creative ads'] = { "page":'dynamic-creative-ads', "title":'Dynamic creative ads are a type of ad in which the creative content is updated in real time based on predefined parameters set by an advertiser…' };
+glossary['ecpm'] = { "page":'cpm-ecpm', "title":'Cost-Per-Mille (CPM) is a payment model used in mobile app and game advertising…' };
+glossary['effective cost per mille'] = { "page":'cpm-ecpm', "title":'Cost-Per-Mille (CPM) is a payment model used in mobile app and game advertising…' };
+glossary['engagement rate'] = { "page":'ad-viewer-rate', "title":'Ad-viewer rate, also commonly referred to as engagement rate is the percentage of daily active users who engage…' };
+glossary['event callback'] = { "page":'event-callbacks', "title":'Event callbacks in mobile apps are mechanisms used by developers to track specific user actions or occurrences within an app…' };
+glossary['event callbacks'] = { "page":'event-callbacks', "title":'Event callbacks in mobile apps are mechanisms used by developers to track specific user actions or occurrences within an app…' };
+glossary['fill rate'] = { "page":'fill-rate', "title":'Fill rate refers to the percentage of times an ad request is filled by an ad network…' };
+glossary['first-party data'] = { "page":'first-party-data', "title":'First-party data is information that a brand has collected through a direct relationship…' };
+glossary['fractional attribution'] = { "page":'fractional-attribution', "title":'Fractional attribution acknowledges more than one advertisement’s contribution…' };
+glossary['gacha'] = { "page":'gacha', "title":'The term “Gacha” is derived from Japan’s Gashapon vending machines…' };
+glossary['gaid'] = { "page":'gaid', "title":'Google Advertiser Identity (GAID) is a device identifier for advertisers…' };
+glossary['game monetization'] = { "page":'mobile-game-monetization', "title":'Mobile game monetization is the strategy and tactics game developers employ…' };
+glossary['gaming'] = { "page":'mobile-gaming', "title":'Mobile gaming is the most popular form of gaming in the world…' };
+glossary['gdpr'] = { "page":'gdpr', "title":'GDPR (General Data Protection Regulation) is a European Union law…' };
+glossary['general data protection regulation'] = { "page":'gdpr', "title":'GDPR (General Data Protection Regulation) is a European Union law…' };
+glossary['google advertiser identity'] = { "page":'gaid', "title":'Google Advertiser Identity (GAID) is a device identifier for advertisers…' };
+glossary['hardcore game'] = { "page":'hardcore-games', "title":'Hardcore games are those that require players to invest a lot of time to learn…' };
+glossary['hardcore games'] = { "page":'hardcore-games', "title":'Hardcore games are those that require players to invest a lot of time to learn…' };
+glossary['hardcore'] = { "page":'hardcore-games', "title":'Hardcore games are those that require players to invest a lot of time to learn…' };
+glossary['header bidding'] = { "page":'header-bidding', "title":'Header bidding is a programmatic method of selling advertising space…' };
+glossary['header bid'] = { "page":'header-bidding', "title":'Header bidding is a programmatic method of selling advertising space…' };
+glossary['header bids'] = { "page":'header-bidding', "title":'Header bidding is a programmatic method of selling advertising space…' };
+glossary['hybrid-casual game'] = { "page":'hybrid-casual', "title":'Hybrid-casual is a relatively new style of mobile game…' };
+glossary['hybrid-casual games'] = { "page":'hybrid-casual', "title":'Hybrid-casual is a relatively new style of mobile game…' };
+glossary['hybrid-casual'] = { "page":'hybrid-casual', "title":'Hybrid-casual is a relatively new style of mobile game…' };
+glossary['hybrid monetization'] = { "page":'hybrid-monetization', "title":'Hybrid monetization uses both in-app advertising and in-app purchases…' };
+glossary['hyper-casual game'] = { "page":'hyper-casual-games', "title":'Hyper-casual games are characterized by lightweight, instantly playable…' };
+glossary['hyper-casual games'] = { "page":'hyper-casual-games', "title":'Hyper-casual games are characterized by lightweight, instantly playable…' };
+glossary['hyper-casual'] = { "page":'hyper-casual-games', "title":'Hyper-casual games are characterized by lightweight, instantly playable…' };
+glossary['iap roas'] = { "page":'iap-roas', "title":'IAP ROAS, or “In-App Purchase Return on Ad Spend”, is a metric commonly used in the mobile app industry…' };
+glossary['iap-roas'] = { "page":'iap-roas', "title":'IAP ROAS, or “In-App Purchase Return on Ad Spend”, is a metric commonly used in the mobile app industry…' };
+glossary['iaproas'] = { "page":'iap-roas', "title":'IAP ROAS, or “In-App Purchase Return on Ad Spend”, is a metric commonly used in the mobile app industry…' };
+glossary['identifier for advertisers'] = { "page":'idfa', "title":'IDFA stands for Identifier for Advertisers, which is a unique ID assigned by Apple…' };
+glossary['identifier for vendor'] = { "page":'idfv', "title":'Identifier for Vendor (IDFV) is a code created by an app developer and assigned…' };
+glossary['idfa'] = { "page":'idfa', "title":'IDFA stands for Identifier for Advertisers, which is a unique ID assigned by Apple…' };
+glossary['idfv'] = { "page":'idfv', "title":'Identifier for Vendor (IDFV) is a code created by an app developer and assigned…' };
+glossary['idle game'] = { "page":'idle-games', "title":'Idle games, also known as incremental games and clicker games…' };
+glossary['idle games'] = { "page":'idle-games', "title":'Idle games, also known as incremental games and clicker games…' };
+glossary['idle'] = { "page":'idle-games', "title":'Idle games, also known as incremental games and clicker games…' };
+glossary['impdau'] = { "page":'impdau', "title":'Impressions per daily active user, or IMPDAU, is a KPI used by developers to measure…' };
+glossary['impression'] = { "page":'impressions', "title":'An impression is when a user on a device sees an advertisement…' };
+glossary['impressions'] = { "page":'impressions', "title":'An impression is when a user on a device sees an advertisement…' };
+glossary['impressions per daily active user'] = { "page":'impdau', "title":'Impressions per daily active user, or IMPDAU, is a KPI used by developers to measure…' };
+glossary['in-app advertising'] = { "page":'in-app-advertising', "title":'In-app advertising means that a mobile app incorporates advertising into its experience…' };
+glossary['in-app advertisement'] = { "page":'in-app-advertising', "title":'In-app advertising means that a mobile app incorporates advertising into its experience…' };
+glossary['in-app advertisements'] = { "page":'in-app-advertising', "title":'In-app advertising means that a mobile app incorporates advertising into its experience…' };
+glossary['in-app bidding'] = { "page":'in-app-bidding', "title":'In-app bidding is an advanced advertising method…' };
+glossary['in-app bid'] = { "page":'in-app-bidding', "title":'In-app bidding is an advanced advertising method…' };
+glossary['in-app bids'] = { "page":'in-app-bidding', "title":'In-app bidding is an advanced advertising method…' };
+glossary['in-app event'] = { "page":'in-app-events', "title":'In-app events are any activity that a user takes after installing an app…' };
+glossary['in-app events'] = { "page":'in-app-events', "title":'In-app events are any activity that a user takes after installing an app…' };
+glossary['in-app purchase'] = { "page":'in-app-purchases', "title":'In-app purchases (IAP) occur when a user purchases an item in an app or game with real money…' };
+glossary['in-app purchaser'] = { "page":'in-app-purchases', "title":'In-app purchases (IAP) occur when a user purchases an item in an app or game with real money…' };
+glossary['in-app purchases'] = { "page":'in-app-purchases', "title":'In-app purchases (IAP) occur when a user purchases an item in an app or game with real money…' };
+glossary['incrementality'] = { "page":'incrementality', "title":'Incrementality is a measure of the additional value generated by a specific advertising campaign or marketing initiative…' };
+glossary['installs per mille'] = { "page":'ipm', "title":'Installs Per Mille (IPM) is the number of times your app is installed per thousand ad impressions…' };
+glossary['interstitial ad'] = { "page":'interstitial-ads', "title":'Interstitial ads are full-screen ads that cover the entirety of an app’s interface…' };
+glossary['interstitial ads'] = { "page":'interstitial-ads', "title":'Interstitial ads are full-screen ads that cover the entirety of an app’s interface…' };
+glossary['interstitial'] = { "page":'interstitial-ads', "title":'Interstitial ads are full-screen ads that cover the entirety of an app’s interface…' };
+glossary['inventory'] = { "page":'ad-inventory', "title":'Ad inventory is the total amount of ad space a publisher has available for advertisers to buy at any given time…' };
+glossary['ios'] = { "page":'ios', "title":'iOS stands for iPhone Operating System, a mobile operating system…' };
+glossary['ipm'] = { "page":'ipm', "title":'Installs Per Mille (IPM) is the number of times your app is installed per thousand ad impressions…' };
+glossary['key performance indicator'] = { "page":'kpi', "title":'Key Performance Indicators (KPIs) are the quantifiable metrics used by app developers…' };
+glossary['key performance indicators'] = { "page":'kpi', "title":'Key Performance Indicators (KPIs) are the quantifiable metrics used by app developers…' };
+glossary['kpi'] = { "page":'kpi', "title":'Key Performance Indicators (KPIs) are the quantifiable metrics used by app developers…' };
+glossary['latency'] = { "page":'latency', "title":'Latency is the delay that occurs in communication over a network…' };
+glossary['lat'] = { "page":'lat', "title":'Limit Ad Tracking, or LAT, gives users the option to restrict the sharing…' };
+glossary['lifetime value'] = { "page":'ltv', "title":'Lifetime Value (LTV) is a prediction of the profit margin a game developer will earn from an average user…' };
+glossary['limit ad tracking'] = { "page":'lat', "title":'Limit Ad Tracking, or LAT, gives users the option to restrict the sharing…' };
+glossary['liveops'] = { "page":'liveops', "title":'LiveOps refers to any updates or improvements made to a game without having to release a brand new version…' };
+glossary['ltv'] = { "page":'ltv', "title":'Lifetime Value (LTV) is a prediction of the profit margin a game developer will earn from an average user…' };
+glossary['massively multiplayer online role-playing game'] = { "page":'mmorpg', "title":'MMORPG stands for massively multiplayer online role-playing games…' };
+glossary['massively multiplayer online role-playing games'] = { "page":'mmorpg', "title":'MMORPG stands for massively multiplayer online role-playing games…' };
+glossary['match-three game'] = { "page":'match-three-games', "title":'Match-three is a mobile game genre…' };
+glossary['match-three games'] = { "page":'match-three-games', "title":'Match-three is a mobile game genre…' };
+glossary['match-three'] = { "page":'match-three-games', "title":'Match-three is a mobile game genre…' };
+glossary['mau'] = { "page":'mau', "title":'Monthly Active Users (MAU) is a metric that measures how many unique users use your app…' };
+glossary['mediated'] = { "page":'ad-mediation', "title":'Ad mediation is a platform used by app developers to connect multiple ad networks to their app…' };
+glossary['mediate'] = { "page":'ad-mediation', "title":'Ad mediation is a platform used by app developers to connect multiple ad networks to their app…' };
+glossary['mediates'] = { "page":'ad-mediation', "title":'Ad mediation is a platform used by app developers to connect multiple ad networks to their app…' };
+glossary['mediation'] = { "page":'ad-mediation', "title":'Ad mediation is a platform used by app developers to connect multiple ad networks to their app…' };
+glossary['mediation platform'] = { "page":'mediation-platform', "title":'Mediation platforms centralize access to multiple ad networks through a single SDK integration…' };
+glossary['mediation platforms'] = { "page":'mediation-platform', "title":'Mediation platforms centralize access to multiple ad networks through a single SDK integration…' };
+glossary['medium rectangle ad'] = { "page":'mrec-ads', "title":'Medium Rectangle ads, or MRECs, are essentially larger versions of banner ads that…' };
+glossary['medium rectangle ads'] = { "page":'mrec-ads', "title":'Medium Rectangle ads, or MRECs, are essentially larger versions of banner ads that…' };
+glossary['medium rectangle'] = { "page":'mrec-ads', "title":'Medium Rectangle ads, or MRECs, are essentially larger versions of banner ads that…' };
+glossary['medium rectangles'] = { "page":'mrec-ads', "title":'Medium Rectangle ads, or MRECs, are essentially larger versions of banner ads that…' };
+glossary['meta game'] = { "page":'meta-games', "title":'In mobile gaming, the meta refers to the parts of gameplay that a player repeats…' };
+glossary['meta games'] = { "page":'meta-games', "title":'In mobile gaming, the meta refers to the parts of gameplay that a player repeats…' };
+glossary['mid-core game'] = { "page":'mid-core-games', "title":'Mid-core games are more complex than hyper-casual and casual games…' };
+glossary['mid-core games'] = { "page":'mid-core-games', "title":'Mid-core games are more complex than hyper-casual and casual games…' };
+glossary['mid-core'] = { "page":'mid-core-games', "title":'Mid-core games are more complex than hyper-casual and casual games…' };
+glossary['minimum viable product'] = { "page":'mvp', "title":'MVP stands for minimum viable product and is a term regularly used in…' };
+glossary['mmo game'] = { "page":'mmo-games', "title":'MMO stands for massive multiplayer online game…' };
+glossary['mmo games'] = { "page":'mmo-games', "title":'MMO stands for massive multiplayer online game…' };
+glossary['mmo'] = { "page":'mmo-games', "title":'MMO stands for massive multiplayer online game…' };
+glossary['mmorpg'] = { "page":'mmorpg', "title":'MMORPG stands for massively multiplayer online role-playing games…' };
+glossary['mmp'] = { "page":'mmp', "title":'An MMP is a mobile measurement partner that works with app and game publishers to track…' };
+glossary['mmps'] = { "page":'mmp', "title":'An MMP is a mobile measurement partner that works with app and game publishers to track…' };
+glossary['mobile ad network'] = { "page":'mobile-ad-networks', "title":'Mobile ad networks are platforms that connect advertisers with publishers who have mobile apps or websites…' };
+glossary['mobile ad networks'] = { "page":'mobile-ad-networks', "title":'Mobile ad networks are platforms that connect advertisers with publishers who have mobile apps or websites…' };
+glossary['mobile ad viewability'] = { "page":'mobile-ad-viewability-2', "title":'Mobile ad viewability is the concept of how visible ads on a mobile device are to users…' };
+glossary['mobile app acquisition'] = { "page":'mobile-app-user-acquisition', "title":'Apps can only be successful if they have users. But quality matters as much as quantity…' };
+glossary['mobile app monetization'] = { "page":'mobile-app-monetization', "title":'Mobile app monetization is an umbrella term that describes the strategy and tactics…' };
+glossary['mobile attribution'] = { "page":'mobile-attribution', "title":'Attribution is how mobile marketers know exactly what led users to their app or game…' };
+glossary['mobile game monetization'] = { "page":'mobile-game-monetization', "title":'Mobile game monetization is the strategy and tactics game developers employ…' };
+glossary['mobile game'] = { "page":'mobile-gaming', "title":'Mobile gaming is the most popular form of gaming in the world…' };
+glossary['mobile games'] = { "page":'mobile-gaming', "title":'Mobile gaming is the most popular form of gaming in the world…' };
+glossary['mobile gaming'] = { "page":'mobile-gaming', "title":'Mobile gaming is the most popular form of gaming in the world…' };
+glossary['mobile measurement partner'] = { "page":'mmp', "title":'An MMP is a mobile measurement partner that works with app and game publishers to track…' };
+glossary['mobile measurement partners'] = { "page":'mmp', "title":'An MMP is a mobile measurement partner that works with app and game publishers to track…' };
+glossary['monthly active users'] = { "page":'mau', "title":'Monthly Active Users (MAU) is a metric that measures how many unique users use your app…' };
+glossary['mrec ad'] = { "page":'mrec-ads', "title":'Medium Rectangle ads, or MRECs, are essentially larger versions of banner ads that…' };
+glossary['mrec ads'] = { "page":'mrec-ads', "title":'Medium Rectangle ads, or MRECs, are essentially larger versions of banner ads that…' };
+glossary['mrec'] = { "page":'mrec-ads', "title":'Medium Rectangle ads, or MRECs, are essentially larger versions of banner ads that…' };
+glossary['mrecs'] = { "page":'mrec-ads', "title":'Medium Rectangle ads, or MRECs, are essentially larger versions of banner ads that…' };
+glossary['mvp'] = { "page":'mvp', "title":'MVP stands for minimum viable product and is a term regularly used in…' };
+glossary['native ad'] = { "page":'native-ads', "title":'Native ads follow the natural form and function of the user experience in which…' };
+glossary['native ads'] = { "page":'native-ads', "title":'Native ads follow the natural form and function of the user experience in which…' };
+glossary['network'] = { "page":'ad-network', "title":'An ad network is a provider of ad space…' };
+glossary['networks'] = { "page":'ad-network', "title":'An ad network is a provider of ad space…' };
+glossary['oem ad'] = { "page":'oem-advertising', "title":'OEM advertising takes place on a mobile device through software that was preloaded on that device…' };
+glossary['oem ads'] = { "page":'oem-advertising', "title":'OEM advertising takes place on a mobile device through software that was preloaded on that device…' };
+glossary['oem advertiser'] = { "page":'oem-advertising', "title":'OEM advertising takes place on a mobile device through software that was preloaded on that device…' };
+glossary['oem advertisers'] = { "page":'oem-advertising', "title":'OEM advertising takes place on a mobile device through software that was preloaded on that device…' };
+glossary['oem advertising'] = { "page":'oem-advertising', "title":'OEM advertising takes place on a mobile device through software that was preloaded on that device…' };
+glossary['oem advertisment'] = { "page":'oem-advertising', "title":'OEM advertising takes place on a mobile device through software that was preloaded on that device…' };
+glossary['oem advertisments'] = { "page":'oem-advertising', "title":'OEM advertising takes place on a mobile device through software that was preloaded on that device…' };
+glossary['oem'] = { "page":'oem', "title":'An OEM, or original equipment manufacturer, is a company that makes products to be integrated by or branded by another company…' };
+glossary['oems'] = { "page":'oem', "title":'An OEM, or original equipment manufacturer, is a company that makes products to be integrated by or branded by another company…' };
+glossary['offerwall ad'] = { "page":'offerwall-ads', "title":'Offerwall ads are timely ads that offer rewards to players…' };
+glossary['offerwall ads'] = { "page":'offerwall-ads', "title":'Offerwall ads are timely ads that offer rewards to players…' };
+glossary['offerwall'] = { "page":'offerwall-ads', "title":'Offerwall ads are timely ads that offer rewards to players…' };
+glossary['on-device ad'] = { "page":'on-device-advertising', "title":'On-Device Advertising (ODA) can be delivered to mobile devices without the need for an active internet connection…' };
+glossary['on-device ads'] = { "page":'on-device-advertising', "title":'On-Device Advertising (ODA) can be delivered to mobile devices without the need for an active internet connection…' };
+glossary['on-device advertising'] = { "page":'on-device-advertising', "title":'On-Device Advertising (ODA) can be delivered to mobile devices without the need for an active internet connection…' };
+glossary['oobe'] = { "page":'out-of-the-box-experience-oobe', "title":'OOBE (Out-Of-the-Box Experience) is the experience a user has when setting up and using a product for the first time…' };
+glossary['organic install'] = { "page":'organic-installs', "title":'An organic install occurs when someone installs an app without…' };
+glossary['organic installs'] = { "page":'organic-installs', "title":'An organic install occurs when someone installs an app without…' };
+glossary['original equipment manufacturer'] = { "page":'oem', "title":'An OEM, or original equipment manufacturer, is a company that makes products to be integrated by or branded by another company…' };
+glossary['original equipment manufacturers'] = { "page":'oem', "title":'An OEM, or original equipment manufacturer, is a company that makes products to be integrated by or branded by another company…' };
+glossary['ott'] = { "page":'ott', "title":'OTT (Over-the-Top) describes streaming services that deliver video content over the internet…' };
+glossary['out-of-the-box experience'] = { "page":'out-of-the-box-experience-oobe', "title":'OOBE (Out-Of-the-Box Experience) is the experience a user has when setting up and using a product for the first time…' };
+glossary['over-the-top'] = { "page":'ott', "title":'OTT (Over-the-Top) describes streaming services that deliver video content over the internet…' };
+glossary['paid app'] = { "page":'paid-apps', "title":'Paid apps are when a user purchases an app for a one-time fee…' };
+glossary['paid apps'] = { "page":'paid-apps', "title":'Paid apps are when a user purchases an app for a one-time fee…' };
+glossary['performance marketing'] = { "page":'performance-marketing', "title":'Performance marketing is when advertisers pay when a specific action is completed, such as a sale, lead, or click…' };
+glossary['playable ad'] = { "page":'playable-ads', "title":'Playable ads are interactive ads that let users try out the core functionality of an app…' };
+glossary['playable ads'] = { "page":'playable-ads', "title":'Playable ads are interactive ads that let users try out the core functionality of an app…' };
+glossary['playable'] = { "page":'playable-ads', "title":'Playable ads are interactive ads that let users try out the core functionality of an app…' };
+glossary['pmp'] = { "page":'private-marketplace-pmp', "title":'Private marketplaces (PMPs) are customized, invitation-only RTB marketplaces…' };
+glossary['pmps'] = { "page":'private-marketplace-pmp', "title":'Private marketplaces (PMPs) are customized, invitation-only RTB marketplaces…' };
+glossary['postback'] = { "page":'postback', "title":'A postback, also called a callback, is a type of attribution…' };
+glossary['postbacks'] = { "page":'postback', "title":'A postback, also called a callback, is a type of attribution…' };
+glossary['preloaded'] = { "page":'preload', "title":'“Preload” refers to software, applications, or content that is pre-installed on a device before the device reaches the consumer…' };
+glossary['preloading'] = { "page":'preload', "title":'“Preload” refers to software, applications, or content that is pre-installed on a device before the device reaches the consumer…' };
+glossary['preload'] = { "page":'preload', "title":'“Preload” refers to software, applications, or content that is pre-installed on a device before the device reaches the consumer…' };
+glossary['preloads'] = { "page":'preload', "title":'“Preload” refers to software, applications, or content that is pre-installed on a device before the device reaches the consumer…' };
+glossary['private marketplace'] = { "page":'private-marketplace-pmp', "title":'Private marketplaces (PMPs) are customized, invitation-only RTB marketplaces…' };
+glossary['private marketplaces'] = { "page":'private-marketplace-pmp', "title":'Private marketplaces (PMPs) are customized, invitation-only RTB marketplaces…' };
+glossary['probabilistic attribution'] = { "page":'probabilistic-attribution', "title":'Probabilistic attribution is a form of attribution based on probabilities, not ID or device…' };
+glossary['puzzle game'] = { "page":'puzzle-games', "title":'Puzzle mobile games are designed to test problem-solving skills…' };
+glossary['puzzle games'] = { "page":'puzzle-games', "title":'Puzzle mobile games are designed to test problem-solving skills…' };
+glossary['puzzle'] = { "page":'puzzle-games', "title":'Puzzle mobile games are designed to test problem-solving skills…' };
+glossary['racing game'] = { "page":'racing-games', "title":'Racing games are a genre of games that put you in the driver’s seat…' };
+glossary['racing games'] = { "page":'racing-games', "title":'Racing games are a genre of games that put you in the driver’s seat…' };
+glossary['racing'] = { "page":'racing-games', "title":'Racing games are a genre of games that put you in the driver’s seat…' };
+glossary['real-time bidder'] = { "page":'rtb', "title":'Real-Time Bidding, or RTB, is a programmatic ad buying process…' };
+glossary['real-time bidding'] = { "page":'rtb', "title":'Real-Time Bidding, or RTB, is a programmatic ad buying process…' };
+glossary['real-time bid'] = { "page":'rtb', "title":'Real-Time Bidding, or RTB, is a programmatic ad buying process…' };
+glossary['real-time bids'] = { "page":'rtb', "title":'Real-Time Bidding, or RTB, is a programmatic ad buying process…' };
+glossary['retention rate'] = { "page":'retention-rate', "title":'Retention rate is one of the most important key performance indicators…' };
+glossary['return on ad spend'] = { "page":'roas', "title":'Return on Ad Spend, or ROAS, is an important KPI for developers…' };
+glossary['revenue attribution'] = { "page":'ad-revenue-attribution', "title":'Ad revenue attribution is measuring the profitability of user in-app actions…' };
+glossary['rewarded ad'] = { "page":'rewarded-video-ads', "title":'Rewarded video ads are a specific type of ads shown in exchange for a reward…' };
+glossary['rewarded ads'] = { "page":'rewarded-video-ads', "title":'Rewarded video ads are a specific type of ads shown in exchange for a reward…' };
+glossary['rewarded'] = { "page":'rewarded-video-ads', "title":'Rewarded video ads are a specific type of ads shown in exchange for a reward…' };
+glossary['rewarded video ad'] = { "page":'rewarded-video-ads', "title":'Rewarded video ads are a specific type of ads shown in exchange for a reward…' };
+glossary['rewarded video ads'] = { "page":'rewarded-video-ads', "title":'Rewarded video ads are a specific type of ads shown in exchange for a reward…' };
+glossary['rewarded video'] = { "page":'rewarded-video-ads', "title":'Rewarded video ads are a specific type of ads shown in exchange for a reward…' };
+glossary['roas'] = { "page":'roas', "title":'Return on Ad Spend, or ROAS, is an important KPI for developers…' };
+glossary['rtb'] = { "page":'rtb', "title":'Real-Time Bidding, or RTB, is a programmatic ad buying process…' };
+glossary['sdk'] = { "page":'sdk', "title":'A software development kit, or SDK, is essentially a pack of…' };
+glossary['segmentation'] = { "page":'user-segmentation', "title":'User segmentation is the separation of users into groups based on shared characteristics, typically for targeting and data analysis purposes…' };
+glossary['sellers.json'] = { "page":'sellers-json', "title":'sellers.json is a standard provided by the Interactive Advertising Bureau that…' };
+glossary['simulation game'] = { "page":'simulation-games', "title":'Simulation games are a genre of games that are designed to mimic activities…' };
+glossary['simulation games'] = { "page":'simulation-games', "title":'Simulation games are a genre of games that are designed to mimic activities…' };
+glossary['skadnetwork'] = { "page":'skadnetwork', "title":'SKAdNetwork is a privacy-friendly way to attribute impressions and clicks…' };
+glossary['skan'] = { "page":'skadnetwork', "title":'SKAdNetwork is a privacy-friendly way to attribute impressions and clicks…' };
+glossary['software development kit'] = { "page":'sdk', "title":'A software development kit, or SDK, is essentially a pack of…' };
+glossary['spo'] = { "page":'supply-path-optimization-spo', "title":'Supply Path Optimization, or SPO, is the strategy through which buyers…' };
+glossary['ssp'] = { "page":'ssp', "title":'Supply-side platforms, or SSPs, are a platform for publishers to manage…' };
+glossary['ssps'] = { "page":'ssp', "title":'Supply-side platforms, or SSPs, are a platform for publishers to manage…' };
+glossary['subscription app'] = { "page":'subscription-apps', "title":'Subscription apps require players to pay a monthly fee…' };
+glossary['subscription apps'] = { "page":'subscription-apps', "title":'Subscription apps require players to pay a monthly fee…' };
+glossary['subscription game'] = { "page":'subscription-apps', "title":'Subscription apps require players to pay a monthly fee…' };
+glossary['subscription games'] = { "page":'subscription-apps', "title":'Subscription apps require players to pay a monthly fee…' };
+glossary['supply path optimization'] = { "page":'supply-path-optimization-spo', "title":'Supply Path Optimization, or SPO, is the strategy through which buyers…' };
+glossary['supply-side platform'] = { "page":'ssp', "title":'Supply-side platforms, or SSPs, are a platform for publishers to manage…' };
+glossary['supply-side platforms'] = { "page":'ssp', "title":'Supply-side platforms, or SSPs, are a platform for publishers to manage…' };
+glossary['suppression list'] = { "page":'suppression-list', "title":'A suppression list is the list of an audience for a mobile app…' };
+glossary['suppression lists'] = { "page":'suppression-list', "title":'A suppression list is the list of an audience for a mobile app…' };
+glossary['telecom carrier'] = { "page":'telecom-carrier', "title":'A telecom carrier is a company or organization that provides telecommunications services…' };
+glossary['telecom carriers'] = { "page":'telecom-carrier', "title":'A telecom carrier is a company or organization that provides telecommunications services…' };
+glossary['tracker'] = { "page":'tracker', "title":'In mobile measurement, a tracker is a link inserted into a campaign by an advertiser…' };
+glossary['trackers'] = { "page":'tracker', "title":'In mobile measurement, a tracker is a link inserted into a campaign by an advertiser…' };
+glossary['user acquisition cost'] = { "page":'user-acquisition-cost-cac', "title":'Customer Acquisition Cost (CAC) is a metric of how much it costs to acquire a customer…' };
+glossary['user acquisition'] = { "page":'mobile-app-user-acquisition', "title":'Apps can only be successful if they have users. But quality matters as much as quantity…' };
+glossary['user acquisition'] = { "page":'user-acquisition', "title":'User acquisition is the process of acquiring users for a mobile app through…' };
+glossary['user-level attribution'] = { "page":'user-level-attribution', "title":'User-level mobile attribution can inform developers what percentage of users…' };
+glossary['user segmentation'] = { "page":'user-segmentation', "title":'User segmentation is the separation of users into groups based on shared characteristics, typically for targeting and data analysis purposes…' };
+glossary['viewability'] = { "page":'mobile-ad-viewability-2', "title":'Mobile ad viewability is the concept of how visible ads on a mobile device are to users…' };
+glossary['view-through attribution'] = { "page":'view-through-attribution', "title":'View-through attribution (VTA) tracks the impact of display advertising on user behavior.…' };
+glossary['vta'] = { "page":'view-through-attribution', "title":'View-through attribution (VTA) tracks the impact of display advertising on user behavior.…' };
+glossary['waterfall'] = { "page":'waterfall', "title":'A waterfall refers to the traditional programmatic method of ad buying…' };
+glossary['waterfalls'] = { "page":'waterfall', "title":'A waterfall refers to the traditional programmatic method of ad buying…' };
+glossary['word game'] = { "page":'word-games', "title":'Word games are simple but come in a variety of designs and concepts…' };
+glossary['word games'] = { "page":'word-games', "title":'Word games are simple but come in a variety of designs and concepts…' };
 
 if (Astro.slots.has("default")) {
   content = await Astro.slots.render("default");
 }
 
-const match = content.match(regex)!
-const body = match[1].trim()
-const page = 'https://www.applovin.com/glossary/' + match[2] + '/'
-const title = match[3]
+let body = '';
+let page = '';
+let title = '';
+let match = content.match(regex);
+if (match) {
+  body = match[1].trim();
+  page = match[2];
+  title = match[3];
+} else {
+  match = content.match(regex2);
+  if (match) {
+    const key = match[2].toLowerCase();
+    body = match[1].trim();
+    page = glossary[key]?.page;
+    title = glossary[key]?.title;
+  } else {
+    body = content;
+    const key = body.toLowerCase();
+    page = glossary[key]?.page;
+    title = glossary[key]?.title;
+  }
+}
 
-if (!body) console.log("ERROR: Glossary body missing in " + currentPath);
-if (!match[2]) console.log("ERROR: Glossary page missing in " + currentPath);
-if (!title) console.log("WARNING: Glossary title missing in " + currentPath);
+if (!body) {
+  console.log("ERROR: Glossary body missing in " + currentPath);
+}
+if (!page) {
+  if (!body) {
+    console.log("ERROR: Glossary page missing in " + currentPath + " for " + content);
+  } else {
+    console.log("ERROR: Glossary page missing in " + currentPath + " for " + body);
+  }
+} else {
+  page = 'https://www.applovin.com/glossary/' + page + '/';
+}
+if (!title) {
+  if (!body) {
+    console.log("WARNING: Glossary title missing in " + currentPath + " for " + content );
+  } else {
+    console.log("WARNING: Glossary title missing in " + currentPath + " for " + body );
+  }
+}
 ---
-{title ? <a class="glossary" href={page} title={title}><Fragment set:html={body} /></a>
-       : <a class="glossary" href={page}><Fragment set:html={body} /></a>}
+{title ? (page ? <a class="glossary" href={page} title={title}><Fragment set:html={body} /></a> : <Fragment set:html={body} />)
+       : (page ? <a class="glossary" href={page}><Fragment set:html={body} /></a> : <Fragment set:html={body} />) }

@@ -5,7 +5,7 @@ category-title: Getting Started
 slug: en/api/getting-started
 ---
 
-This guide shows you how to start <Glossary>monetizing your mobile app [mobile-app-monetization] [Mobile app monetization is an umbrella term that describes the strategy and tactics…]</Glossary> with MAX in seven easy steps, incorporating best practices to help you automate daily tasks and maximize revenue.
+This guide shows you how to start <Glossary>monetizing your mobile app [mobile app monetization]</Glossary> with MAX in seven easy steps, incorporating best practices to help you automate daily tasks and maximize revenue.
 
 <Callout type="important">
 Review AppLovin’s [Account Best Practices](https://dash.applovin.com/documentation/mediation/ui-max/account/best-practices) to ensure your account setup is compliant with AppLovin’s policies and reduce the risk of disruption to your ad serving.
@@ -18,12 +18,12 @@ AppLovin may need to approve your account before you can complete the account se
 If you encounter difficulties with setting up your account, visit the [New Account <Abbr>FAQ</Abbr>](https://support.applovin.com/hc/en-us/sections/4403763509261-New-Accounts-).
 
 ### Set Up Payment Information
-AppLovin pays you directly for <Glossary>impressions [impressions] [An impression is when a user on a device sees an advertisement…]</Glossary> served from the <Glossary>AppLovin Exchange [applovin-exchange-alx] [The AppLovin Exchange, or ALX, is AppLovin’s mobile, in-app RTB (real-time bidding) exchange…]</Glossary> or AppLovin Bidding (AppDiscovery).
+AppLovin pays you directly for <Glossary>impressions</Glossary> served from the <Glossary>AppLovin Exchange</Glossary> or AppLovin Bidding (AppDiscovery).
 Set up your payment information in the [<UILabel>Account > Payments > Info</UILabel>](https://dash.applovin.com/o/billing/accounts/) section of the AppLovin dashboard.
 If you have questions about setting up payment or tax forms, please review the [AppLovin Monetization Payment <Abbr>FAQ</Abbr>](https://support.applovin.com/hc/en-us/articles/4403801592461-FAQ-AppLovin-Monetization-Payment).
 
 ### Add Your Developer Domain to MAX
-Add your website domain (the one that you use in your app store listing and where your <Glossary>`app-ads.txt` [authorized-sellers-for-apps-app-ads-txt] [Authorized Sellers for Apps, or app-ads.txt, is an IAB Tech Lab initiative that helps ensure…]</Glossary> file is hosted, to the <UILabel>Domain</UILabel> section within [<UILabel>Account > General > Basic Info</UILabel>](https://dash.applovin.com/o/account#basic_info).
+Add your website domain (the one that you use in your app store listing and where your <Glossary>`app-ads.txt` [app-ads.txt]</Glossary> file is hosted, to the <UILabel>Domain</UILabel> section within [<UILabel>Account > General > Basic Info</UILabel>](https://dash.applovin.com/o/account#basic_info).
 Include only the root domain (for example `mywebsite.com`) in this field.
 
 This allows advertisers to find and validate your `app-ads.txt` file. Learn more at the [`app-ads.txt` Information](https://dash.applovin.com/documentation/mediation/ui-max/account/app-ads-txt-info) page in this documentation.
@@ -32,7 +32,7 @@ This allows advertisers to find and validate your `app-ads.txt` file. Learn more
 To create an ad unit, select [<UILabel>MAX > Mediation > Manage > Ad Units</UILabel>](https://dash.applovin.com/o/mediation/ad_units/) in the AppLovin dashboard.
 
 ### Add Your App
-To add your app, first choose the platform (<Glossary>Android [android] [Android is a mobile operating system designed for touchscreen devices…]</Glossary>, Fire<Abbr>OS</Abbr>, or <Glossary>iOS [ios] [iOS stands for iPhone Operating System, a mobile operating system…]</Glossary>).
+To add your app, first choose the platform (<Glossary>Android</Glossary>, Fire<Abbr>OS</Abbr>, or <Glossary>iOS</Glossary>).
 
 Next, enter your app’s name and app store <Abbr>ID</Abbr> in the input box. If your app is live in an app store, it populates within the dropdown to be selected.
 
@@ -43,7 +43,7 @@ To do this, click <UILabel>Manually Add Your Package Name</UILabel>, then type i
 ### Add Your Ad Unit
 After you add your app, add your ad unit by selecting a format and giving your ad unit a name. <em>AppLovin strongly recommends that you use a single ad unit <Abbr>ID</Abbr> for each format within an app. This ensures an ad is always cached and avoids unnecessary app/user bandwidth usage.</em>
 
-After you add your ad unit, you see the <Glossary>networks [ad-network] [An ad network is a provider of ad space…]</Glossary> available for your <Glossary>waterfall [waterfall] [A waterfall refers to the traditional programmatic method of ad buying…]</Glossary>.
+After you add your ad unit, you see the <Glossary>networks</Glossary> available for your <Glossary>waterfall</Glossary>.
 If this is the first time you are setting up your account, bypass this for now—you will have an opportunity to build the waterfall later.
 If you are already monetizing with MAX, skip to Step 6 below to learn how to set up the waterfall.
 
@@ -68,7 +68,7 @@ These platform-specific instructions show you how to do the following:
    You can find this key in the [<UILabel>Account > General > Keys</UILabel>](https://dash.applovin.com/o/account#keys) section of the AppLovin dashboard.
 1. Initialize the <Abbr>SDK</Abbr> upon app startup to allow the AppLovin <Abbr>SDK</Abbr> enough time to cache ad assets.
    This results in a better user experience.
-1. Enable [Ad Review](https://dash.applovin.com/documentation/mediation/ad-review/creative-review) so you can monitor <Glossary>creatives [creatives-and-ads] [Creatives are the assets you use as part of a user acquisition strategy to attract new users…]</Glossary> from AppLovin and networks from the MAX Dashboard.
+1. Enable [Ad Review](https://dash.applovin.com/documentation/mediation/ad-review/creative-review) so you can monitor <Glossary>creatives</Glossary> from AppLovin and networks from the MAX Dashboard.
 1. Use the MAX Terms & Privacy Policy Flow to prompt acceptance of your Terms of Use and Privacy Policy, and, for <Abbr>iOS</Abbr>, enable the [App Transparency Tracking](https://developer.apple.com/documentation/apptrackingtransparency) (<Abbr>ATT</Abbr>) prompt.
 
 ### Integrate Supported Networks
