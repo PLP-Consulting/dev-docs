@@ -1,0 +1,51 @@
+---
+title: "Enable Networks"
+description: "How to activate networks for one of your ad units within MAX."
+slug: en/api/max-dashboard/ad-units/enable-networks
+---
+With MAX, <Glossary>in-app bidding</Glossary> <Glossary>networks</Glossary> have direct relationships with you.
+Networks pay you based on their payment windows and their final numbers.
+If you have any payment-related questions, work directly with your network partner to resolve them.
+
+If you are new to <Glossary>monetization [app monetization]</Glossary> and you need help in setting up your networks, read the Mediated Network Guides for your platform.
+
+To activate networks for one of your ad units within MAX, navigate to the <UILabel>Ad Units</UILabel> page, select the ad unit, then scroll down the <UILabel>Default Waterfall</UILabel> which includes all supported networks.
+Only enable those networks for which you successfully integrated the <Glossary>SDK</Glossary> and which you [connected to MAX](../networks/connect-networks).
+
+![Default Waterfall. Bidder Networks, Other Networks](/images/enable-networks-01.png)
+
+Bidder Networks:
+: To activate a bidder network, first click the arrow drop-down to the right of the network name.
+  This expands the section for that network.
+  Add your network <Abbr>ID</Abbr>s and click the <UILabel>Status</UILabel> toggle to turn the network on.
+  (AppLovin demand is enabled by default and no other actions are required to receive its ads.)<br />
+  ![Default Waterfall: Bidder Networks](/images/enable-networks-02.png)
+
+Other Networks:
+: To activate one of the other networks, first click the arrow drop-down to the right of the network name.
+  This expands the section for that network.
+  Add your network <Abbr>ID</Abbr>s, <UILabel><Abbr>CPM</Abbr> Price</UILabel> (this should mirror the price floor that you set with the network and associated with the network <Abbr>ID</Abbr>), and <UILabel>Country Targeting</UILabel> if applicable.
+  If you have multiple network <Abbr>ID</Abbr>s, click <UILabel>Add a New Ad Unit <Abbr>ID</Abbr></UILabel> to repeat the process.<br />
+  ![Default Waterfall: Other Networks](/images/enable-networks-03.png)
+
+  [Auto-<abbr title="cost per mille">CPM</abbr>](https://dash.applovin.com/documentation/mediation/ui-max/networks/auto-cpm):
+  : After you connect your network, auto-<Glossary>CPM</Glossary> activates within a day or two to sync with the actual <Glossary>eCPM</Glossary> the network pays you.
+
+Custom Networks:
+: If you have not done so already, create your custom network on the <UILabel>Networks</UILabel> tab.
+  Your network then shows up in the relevant format’s <Glossary>waterfall</Glossary>.
+  You can turn on the network by clicking the drop-down arrow to the right of the network name and moving the <UILabel>Status</UILabel> toggle to the on position.
+
+Direct Sold Campaigns:
+: To enable this feature, contact your account team or [the support team](https://support.applovin.com/hc/en-us/requests/new) for assistance.
+  Then follow the instructions on [the Direct Sold page](https://dash.applovin.com/documentation/mediation/features/direct-sold) to set up a campaign.
+
+## App <Abbr>ID</Abbr> Validation
+
+For networks within the same ad unit, both in the same waterfall and intra-waterfall, AppLovin validates that app-level network <Abbr>ID</Abbr>s are consistent throughout, to prevent initialization issues.
+If there is an app <Abbr>ID</Abbr> level mismatch for a network, you cannot save the ad unit and you see an error with the network, for example:
+
+![Ogury cannot be enabled with different Asset Key](/images/enable-networks-04.png)
+<Callout type="note">
+  This does not apply to Pangle in China. AppLovin allows you to enter different app <abbr title="identifier">ID</abbr>s for the bidding and the traditional instance.
+</Callout>
