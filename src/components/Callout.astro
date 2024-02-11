@@ -20,6 +20,7 @@ const typeMap = new Map<String, BannerKind>([
   ["note", "primary"],
   ["tip", "positive"],
   ["seealso", "positive"],
+  ["related", "positive"],
   ["important", "warning"],
   ["warning", "negative"],
 ]);
@@ -66,5 +67,5 @@ if (Astro.slots.has("default")) {
 
 <table>
  <thead><tr><th>{title ? title : typeTitle}:{bannerType}</th></tr></thead>
- <tbody><tr><td><Fragment set:html={content} slot="description" /></td></tr></tbody>
+ <tbody><tr><td><Fragment set:html={content} /></td></tr></tbody>
 </table>
