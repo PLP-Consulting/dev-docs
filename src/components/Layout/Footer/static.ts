@@ -1,37 +1,35 @@
-export const adjustLink = "https://www.adjust.com";
+export const applovinBase = "https://www.applovin.com"
 
 export const footerLinks = [
-  { text: "About Us", url: `${adjustLink}/company/` },
-  { text: "Security", url: `${adjustLink}/security/` },
   {
-    text: "Privacy Policy",
-    url: `${adjustLink}/terms/privacy-policy/`,
+    text: "About Us",
+    url: `${applovinBase}/about`,
   },
   {
-    text: "Terms & Conditions",
-    url: `${adjustLink}/terms/general-terms-and-conditions/`,
+    text: "Terms",
+    url: `${applovinBase}/terms`,
   },
-  { text: "CCPA & GDPR", url: `${adjustLink}/terms/ccpa/` },
   {
-    text: "Legal Notice",
-    url: `${adjustLink}/terms/impressum/`,
+    text: "Privacy",
+    url: `${applovinBase}/privacy`,
+  },
+  {
+    text: "Your California Privacy Choices",
+    url: `${applovinBase}/privacy-ca-residents`,
+  },
+  {
+    text: "EULA",
+    url: `${applovinBase}/eula/`,
+  },
+  {
+    text: "DMCA",
+    url: `${applovinBase}/dmca/`,
   },
 ];
 
 export const footerIcons = [
-  {
-    name: "wechat-icon",
-    link: "https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzIzODg5ODQwMg==",
-  },
-  { name: "facebook-icon", link: "https://www.facebook.com/adjustcom" },
-  { name: "twitter-icon", link: "https://twitter.com/adjustcom" },
-  { name: "instagram-icon", link: "https://www.instagram.com/adjustcom/" },
-  {
-    name: "linkedin-icon",
-    link: "https://www.linkedin.com/company/adjustcom/",
-  },
-  {
-    name: "youtube-icon",
-    link: "https://www.youtube.com/channel/UCLxY21pzKyjTuODjUytJIsA",
-  },
+  { name: "facebook-icon", link: "https://www.facebook.com/AppLovin" },
+  { name: "twitter-icon", link: "https://twitter.com/AppLovin" },
+  { name: "instagram-icon", link: "https://www.instagram.com/applovin" },
+  { name: "linkedin-icon", link: "https://www.linkedin.com/company/applovin" },
 ];
