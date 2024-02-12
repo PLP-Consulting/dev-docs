@@ -1,0 +1,35 @@
+---
+title: "Account Info"
+description: "Manage your account information in the Account > General section of the AppLovin Dashboard."
+slug: en/api/max-dashboard/account/account-info
+---
+Manage your account information in the [<UILabel>Account &gt; General</UILabel>](https://dash.applovin.com/o/account) section of the AppLovin Dashboard.
+
+[<UILabel>Basic Info</UILabel>](https://dash.applovin.com/o/account#basic_info) includes information such as your name, email, company name, and domain.
+For <UILabel>Domain</UILabel>, add the developer website that you use in your app store listing, and where you host <Glossary>your `app-ads.txt` file [app-ads.txt]</Glossary>.
+Include only the root domain (for example: `mywebsite.com`), not the filename or page name.
+Learn more about `app-ads.txt` at [the `app-ads.txt` Information page](https://dash.applovin.com/documentation/mediation/ui-max/account/app-ads-txt-info) in this documentation.
+
+[<UILabel>Password</UILabel>](https://dash.applovin.com/o/account#password) is where you can update the password for your account.
+Your password must contain letters and numbers.
+The minimum length is eight characters.
+
+## Keys
+
+Important <Abbr title="application programming interface">API</Abbr> keys for your MAX account are stored here.
+You can copy them from the <UILabel>Keys</UILabel> page when you need to.
+To access this page, go to [<UILabel>Account &gt; General &gt; Keys</UILabel>](https://dash.applovin.com/o/account#keys) in the AppLovin Dashboard.
+
+- You need the <UILabel><Abbr>SDK</Abbr> Key</UILabel> during the initialization process to initialize the <Glossary>SDK</Glossary>.
+- Use the <UILabel>Report Key</UILabel> (also known as the <Abbr>API</Abbr> Key) to authenticate the endpoint for all Reporting <Abbr>API</Abbr> connections.
+- You need the <UILabel>Management Key</UILabel> to use the [Ad Unit Management <Abbr>API</Abbr>](https://dash.applovin.com/documentation/mediation/features/ad-unit-automation-api).
+  Request this from your account team.
+- Use the <UILabel>Event Key</UILabel> for the [<Abbr>S2S</Abbr> Impression Revenue <Abbr>API</Abbr>](https://dash.applovin.com/documentation/mediation/features/s2s-impression-revenue-api#server-to-server-impression-revenue-api).
+- You need the <UILabel>Ad Review Key</UILabel> to enable [Ad Review](https://dash.applovin.com/documentation/mediation/ad-review/overview) within the <Abbr>SDK</Abbr> during the integration process.
+
+## Two-Step Verification
+
+MAX protects your MAX account with two-step verification that you set up when you create your account.
+At login, MAX may prompt you to enter a security code that MAX texts to your mobile phone.
+To change the phone number that MAX uses for two-step verification, go to [<UILabel>Account &gt; General &gt; 2-Step Verification</UILabel>](https://dash.applovin.com/o/account#two_step_verification) in your AppLovin Dashboard, click the <UILabel>Edit button</UILabel> and follow the prompts on the page.
+

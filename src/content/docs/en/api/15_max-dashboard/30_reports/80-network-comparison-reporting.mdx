@@ -1,0 +1,28 @@
+---
+title: "Network Comparison Reporting"
+description: "The Network Comparison report helps you identify and address reporting discrepancies between MAX and network partners."
+slug: en/api/max-dashboard/reports/network-comparison-reporting
+---
+The Network Comparison report helps you identify and address reporting discrepancies between MAX and <Glossary>network</Glossary> partners.
+It centralizes MAX- and network-reported data into one dashboard so you can compare stats without having to download multiple reports.
+The dashboard metrics include <Glossary>impressions</Glossary>, <Glossary>CPM</Glossary>, and revenue and the report calculates the differences between the two platforms.
+
+Use this report to validate that network <Abbr>CPM</Abbr>s are aligned with <Abbr>CPM</Abbr>s reported in MAX.
+Because network data powers auto-<Abbr>CPM</Abbr> updating and <Glossary>bidding</Glossary>, it is important that you ensure MAX is pulling in accurate information for networks competing in the unified auction so you do not lose revenue.
+
+[Schedule important reports to have them delivered via email on a regular basis.](./scheduled-reporting)
+
+Before you use the report, [connect your networks](../networks/connect-networks) on the <UILabel>Networks</UILabel> page.
+From there, navigate to [<UILabel>MAX &gt; Mediation &gt; Debug Reports &gt; Network Comparison</UILabel>](https://dash.applovin.com/o/mediation/network_comparison_report).
+The <span class="uilabel"><Abbr>CPM</Abbr> Delta</span> metric is a great starting point for identifying discrepancy issues.
+Include network placement, application, ad type, and country (if applicable) in the report filters for a granular breakdown to identify discrepancy issues.
+
+![Network. Ad Type. MAX Imps. Network Imps. Imp Delta. MAX Rev. Network Rev. Rev Delta. Max CPM. Network CPM. CPM Delta.](/images/network-comparison-reporting-01.png)
+
+<Callout type="note">
+If you don’t see your network appear in the report, try reconnecting to the network on the <UILabel>Networks</UILabel> page.
+
+You may see higher discrepancies between network and MAX numbers at launch and when user adoption rates are low, but this should stabilize as adoption increases.
+
+If there are discrepancies greater than 5% for one or more network placement <Abbr>ID</Abbr>s after full adoption, reach out to your account team or submit a support ticket for assistance troubleshooting.
+</Callout>

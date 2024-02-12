@@ -1,0 +1,72 @@
+---
+title: "Advanced Reporting"
+description: "MAX Advanced Reporting delivers real-time, granular insights that help you understand your monetization performance."
+slug: en/api/max-dashboard/reports/advanced-reporting
+---
+MAX Advanced Reporting ([<UILabel>MAX &gt; Mediation &gt; Analyze &gt; Advanced Reporting</UILabel>](https://dash.applovin.com/o/mediation/report)) delivers real-time, granular insights that help you understand your <Glossary>monetization [app monetization]</Glossary> performance.
+You can run hourly, daily, or weekly reports to analyze trends and deep-dive into your app’s performance.
+[Schedule important reports to have them delivered via email on a regular basis.](./scheduled-reporting)
+
+Select <UILabel>Chart</UILabel> to see a visual representation of your app performance, or select the <UILabel>Table</UILabel> view.
+
+![Advanced Reporting. Select a Saved Report: Chart/Table. Run Report. View By. X-axis. Y-axis. Hide Controls. Export as CSV. Hour / Master Publishing Account (MPA) / Account / Application / Network / Network Placement / Ad Unit Name / Waterfall / Ad Unit Test / Ad Placement / Platform / Country / Ad Type / Has IDFA](/images/advanced-reporting-01.png)
+
+From the chart view, you can filter data to more closely examine your app’s performance and choose from the <UILabel>View By</UILabel> options to create different views that help you to visualize more granular data.
+Filter reports by checking the checkbox associated with the field you want to filter on.
+These fields include:
+
+Network Placement
+: the unique <Glossary>network</Glossary> placement <Abbr>ID</Abbr> that you use per network and per ad format
+
+Ad Unit Name
+  : the name that you assign to each MAX ad unit at the time you create it
+
+Ad Unit Test
+  : the segment of an <Glossary>A/B Test</Glossary> that you are running
+    <Callout type="note">
+    You can analyze the control <Abbr>vs.</Abbr> test behavior of each of your test varieties for the dates and hours you select.
+    </Callout>
+
+Ad Placement
+  : the placement name that you assign when you integrate each ad format, for granular reporting (e.g. `Rewarded_Store`, `Rewarded_LevelEnd`)
+
+For reports that you frequently run, you can save time by using the <UILabel>Select a Saved Report</UILabel> feature that is available in all reports.
+MAX also offers Compare functionality with which you can catch the trends in your monetization stack on an hourly, daily, or weekly basis.
+This way you don’t lose the chance to maximize revenue.
+
+## Metrics
+
+Requests
+: the number of times your app requested an ad to be loaded for a unique <Glossary>impression</Glossary> opportunity
+
+Attempts
+: the number of times your app successfully requested an ad from a network partner
+  <Callout type="note">
+  For <Glossary>in-app bidders</Glossary> that have full access to all impression opportunities, requests should equal attempts.
+  </Callout>
+
+Responses
+: for in-app bidders, the number of times any of the bidding-enabled <Glossary>mediated</Glossary> networks returns a valid bid response
+
+Fill Rate
+: for in-app bidders, the bid rate, that is: the number of ad requests that a bidder fills with an ad response
+  <Callout type="note">
+  While some bidders prefer to bid on all opportunities with a high bid response rate, some will only bid on a select group of users where they have applicable and competitive demand.
+  AppLovin sees a range of 40% to 90% bid rate across all our bidders.
+  </Callout>
+
+Impressions
+: the total number of ads that your app shows its users
+  <Callout type="note">
+  Impressions reported by MAX may differ from what the ad network reports due to several factors (such as different time zones).
+  </Callout>
+
+Estimated Revenue
+: the total revenue that your app generates for the impressions that it shows to the users of the app
+  <Callout type="note">
+  Revenue reported by MAX may differ from what the ad network reports due to several factors (e.g. different time zones).
+  </Callout>
+
+<Abbr>eCPM</Abbr>
+: <Glossary>effective cost per thousand</Glossary> impressions based on the revenue that your app generates for the impressions that your app shows the users
+

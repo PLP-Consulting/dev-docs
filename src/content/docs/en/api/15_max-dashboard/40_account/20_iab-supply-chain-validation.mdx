@@ -1,0 +1,89 @@
+---
+title: "app-ads.txt Info"
+description: "Use app-ads.txt to prove to advertisers that you own the app that originates an ad request."
+slug: en/api/max-dashboard/account/app-ads.txt-info
+---
+The Interactive Advertising Bureau (<Abbr>IAB</Abbr>) created <Glossary>`app-ads.txt` [app-ads.txt]</Glossary> as a way for app publishers to prove to advertisers that they own the app that originates an ad request.
+App publishers host this text file on the website that is linked from the Google Play Store and/or Apple App Store.
+This file includes a reference to all ad sources that are authorized to sell your app inventory.
+You make this file publicly available and crawlable by <Glossary>exchanges [ad exchange]</Glossary>, <Glossary>supply-side platforms</Glossary> (<Abbr>SSP</Abbr>s), other buyers, and third-party vendors.
+
+When an app sends out an ad request, an advertiser can check the app store page for the developer website, find the corresponding `app-ads.txt` file at that site, and verify that the publisher <Abbr>ID</Abbr> in the ad request matches the <Abbr>ID</Abbr> in the `app-ads.txt` file.
+This prevents a malicious actor from faking ad requests from an app, because the publisher <Abbr>ID</Abbr> in their ad request will not match the publisher <Abbr>ID</Abbr> included in the `app-ads.txt` file.
+
+Many advertisers will not bid on apps that do not have a valid `app-ads.txt` file.
+
+<Callout type="note">
+As per [the <Abbr>IAB</Abbr> `Sellers.json` spec](https://iabtechlab.com/wp-content/uploads/2019/07/Sellers.json_Final.pdf), you can use only one domain per Seller <Abbr>ID</Abbr> (MAX Account).
+It is invalid for a `seller_id` to represent multiple entities.
+</Callout>
+
+To maximize the number of <Glossary>bidders [in-app bidding]</Glossary> who bid on your app inventory, maximize your revenue, and safeguard your app against certain types of fraud, AppLovin strongly recommends that you maintain an `app-ads.txt` file and that you include AppLovin as an authorized ad source in that file.
+
+<Callout type="related">
+  [“Fight fraud and improve eCPMs: How to implement `app-ads.txt` for your app”](https://www.applovin.com/blog/fight-fraud-and-improve-ecpms-how-to-implement-app-ads-txt-for-your-app/)
+  from the AppLovin Mobile Apps Blog.
+</Callout>
+
+## How to Implement an `app-ads.txt` File
+1. Add your developer website to the app store.
+   You must link your developer website in your store listings in Google Play and/or the App Store so that AppLovin and other ad platforms can establish your app’s ownership.
+   - For Google Play, add your developer website <Abbr>URL</Abbr> in the Developer contact section of your app listing:
+     1. Sign in to your Play Console.
+     1. Select your app.
+     1. In the menu on the left, select <UILabel>Store presence &gt; Store listing</UILabel>.
+     1. Scroll to <UILabel>Developer contact</UILabel>.
+     1. Add your developer website <Abbr title="uniform resource locator">URL</Abbr>.
+   - For the Apple App Store, place your `app-ads.txt` file at the same domain that you use for <UILabel>App Privacy</UILabel>.
+1. Create your `app-ads.txt` file.
+   Add the `app-ads.txt` file to the root directory of your developer website.
+   In this file, list all authorized sellers of your app inventory.
+   To do this, ask each of the <Glossary>ad networks</Glossary> that you connected to your app for the relevant lines you should add to your `app-ads.txt` file.
+
+   You must format your `app-ads.txt` file according to the specifications of the <Abbr>IAB</Abbr> Tech Lab so that your file can be successfully verified by those who use it.
+   Review the [Authorized Sellers for Apps specification](https://www.iabtechlab.com/wp-content/uploads/2019/03/app-ads.txt-v1.0-final-.pdf) provided by the <Abbr>IAB</Abbr> Tech Lab.
+   <Callout type="note">
+   You must use `utf-8` character encoding in your `app-ads.txt` file.
+   Your web server must serve this file as `Content-type: text/plain`.
+   </Callout>
+1. Add AppLovin to your `app-ads.txt` file.
+   You can find the relevant AppLovin lines to add to your `app-ads.txt` file at the [<UILabel>Account &gt; General &gt; App-ads.txt Info</UILabel>](https://dash.applovin.com/o/account#app_ads_txt) page in the AppLovin Dashboard.
+1. Register the root domain of your developer website <Abbr>URL</Abbr> (for example: `mywebsite.com`) in the <UILabel>Domain</UILabel> field at [<UILabel>Account &gt; General &gt; Basic Info</UILabel>](https://dash.applovin.com/o/account#basic_info) in the AppLovin Dashboard.
+   As per [the <Abbr>IAB</Abbr> specification](https://iabtechlab.com/wp-content/uploads/2019/07/Sellers.json_Final.pdf#%5B%7B%22num%22%3A17%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C70%2C528%2C0%5D), you can use only one `domain` in the <Glossary>`sellers.json` [sellers.json]</Glossary> file that AppLovin manages.
+   If your MAX account is used by multiple studios or game developers then choose one of the following two options:
+   - Use the same developer website <Abbr>URL</Abbr> in the store listings for all the apps that you manage with your AppLovin account.
+   - If you cannot use the same developer website for all of the apps that you manage with the MAX account, then each of the developer websites must establish an <Abbr>HTTP</Abbr> redirect that diverts requests for the `app-ads.txt` file at these developer websites to the `app-ads.txt` file that you host on the <UILabel>Domain</UILabel> that you enter into your MAX Account.
+      As per the <Abbr>IAB</Abbr> Spec, [“Only a single <Abbr>HTTP</Abbr> redirect to a destination outside the original root domain is allowed to facilitate one-hop delegation of authority to a third party’s web server domain. If the third party location returns a redirect, then the advertising system should treat the response as an error.”](https://iabtechlab.com/wp-content/uploads/2019/07/Sellers.json_Final.pdf#%5B%7B%22num%22%3A10%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C70%2C279%2C0%5D)
+      For example, the MAX Account “Animal Kingdom” manages the apps from the following studios:
+      - Studio Bears
+      - Studio Tigers
+      - Studio Monkeys
+
+      The owner of the MAX Account should host an `app-ads.txt` file on `animalkingdom.com` and use `animalkingdom.com` as the Domain in the MAX <Abbr>UI</Abbr> (which is then published to AppLovin’s `seller.json` file).
+      The studios set the developer websites in the store for their apps to be their sites— `www.studiobears.com` or `www.studiotigers.com` or `www.studiomonkeys.com`.
+      These studios must redirect requests for the `app-ads.txt` file at the domain of the developer websites indicated in the app store—`www.studiobears.com/app-ads.txt` or `www.studiotigers.com/app-ads.txt` or `www.studiomonkeys.com/app-ads.txt`—to `animalkingdom.com/app-ads.txt`.
+
+### Example
+Here is an example `app-ads.txt` file:
+
+```plaintext title="app-ads.txt"
+# Network Name, Publisher/Account ID, Relationship Type
+applovin.com, 9eaf9ad6dc92d5fcn6f47c30168fb8fq, DIRECT
+mintegral.com, 19435, DIRECT, 0aeed123c80d6423
+google.com, pub-3940498599942544, DIRECT, f08c47fec0986fa0
+```
+## Best Practices
+- Double-check that you accurately copied-and-pasted each network line entry into your `app-ads.txt` file.
+- Reach out to all of your integrated ad partners (networks, exchanges, buyers, and so forth) to request their `app-ads.txt` entry for your file.
+  Check with them regularly for updates.
+- Be careful of unknown companies reaching out directly and requesting to be added to your `app-ads.txt` file.
+  AppLovin strongly advises that you only list companies that you and your <em>direct</em> <Glossary>SSP</Glossary> partners work with.
+- Use the helpful [ads.txt Validator](https://adstxt.guru/validator/) website to validate that your `app-ads.txt` entries are correct and up-to-date.
+- Check your `app-ads.txt` integration by using the Mediation Debugger.
+  Here is an example of how the Mediation Debugger appears when you have successfully integrated `app-ads.txt`:
+
+  ![MAX. SDK Version: 11.6.0. Plugin Version: None. Ad Review Version: ❌. app-ads.txt: ✅](/images/app-ads-txt-01.png)
+
+<Callout type="note">
+<Glossary>SDK</Glossary> v11.6.0 may show an inaccurate integration error.
+</Callout>
