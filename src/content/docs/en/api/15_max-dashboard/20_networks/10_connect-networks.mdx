@@ -1,0 +1,31 @@
+---
+title: "Connect Networks"
+description: "To activate networks in your ad unit waterfall, you must first connect them to MAX."
+slug: en/api/max-dashboard/networks/connect-networks
+---
+To activate <Glossary>networks</Glossary> in your ad unit <Glossary>waterfall</Glossary>, you must first connect them to MAX.
+This aligns MAX estimated stats with network-reported revenue numbers, which powers <Glossary>in-app bidding</Glossary> and auto-<Glossary>CPM</Glossary>.
+It’s important that you connect your networks and enable [auto-<Abbr>CPM</Abbr>](./auto-cpm) so that the competition between your networks is accurate and automated.
+
+After you connect your networks on the <UILabel>Manage Networks</UILabel> page, [enable them within the waterfalls of your ad units](../ad-units/enabling-networks).
+
+## Supported Networks
+
+Select [<UILabel>Mediation &gt; Manage &gt; Networks</UILabel>](https://dash.applovin.com/o/mediation/networks) in your AppLovin dashboard and connect all the networks that you want to <Glossary>mediate</Glossary>.
+
+![Manage Networks. Please connect networks to get accurate network reporting in your MAX account. Search for networks. Table of networks: Network, Supported Ad Units, Status.](/images/connect-networks-01.png)
+
+When you click the <UILabel>Connect</UILabel> button in the row representing a network that you want to connect, a <UILabel>Manage Network</UILabel> page for that network appears.
+Click the grey <UILabel>ⓘ</UILabel> button on that page to view integration instructions for that network.
+
+![Manage Network. Network Credentials. Please enter your AdColony account settings. To access your AdColony settings, log into your dashboard and navigate to your Account Settings section to access your API key.](/images/connect-networks-02.png)
+
+If you need to add multiple instances of a network to MAX, scroll to the bottom of the <UILabel>Manage Networks</UILabel> page and click <UILabel>Click here to add another instance of an existing network for reporting</UILabel>.
+
+## Custom Networks
+
+If you have a custom <Glossary>SDK</Glossary> network, scroll to the bottom of the <UILabel>Manage Networks</UILabel> page and click <UILabel>Click here to add a Custom Network</UILabel>.
+Then toggle to your desired ad format and add your network tag or adapter class name to complete the setup.
+Custom networks are not eligible for in-app bidding or auto-<Abbr>CPM</Abbr>.
+
+![Manage Network. Network Type radio buttons: JS Tag, SDK. Custom Network Name input field. Banner tab. Custom Network Tag input field.](/images/connect-networks-03.png)

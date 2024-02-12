@@ -1,0 +1,48 @@
+---
+title: "Auto-CPM"
+description: "Auto-CPM automates CPM updating for non-bidding networks."
+slug: en/api/max-dashboard/networks/auto-cpm
+---
+Auto-<Glossary>CPM</Glossary> automates <Abbr>CPM</Abbr> updating for non-bidding <Glossary>networks</Glossary>.
+This aligns the <Abbr>CPM</Abbr> price for a network placement <Abbr>ID</Abbr> in the MAX Dashboard with the network-reported <Abbr>CPM</Abbr>.
+
+The <Abbr>CPM</Abbr> price updates daily according to the average network <Abbr>CPM</Abbr> for the last seven days.
+Auto-<Abbr>CPM</Abbr> supports ad unit/network placement/country granularity.
+The network <Abbr>ID</Abbr> must have at least 1,000 <Glossary>impressions</Glossary> in the last seven days to enable <Abbr>CPM</Abbr> updating within MAX.
+
+<Callout type="note">
+MAX applies heavier weighting to more recent data in its seven day look-back.
+This may cause adjusted <Abbr>CPM</Abbr> to not exactly match the average <Abbr>CPM</Abbr>.
+
+Networks whose reporting does not break down to ad unit/network <Abbr>ID</Abbr>/country granularity are not eligible for auto-<Abbr>CPM</Abbr>.
+Custom networks are also not eligible for auto-<Abbr>CPM</Abbr>.
+</Callout>
+
+Auto-<Abbr>CPM</Abbr> allows for fair competition between all networks in the unified auction because it uses accurate pricing.
+This also reduces the work of manually updating <Abbr>CPM</Abbr>s which can lead to inaccurate or decreased revenue.
+
+If you do not enable auto-<Abbr>CPM</Abbr>, MAX uses the value for <Abbr>CPM</Abbr> price that you enter manually.
+
+## Activating Auto-<abbr title="cost per mille">CPM</abbr>
+
+To activate auto-<abbr title="cost per mille">CPM</abbr>, follow these steps:
+
+1. Manually add the network price floor for each network placement <Abbr>ID</Abbr> in the <Glossary>waterfall(s)</Glossary> on the <UILabel>Ad Unit</UILabel> page.
+   It’s important that the MAX <Abbr>CPM</Abbr> price initially matches the network <Abbr>CPM</Abbr> floor or historical <Abbr>CPM</Abbr> to avoid data discrepancies later.
+1. Open the <UILabel>Networks</UILabel> page ([<UILabel>MAX &gt; Mediation &gt; Manage &gt; Networks</UILabel>](https://dash.applovin.com/o/mediation/networks)) and connect the network that you want to <Glossary>mediate</Glossary> by entering the network <Abbr>API</Abbr> credentials.
+1. Click the <UILabel>Connect</UILabel> button for the network that you want to activate.
+   The <UILabel>Manage Network</UILabel> page appears.
+   For non-bidding networks, you will see a toggle with which you can turn on auto-<Abbr>CPM</Abbr>.
+   <Glossary>Bidding</Glossary> networks submit <Glossary>real-time bid</Glossary> pricing and so they do not utilize auto-<Abbr>CPM</Abbr>.
+
+![Manage Networks &gt; AdMob. Manage Network. AdMob by Google. Auto-CPM toggle. Network Credentials: You have successfully connected this account. To reconnect it with new credentials click here. Save button. Cancel button.](/images/auto-cpm-01.png)
+
+Any network placement <Abbr>ID</Abbr>s that are governed by auto-<Abbr>CPM</Abbr> will show the <Abbr>CPM</Abbr> price grayed-out in the waterfall.
+Click the info <UILabel>ⓘ</UILabel> button within the <Abbr>CPM</Abbr> price field for options either to override auto-<Abbr>CPM</Abbr> by manually entering the <Abbr>CPM</Abbr> or to see a detailed breakdown of the <Abbr>CPM</Abbr> values used.
+
+![Ad Unit 1: $7, Include All. Ad Unit 2: $2, Exclude 5. + Add New Ad Unit button.](/images/auto-cpm-02.png)
+
+<Callout type="warning">
+To ensure that auto-<Abbr>CPM</Abbr> works with accurate data, use the [Network Comparison Report](https://dash.applovin.com/documentation/mediation/ui-max/reports/network-comparison) to check for <Abbr>CPM</Abbr> and revenue discrepancies on a weekly basis.
+If there are discrepancies greater than 5%, use the report to identify the affected network <Abbr>ID</Abbr>s, then contact your account team or submit a support ticket for assistance with troubleshooting.
+</Callout>
