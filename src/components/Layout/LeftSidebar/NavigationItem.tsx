@@ -27,7 +27,7 @@ const LeftSidebarItem: FC<{
       <li
         key={sidebarData.title}
         className={classNames(
-          "relative hover:text-link-active  min-h-[31px] text-sm",
+          "relative hover:text-link-active min-h-[31px] text-sm",
           {
             "text-link-active": currentPage === sidebarData.slug,
             "pl-2": level > 2,
@@ -51,25 +51,24 @@ const LeftSidebarItem: FC<{
               )}
             </>
           ) : null}
-          <a
-            href={`/${sidebarData.slug}`}
-            className={classNames(
-              "inline-block w-full text-sm hover:no-underline",
-              {
-                "text-link-active": currentPage?.slice(1) === sidebarData.slug,
-                "font-bold": level === 1,
-                "font-medium": isOpen,
-                "font-normal": level > 1 && !isOpen,
-                "ml-[21px]": level > 2 && !isChilds,
-              }
-            )}
+          <a href={`/${sidebarData.slug}`}
+             className={classNames(
+               "inline-block w-full text-sm hover:no-underline",
+               {
+                 "text-link-active": currentPage?.slice(1) === sidebarData.slug,
+                 "font-bold": level === 1,
+                 "font-medium": isOpen,
+                 "font-normal": level > 1 && !isOpen,
+                 "ml-[21px]": level > 2 && !isChilds,
+               }
+             )}
           >
             {sidebarData.title}
           </a>
         </div>
       </li>
-      {isOpen
-        ? sidebarData?.children?.map((child) => (
+      { isOpen ?
+          sidebarData?.children?.map((child) => (
             <LeftSidebarItem
               key={child.path}
               currentPage={currentPage}
@@ -77,7 +76,8 @@ const LeftSidebarItem: FC<{
               level={child.level}
             />
           ))
-        : null}
+        : null
+      }
     </ul>
   );
 };

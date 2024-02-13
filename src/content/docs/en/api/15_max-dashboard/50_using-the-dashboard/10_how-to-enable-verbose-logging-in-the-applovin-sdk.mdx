@@ -1,0 +1,21 @@
+---
+title: "How to Enable Verbose Logging in the AppLovin SDK"
+description: "How to enable verbose logs via the output console / logcat and how to verify that verbose logs are enabled."
+slug: en/api/max-dashboard/using-the-dashboard/how-to-enable-verbose-logging-in-the-applovin-sdk
+---
+For instructions on how to enable verbose logs via the output console / logcat, see the Advanced Settings page for your platform.
+
+To verify that you enabled verbose logs successfully, check for this line — `Verbose Logging On: true` — in the AppLovin <Abbr>SDK</Abbr> initialization block:
+
+```plaintext
+========================================
+AppLovin SDK
+Version: 9.13.4
+⋮
+Verbose Logging On: true
+⋮
+========================================
+```
+
+You can then find AppLovin verbose logs in logcat or XCode terminal as lines that start with `/AppLovinSdk: [AppLovinSdk]`.
+

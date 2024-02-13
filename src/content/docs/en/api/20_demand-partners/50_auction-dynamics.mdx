@@ -1,0 +1,33 @@
+---
+title: "Auction Dynamics"
+description: "The MAX In-App Bidding Exchange is a first-price, fair and transparent, unified first-price auction in which the highest bidder wins."
+slug: en/api/demand-partners/auction-dynamics
+---
+
+The MAX <Glossary>In-App Bidding</Glossary> Exchange is a first-price, fair and transparent, unified first-price auction in which the highest bidder wins.
+All <Glossary>SDK</Glossary> in-app bidders and <Glossary>DSPs</Glossary> have equal access to each ad <Glossary>impression</Glossary> opportunity and receive full notification coverage with enhanced macros.
+
+The MAX In-App Bidding Exchange collects bids for individual impression opportunities from <Abbr>SDK</Abbr>-based demand partners and <Abbr>DSP</Abbr>s by using the Open<Glossary>RTB</Glossary> 2.5 protocol.
+To integrate with MAX, a bidder must comply with the Open<Abbr>RTB</Abbr> 2.5 <Abbr>API</Abbr>.
+
+For the latest version of the MAX in-app bidding spec for <Abbr>SDK</Abbr>-based in-app bidders, see [the AppLovin <Abbr>oRTB</Abbr> Specification page](https://support.applovin.com/hc/en-us/articles/11623322707085)
+
+## MAX Ad Serving Flow
+
+![Device: Publisher App makes Ad Request to MAX SDK; Token abc goes to Demand Source 1 Adapter and then to Demand Source 1 SDK; Token def goes to Demand Source 2 Adapter and then to Demand Source 2 SDK; Ad Request with both tokens goes to MAX Ad Server. MAX Server: Waterfall goes to Max Ad Server which communicates with AppLovin Exchange. Third Party Server: Demand Source Bidders send bid responses to MAX Ad Server and get bid requests with tokens in return. AppLovin Exchange communicates with DSPs one through three.](/images/auction-dynamics-01.png)
+
+  1. The user launches the app.
+  1. MAX initializes all eligible <Abbr>SDK</Abbr>s. 
+  1. The publisher requests an ad.
+  1. For <Abbr>SDK</Abbr> bidders, MAX collects bid tokens from initialized <Abbr>SDK</Abbr>s. 
+  1. MAX <Abbr>SDK</Abbr> makes an ad request to MAX ad server.
+  1. MAX auction server requests bids from eligible <Abbr>SDK</Abbr> bidder endpoints and <Abbr>DSP</Abbr>s in <Glossary>AppLovin Exchange</Glossary>.
+     Identity tokens are passed in the bid request to <Abbr>SDK</Abbr> bidders.
+  1. Real-time bids returned by <Abbr>DSP</Abbr>s and <Abbr>SDK</Abbr> bidders within the maximum timeout threshold (tmax) are merged with the non-bidding demand sources in the publisher <Glossary>waterfall</Glossary>.
+  1. MAX auction server resolves the auction based on the highest <Glossary>CPM</Glossary> value.
+  1. MAX sends loss notifications to bidders that lose the auction due to error or invalid bid (e.g. below the floor, missing bid value, zero as bid price).
+  1. If the winner is a <Abbr>DSP</Abbr>, MAX notifies the <Abbr>DSP</Abbr> and AppLovin <Abbr>SDK</Abbr> is asked to load and show the ad.
+     If the winner is an <Abbr>SDK</Abbr> bidder, MAX notifies the winning demand partner’s <Abbr>SDK</Abbr> to load and show the ad.
+  1. If the load succeeds, MAX sends a win notification to the bidder.
+     If the load does not succeed, MAX sends a loss notification to the bidder.
+  1. MAX calls the winner’s billing <Abbr>URL</Abbr> after the ad renders.

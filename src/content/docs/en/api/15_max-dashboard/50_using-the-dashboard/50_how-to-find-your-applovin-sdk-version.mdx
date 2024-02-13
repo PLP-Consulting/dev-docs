@@ -1,0 +1,81 @@
+---
+title: "How to Find Your AppLovin SDK Version"
+description: "You can discover which AppLovin SDK version you are using in multiple ways."
+slug: en/api/max-dashboard/using-the-dashboard/how-to-find-your-applovin-sdk-version
+---
+
+You can discover which AppLovin <Glossary>SDK</Glossary> version you are using in multiple ways:
+
+## Log
+
+The AppLovin <Abbr>SDK</Abbr> prints the <Abbr>SDK</Abbr> version to the log as part of the initialization process.
+You will find these lines in the device log:
+
+```plaintext
+========================================
+AppLovin SDK
+Version: <var>X</var>.<var>XX</var>.<var>X</var>
+```
+
+## Native Android
+### Programmatically
+
+You can retrieve the version programmatically through a field in the <Abbr>SDK</Abbr>.
+The following code snippets show how to do this in Java and Kotlin:
+
+```java title="Java"
+String version = AppLovinSdk.VERSION;
+int versionCode = AppLovinSdk.VERSION_CODE;
+```
+```kotlin title="Kotlin"
+val version : String = AppLovinSdk.VERSION
+val versionCode : Int = AppLovinSdk.VERSION_CODE
+```
+
+### AppLovin MAX Mediation Debugger
+
+You can find the version in the Mediation Debugger, which you can show in your app by means of an <Abbr>SDK</Abbr> method (after the <Abbr>SDK</Abbr> initializes).
+The following code snippets show how to do this in Java and Kotlin:
+
+```java title="Java"
+AppLovinSdk.getInstance(this).showMediationDebugger();
+```  
+```kotlin title="Kotlin"
+AppLovinSdk.getInstance(this).showMediationDebugger()
+```  
+  
+## Native iOS
+### Programmatically
+
+You can retrieve the version programmatically by means of a property in the <Abbr>SDK</Abbr>.
+The following code snippets show how to do this in Objective-C and Swift:
+
+```objective-c title="Objective-C"
+NSString *version = [ALSdk version];
+NSUInteger versionCode = [ALSdk versionCode];
+```
+```swift title="Swift"
+var version : String = ALSdk.version()
+var versionCode : UInt = ALSdk.versionCode
+```
+  
+### AppLovin MAX Mediation Debugger
+
+You can find the version in the Mediation Debugger, which you can show in your app by means of an <Abbr>SDK</Abbr> method (after the <Abbr>SDK</Abbr> initializes).
+The following code snippets show how to do this in Objective-C and Swift:
+
+```objective-c title="Objective-C"
+[[ALSdk shared] showMediationDebugger];
+```
+```swift title="Swift"
+ALSdk.shared()!.showMediationDebugger()
+```
+
+## Unity (MAX Plugin)
+### AppLovin MAX Mediation Debugger
+
+You can find the version in the Mediation Debugger, which you can show in your app by means of an <Abbr>SDK</Abbr> method (after the <Abbr>SDK</Abbr> initializes):
+
+```csharp title="C#"
+MaxSdk.ShowMediationDebugger();
+```
