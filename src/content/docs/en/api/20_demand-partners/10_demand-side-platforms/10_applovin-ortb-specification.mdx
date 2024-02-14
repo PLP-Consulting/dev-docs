@@ -1,0 +1,1109 @@
+---
+title: "AppLovin oRTB Specification"
+description: "AppLovin RTB supports the OpenRTB 2.5 API on ad requests from apps that MAX mediates."
+slug: en/api/demand-partners/demand-side-platforms/applovin-ortb-specification
+---
+
+AppLovin RTB supports the OpenRTB 2.5 API on ad requests from apps that MAX mediates.
+This document describes the Open<Abbr>RTB</Abbr> integration with AppLovin for <Glossary>SDK</Glossary> <Glossary>bidders [in-app bidders]</Glossary> and <Glossary>DSPs</Glossary> and details any feature differences between the Open<Abbr>RTB</Abbr> 2.5 spec and the AppLovin <Abbr>RTB</Abbr> spec.
+
+<Callout type="note">
+<Glossary>GDPR</Glossary> non-consent and <Abbr>CCPA</Abbr> do-not-sell requests are <em>not</em> supported and will not be sent in the bid stream.
+</Callout>
+
+### Protocol Details
+
+Bid Requests
+: AppLovin <Abbr>RTB</Abbr> buyers receive bid requests in <Abbr>HTTP</Abbr> `POST` format.
+  AppLovin recommends that you use <Abbr>HTTP</Abbr> so as to avoid <Glossary>latency</Glossary>.
+
+<Abbr>HTTP</Abbr> Keep-Alive
+: AppLovin <Abbr>RTB</Abbr> buyers should enable persistent connection handling.
+  Set max keep-alive to at least five minutes.
+
+Compressed/gzip <Abbr>oRTB</Abbr> 
+: AppLovin <Abbr>RTB</Abbr> requires compression for efficiency.
+  Adhere to [Open<Abbr>RTB</Abbr> <Abbr>API</Abbr> Specification version 2.5, section 2.4: Data Encoding](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A53%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C229%2C0%5D).
+
+### Bid Regions
+
+The AppLovin <Abbr>RTB</Abbr> servers cover four geographical regions:
+
+- ASIA-PACIFIC: Hong Kong, Tokyo
+- EUROPE: Amsterdam
+- US-EAST: New York, Washington
+- US-WEST: San Francisco, San Jose
+
+### Endpoints
+
+<Abbr>DSP</Abbr> buyers and <Abbr>SDK</Abbr> bidders can specify up to one endpoint per region.
+All requests from the respective region are routed to that endpoint.
+
+### Supported Ad Formats
+
+AppLovin <Abbr>RTB</Abbr> supports mobile <Glossary>in-app ads</Glossary> only; it does not support desktop or web ad serving.
+The ad formats AppLovin <Abbr>RTB</Abbr> supports are <Glossary>banners</Glossary>, <Glossary>medium rectangles</Glossary> (<Abbr>MREC</Abbr>s), <Glossary>native ads</Glossary>, <Glossary>interstitials</Glossary>, and <Glossary>rewarded ads</Glossary>.
+
+Acceptable <Abbr>MIME</Abbr> types include:
+
+| ad format | <Abbr>MIME</Abbr> type |
+| --------- | ---------------------- |
+| <Abbr>MRAID</Abbr>, <Abbr>HTML</Abbr>, <Abbr>MREC</Abbr> | `text/html` |
+| Native ads | `image/png`, `image/jpeg`, `image/gif` |
+| <Abbr>VAST</Abbr> | `video/mp4` |
+
+Acceptable <Abbr>MRAID</Abbr> and <Abbr>VAST</Abbr> versions include those in the following list.
+However, there are limitations.
+For example, AppLovin <Abbr>RTB</Abbr> does not support calendar <Abbr>API</Abbr> events from <Abbr>MRAID</Abbr>.
+
+ - <Abbr>MRAID</Abbr> 1.0
+ - <Abbr>MRAID</Abbr> 2.0
+ - <Abbr>MRAID</Abbr> 3.0
+ - <Abbr>VAST</Abbr> 2.0
+ - <Abbr>VAST</Abbr> 3.0
+ - <Abbr>VAST</Abbr> 4.0
+ - <Abbr>VAST</Abbr> 4.1
+ - <Abbr>VAST</Abbr> 4.2
+
+There is additional information further down on this page concerning <Abbr>MRAID</Abbr>, native ads, and <Abbr>VAST</Abbr> support.
+
+### Supported Ad Sizes
+
+AppLovin <Abbr>RTB</Abbr> supports the following ad sizes:
+
+| object | sizes |
+| ------ | ----- |
+| Video object (<Abbr>VAST</Abbr>) | <ul><li>320×480</li><li>480×320</li><li>768×1024</li><li>1024×768</li><li>1920×1080 (<Glossary>Connected TV [ctv]</Glossary>)</li></ul> |
+| Banner object (<Abbr>HTML</Abbr>, <Abbr>MRAID</Abbr>, <Abbr>MREC</Abbr>) | <ul><li>300×250</li><li>320×50</li><li>320×480</li><li>480×320</li><li>768×1024</li><li>1024×768</li></ul> |
+| Native object | specific instructions below |
+
+### Exchange Currency
+
+AppLovin <Abbr>RTB</Abbr> Exchange supports only <Abbr>USD</Abbr>.
+It ignores the currency attribute `cur`.
+
+### Auction Type
+
+MAX auction runs on a first-price basis.
+AppLovin expects bidders to pay the <Glossary>CPM</Glossary> amount they bid in full.
+
+### Blocked Creative Types
+
+AppLovin <Abbr>RTB</Abbr> blocks the following <Glossary>creative</Glossary> types:
+
+ - Adobe Flash
+ - Audio Ad (Auto-Play)
+ - Audio Ad (User Initiated)
+ - Expandable (User Initiated — Rollover)
+ - Pop (e.g. Over, Under, or Upon Exit)
+ - Provocative or Suggestive Imagery
+ - Windows Dialog or Alert Style
+
+If the publisher does not support <Glossary>playable ads</Glossary>, then AppLovin <Abbr>RTB</Abbr> also blocks the following creative types:
+
+ - Expandable (Automatic) [only for non-banner/MREC]
+ - Expandable (User Initiated — Click) [only for non-banner/MREC]
+ - User Interactive (e.g. Embedded Games)
+
+### Blocked Categories
+
+AppLovin <Abbr>RTB</Abbr> blocks the following <Abbr>IAB</Abbr> categories:
+
+ - `IAB8-5` (Cocktails/Beer)
+ - `IAB8-18` (Wine)
+ - `IAB11-4` (Politics)
+ - `IAB25` (Non-Standard Content)
+ - `IAB26` (Illegal Content)
+
+### Blocked Ad Types
+
+AppLovin <Abbr>RTB</Abbr> blocks the following ad types:
+
+ - flash
+ - iframe
+ - <Abbr>XHTML</Abbr> Text Ad
+
+## Bid Request
+### Request Objects
+
+AppLovin <Abbr>RTB</Abbr> bid requests always carry a single <Glossary>impression</Glossary> (this differs from the Open<Abbr>RTB</Abbr> schema).
+Each request has exactly one impression object (`imp`).
+
+### Seats
+
+The AppLovin <Abbr>RTB</Abbr> Exchange does not support multiple seats per bidder.
+It ignores the seat whitelist `wseat` array.
+
+### Bid Request Object
+
+| Attribute | Description | Always Passed? |
+| --------- | ----------- | -------------- |
+| `app` | Details via an App object (see [App Object](#app-object)) about the publisher’s app. | yes |
+| `at` | Auction type. If `1` then first-price auction; if `2` then second-price auction (always set to `1` for AppLovin). | yes |
+| `bapp` | Block list of applications by their platform-specific, <Glossary>exchange</Glossary>-independent application identifiers. On Android, these are bundle or package names (such as “`com.foo.mygame`”); on <Abbr>iOS</Abbr>, these are numeric <Abbr>ID</Abbr>s. <Callout type="note">This field is sent on an opt-in basis; reach out to your account manager if you want to be enabled for this field.</Callout> A maximum of 30 bundles are passed. Bids containing other bundle <Abbr>ID</Abbr>s blocked by publishers will be invalidated and do not participate in the auction. | no |
+| `badv` | Block list of advertisers by their top-level domains (for example, “`ford.com`”). A maximum of 30 domains are passed. Bids containing other domains blocked by publishers are invalidated and do not participate in the auction. | no |
+| `bcat` | Blocked <Abbr>IAB</Abbr> categories for this impression. See [Blocked Categories](#blocked-categories) for a list. | no |
+| `device` | Details via a Device object (see [Device Object](#device-object)) about the user’s device to which the impression is delivered. | yes |
+| `ext` | Placeholder for exchange-specific extensions to Open<Abbr>RTB</Abbr>. | yes |
+| `id` | Unique <Abbr>ID</Abbr> of the bid request | yes |
+| `imp` | Array of Impression objects (see [Impression Object](#impression-object)) representing the impressions offered. Only one impression object is passed. | yes |
+| `regs` | An object that specifies any industry, legal, or governmental regulations in force for this request. | no |
+| `regs.ext.ccpa` | Flag indicating if this request is subject to the <Abbr>CCPA</Abbr> regulations, where `0` = no, `1` = yes. | yes, if `regs` is passed |
+| `regs.ext.consent` | Flag indicating if a user has granted consent, where `0` = no, `1` = yes. | no |
+| `regs.ext.gdpr` | Flag indicating if this request is subject to the <Abbr>GDPR</Abbr> regulations, where `0` = no, `1` = yes. | yes, if `regs` is passed |
+| `regs.ext.us_privacy` | See [Open<Abbr>RTB</Abbr> Extension for <Abbr>US</Abbr> Privacy](https://github.com/InteractiveAdvertisingBureau/USPrivacy/blob/master/CCPA/OpenRTB%20Extension%20for%20USPrivacy.md#extension-object-us_privacy-attribute) | no |
+| `source` | An object that provides data about the inventory source and which entity makes the final decision. | no |
+| `source.ext` | Placeholder for exchange-specific extensions to Open<Abbr>RTB</Abbr>. AppLovin passes `schain` in the extension with subobject `ver`, `complete`, and `nodes`. Please refer to <Abbr>IAB</Abbr>’s spec. | yes, if `source` is passed |
+| `tmax` | Maximum time, in milliseconds, to submit a bid to avoid timeout. Default is `500`<Abbr>ms</Abbr>. | yes |
+| `user` | Details about the human user of the device; the advertising audience. | no |
+| `user.data` | Contains the `name`, `id`, and `segment` objects. | no |
+| `user.data.name` | If applicable, contains data specific to the ad unit, entered by the publisher in the MAX Dashboard. | no |
+| `user.data.segment` | Contains the `signal` field which contains any custom data the <Abbr>SDK</Abbr> bidder collects and passes to MAX <Abbr>SDK</Abbr> via the adapter (e.g. identity token required by the network so that networks or bidders can respond to a bid request). | no |
+| `user.ext` | Placeholder for exchange-specific extensions to Open<Abbr>RTB</Abbr>. | no |
+| `user.ext.consent` | `0` if the user did not grant consent; `1` if the user granted consent. | no |
+| `user.ext.gdpr` | `0` if the user is not subject to <Abbr>GDPR</Abbr>; `1` if the user is subject to <Abbr>GDPR</Abbr>. | no |
+| `user.id` | AppLovin-specific device <Abbr>ID</Abbr> for each user within each app. | no |
+
+### App Object
+
+| Attribute | Description | Always Passed? |
+| --------- | ----------- | -------------- |
+| `bundle` | Application iTunes <Abbr>ID</Abbr> or package name. On Android, this is the package name, for example `com.example.app`. On <Abbr>iOS</Abbr>, this is the iTunes <Abbr>ID</Abbr>, for example `628677149`. | no |
+| `cat` | <Abbr>IAB</Abbr> content categories for the Application. See Open<Abbr>RTB</Abbr> Spec 2.5 [List 5.1](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A130%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C643%2C0%5D) for details. | yes |
+| `content` | Object that describes the content where the impression will appear for certain requests, including <Glossary>CTV [ctv]</Glossary> inventory. Aligns to [Open<Abbr>RTB</Abbr> Specification 3.2.16](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A95%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C317%2C0%5D). | no |
+| `content.ext` | Placeholder for exchange-specific extensions to Open<Abbr>RTB</Abbr>, including <Abbr>CTV</Abbr> inventory. | no |
+| `content.url` | <Abbr>URL</Abbr> of the content, for buy-side contextualization or review. | no |
+| `ext` | Placeholder for exchange-specific extensions to Open<Abbr>RTB</Abbr>. | no |
+| `ext.orientation_lock` | Indicates device orientation: `portrait` or `landscape`. | no |
+| `id` | Application <Abbr>ID</Abbr> on AppLovin <Abbr>RTB</Abbr> | yes |
+| `name` | Application name on AppLovin <Abbr>RTB</Abbr> | no |
+| `publisher` | Details about the publisher of the app. | yes |
+| `publisher.ext` | Extension object containing additional publisher information. This contains the `installed_sdk` object which has fields `id`, and subobject `SDK_version` with <Abbr>SDK</Abbr> bidder name and version details. For <Abbr>DSP</Abbr> bidders, `id` will always be `"APPLOVIN_EXCHANGE"`. | no |
+| `publisher.id` | The publisher’s AppLovin <Abbr>ID</Abbr>. Publishers should add this value to their <Glossary>`app-ads.txt` [app-ads.txt]</Glossary> file. | yes |
+| `publisher.name` | The publisher’s name. | yes |
+| `storeurl` | The <Abbr>URL</Abbr> for the app in the App Store or Google Play Store. Used for `app-ads.txt` compliance. | yes |
+| `ver` | Application version, passed when available. | no |
+
+### Device Object
+
+| Attribute | Description | Always Passed? |
+| --------- | ----------- | -------------- |
+| `carrier` (optional) | Carrier of device on a cellular network, or <Abbr>ISP</Abbr> of device on WiFi. | no |
+| `connectiontype` | Type of connection as per [Table 5.22](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A167%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C200%2C0%5D) of the Open<Abbr>RTB</Abbr> 2.5 spec <table><tbody><tr><th scope="row"><tt>0</tt></th><td>unknown</td><td>always pass <tt>0</tt> if the <Abbr>SDK</Abbr> signal is not present.</td></tr><tr><th scope="row"><tt>1</tt></th><td>Ethernet</td><td>if device is connected via Ethernet (Android only)</td></tr><tr><th scope="row"><tt>2</tt></th><td>Wifi</td><td>if device is connected via WiFi (Android / <Abbr>iOS</Abbr>)</td></tr><tr><th scope="row"><tt>3</tt></th><td>Cellular</td><td>if device is connected through <Abbr>EDGE</Abbr>, <Abbr>3G</Abbr>, <Abbr>LTE</Abbr>, etc. (Android / <Abbr>iOS</Abbr>)</td></tr></tbody></table> | no |
+| `devicetype` | The general type of device. Set to `1` for mobile and tablets. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.21](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A167%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C486%2C0%5D) for details. | no |
+| `dnt` | Specifies whether the “Do Not Track” feature is enabled in the device. If `0`, then <Abbr>DNT</Abbr> is set to false. If `1`, then <Abbr>DNT</Abbr> is set to true. This parameter is omitted if <Abbr>DNT</Abbr> is not passed by the <Abbr>SDK</Abbr> or on <Abbr>iOS</Abbr> 5 or lower. | no |
+| `ext` | Placeholder for exchange-specific extensions to Open<Abbr>RTB</Abbr>. | no |
+| `ext.atts` | (<Abbr>iOS</Abbr> Only) An integer passed to represent the app’s app tracking authorization status:<table><tbody><tr><th scope="row"><tt>0</tt></th><td>not determined</td></tr><tr><th scope="row"><tt>1</tt></th><td>restricted</td></tr><tr><th scope="row"><tt>2</tt></th><td>denied</td></tr><tr><th scope="row"><tt>3</tt></th><td>authorized</td></tr></tbody></table> | no |
+| `ext.ifv` | <Glossary>IDFV</Glossary> of device in that publisher. Only passed when <Glossary>IDFA</Glossary> is unavailable or all zeros. | no |
+| `geo` | Location of the device assumed to be the user’s current location defined by a [Geo object](#geo-object). | yes |
+| `h` | Height of the screen in physical pixels. This may be dependent on the device orientation. <Callout type="note">This can differ from `banner.h`.</Callout> | no |
+| `hwv` | Hardware version of the device | no |
+| `ifa` (optional) | Apple <Abbr>IFA</Abbr> or Google Advertising <Abbr>ID</Abbr>. <Glossary>Google Advertising <Abbr>ID</Abbr> [gaid]</Glossary> (Android) is lowercase by default; <Abbr>IFA</Abbr> (<Abbr>iOS</Abbr>) is uppercase by default. If raw is not available then this is not passed. Not passed in requests from countries subject to <Abbr>GDPR</Abbr> if the user does not give consent. | no |
+| `ip` | <Abbr>IPv4</Abbr> address of the device. Not passed in requests from countries subject to <Abbr>GDPR</Abbr> if the user does not give consent. | yes |
+| `ipv6` (optional) | <Abbr>IPv6</Abbr> address of the device. When `ipv6` is present, `ip` is `255.255.255.255` by default. Not passed in requests from countries subject to <Abbr>GDPR</Abbr> if the user does not give consent. | no |
+| `js` | `1` if the device supports JavaScript; otherwise `0`. (Always `1`.) | yes |
+| `language` | Browser language, using [ISO-639-1-alpha-2](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes). | no |
+| `lmt` | <Glossary>“Limit Ad Tracking” [lat]</Glossary> signal commercially endorsed (for example by <Abbr>iOS</Abbr>, Android), where `0` = tracking is unrestricted, `1` = tracking must be limited per commercial guidelines | no |
+| `make` | Device make (for example, `"Apple"`) | no |
+| `mccmnc` | Mobile Country code and Mobile Network Code concatenated by a dash (e.g. `310-005`). See [the list of Mobile Country Codes](https://en.wikipedia.org/wiki/Mobile_country_code) for more details. | no |
+| `model` | Model of the device (for example, `"iPhone"`). <Abbr>iOS</Abbr> will show the full device model name, for example `"iPhone 10,1"`, if known, or just for example `"iPhone"` if not. Android will have detailed model information such as `"SAMSUNG-SM-G900A"`. | no |
+| `os` | Operating system of the device; either `"iOS"` or `"Android"`. | no |
+| `osv` | Operating system version of the device, for example `"3.1.2"`. | no |
+| `pxratio` | The ratio of physical pixels to device-independent pixels. A float value from 0.74 through 4.0. | yes |
+| `ua` | Unprocessed `User-Agent` string from <Abbr>HTTP</Abbr> headers | no |
+| `w` | Width of the screen in physical pixels. This may be dependent on the device orientation. <Callout type="note">This can differ from `banner.w`.</Callout> | no |
+
+### Geo Object
+
+| Attribute | Description | Always Passed? |
+| --------- | ----------- | -------------- |
+| `city` | City of the device. Based on the <Abbr>IP</Abbr> address &amp; Maxmind database. | no |
+| `country` | Country of the device. Based on the <Abbr>IP</Abbr> address &amp; Maxmind database. Passed as country code using [ISO-3166-1-alpha-3](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3). | no |
+| `dma` | Nielsen <Abbr>DMA</Abbr> code based on <Abbr>IP</Abbr> address. | no |
+| `ext` | Placeholder for exchange-specific extensions to Open<Abbr>RTB</Abbr>. | no |
+| `ext.isp` | Internet Service Provider name. | no |
+| `ext.org` | Internet Service Provider name. | no |
+| `ipservice` | Service or provider used to determine geolocation from <Abbr>IP</Abbr> address if applicable (that is, `type` = `2`). Refer to [List 5.23](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A171%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C622%2C0%5D) in the Open<Abbr>RTB</Abbr> Spec 2.5 for more details. | no |
+| `lat` | Latitude from −90.000 to +90.000, where negative is south. Truncated to three decimal places. Blank when not available. | no |
+| `locale` | Language and country of the device. Example `us_en` signifies English as language and the United States as the country. | no |
+| `lon` | Longitude from −180.000 to +180.000, where negative is west. Truncated to three decimal places. Blank when not available. | no |
+| `metro` | Zip code of the device. Based on the <Abbr>IP</Abbr> address &amp; Maxmind database. | no |
+| `region` | Region code using ISO-3166-2; two-letter state code if <Abbr>USA</Abbr>. Always derived from <Abbr>IP</Abbr> address, never a reverse geocode from `lat` / `lon`. | no |
+| `type` | Source of location data; recommended when passing `lat` / `lon`. Refer to [List 5.20](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A167%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C637%2C0%5D) in the Open<Abbr>RTB</Abbr> Spec 2.5 for more details. | no |
+| `zip` (optional) | Zip code of the user. Always derived, never a reverse geocode from `lat` / `lon`. | no |
+
+### Impression Object
+
+An AppLovin <Abbr>RTB</Abbr> bid request always carries a single impression (this differs from the Open<Abbr>RTB</Abbr> schema).
+Each request has exactly one impression object (`imp`).
+
+If the request includes a banner object in the impression object, the impression is eligible for <Abbr>HTML</Abbr> and <Abbr>MRAID</Abbr> ads.
+If the request includes a video object, the impression is eligible for <Abbr>VAST</Abbr> ads.
+The impression object may either include only a banner or video sub-object, or it may include both such objects.
+
+| Attribute | Description | Always Passed? |
+| --------- | ----------- | -------------- |
+| `banner` | A Banner object (see [Banner Object](#banner-object))–required if this impression is offered as a banner ad opportunity. | only for banner impressions |
+| `bidfloor` | <Abbr>CPM</Abbr> minimum bid amount. Default currency is <Abbr>USD</Abbr>. | no |
+| `displaymanager` | “applovin” when the <Abbr>SDK</Abbr> is present. | no |
+| `displaymanagerserver` | AppLovin <Abbr>SDK</Abbr> version passed from the <Abbr>SDK</Abbr>, otherwise not passed. | no |
+| `exp` | Advisory as to the number of seconds that may elapse between the auction and the actual impression. Fixed value of `14400` = 4 hours × 3600 seconds/hour. | yes |
+| `ext` | Placeholder for exchange-specific extensions to Open<Abbr>RTB</Abbr>. | no |
+| `ext.skadn` | Support for Apple’s <Glossary>SKAdNetwork</Glossary>. See the Open<Abbr>RTB</Abbr> [SKAdNetwork extension](https://github.com/InteractiveAdvertisingBureau/openrtb/blob/master/extensions/community_extensions/skadnetwork.md#bid-request) for additional details. | no |
+| `ext.skadn.skadnetids` | A subset of `SKAdNetworkItem` entries in the publisher app’s `Info.plist` that are relevant to the <Abbr>DSP</Abbr>. | yes (if `ext.skadn` is passed) |
+| `ext.skadn.skadnetlist.max` | <Abbr>IABTL</Abbr> list containing the max entry <Abbr>ID</Abbr> of <Abbr>SK</Abbr>AdNetwork <Abbr>ID</Abbr>. | &#xA0; |
+| `ext.skadn.skadnetlist.excl` | Comma-separated list of integer <Abbr>IABTL</Abbr> registration <Abbr>ID</Abbr>s to exclude from <Abbr>IABTL</Abbr> shared list. | &#xA0; |
+| `ext.skadn.sourceapp` | <Abbr>ID</Abbr> of publisher app in Apple’s App Store. Matches `app.bundle`. | yes (if `ext.skadn` is passed) |
+| `ext.skadn.version` | Version of <Abbr>SK</Abbr>AdNetwork supported. Always `"2.0"` or higher. Dependent on both the <Abbr>OS</Abbr> version and the <Abbr>SDK</Abbr> version. <Callout type="note">With the release of <Abbr>SK</Abbr>AdNetwork 2.1, this field is deprecated in favor of `BidRequest.imp.ext.skadn.versions` to support an array of version numbers.</Callout> | yes (if `ext.skadn` is passed) |
+| `ext.skadn.versions` | Array of strings containing the supported <Abbr>SK</Abbr>AdNetwork versions. Always `"2.0"` or higher. Dependent on both the <Abbr>OS</Abbr> version and the <Abbr>SDK</Abbr> version. | yes (if `ext.skadn` is passed) |
+| `ext.skadnetids` | <Abbr>ID</Abbr>s associated with Advanced Bidders only. | no |
+| `id` | A unique identifier for the impression within the bid request. Typically the value starts with `1`, then increments up to <var>n</var> for <var>n</var> impressions. | yes |
+| `instl` | Indicates if impression is offered as an interstitial opportunity. Set to `1` for full screen (interstitial), or `0` if interstitial is not available. | yes |
+| `metric` | An array of Metric objects (see [Metric Object](#metric-object)). | yes |
+| `native` | A Native object (see [Native Object](#native-object))—required if this impression is offered as a <Glossary>native ad</Glossary> opportunity. | only for native impressions |
+| `rwdd` | Indicates whether the user receives a reward for viewing the ad, where `0` = no, `1` = yes. | yes |
+| `secure` | Flag that indicates if the impression requires secure <Abbr>HTTPS</Abbr> <Abbr>URL</Abbr> creative assets and markup, where `0` = Non-secure, `1` = secure. If omitted, the secure state is unknown, but non-secure <Abbr>HTTP</Abbr> support can be assumed. For <Abbr>iOS</Abbr> auctions, this will always be `1` = secure. | yes |
+| `tagid` | Identifier for the specific ad placement or ad tag that was used to initiate the auction. For <Abbr>SDK</Abbr> bidders, the network placement <Abbr>ID</Abbr> for this impression. | yes |
+| `video` | A Video object (see [Video Object](#video-object))—required if this impression is offered as a video ad opportunity. | only for video impressions |
+
+### Metric Object
+| Attribute | Type | Description |
+| --------- | ---- | ----------- |
+| `type`    | string | Type of metric presented, using exchange-curated string names.<p>Session duration (`session_duration`) is the total time a user has spent in a specific app, in seconds. Session depth (`session_depth`) is the total number of ads a user has seen in a given app session. A session ends after a user closes the app. Both session depth and session depth per ad format are present in the bid request.</p>The following represent the total number of ads per format a user saw in the app session:<ul><li>`session_depth_banner`</li><li>`session_depth_full`</li><li>`session_depth_medium_rectangle`</li><li>`session_depth_native`</li><li>`session_depth_rewarded`</li></ul> |
+| `value`   | float | Number representing the value of the metric. Not present for Viewability type.<p>Session Depth: Set to `0.0` if the user has not yet seen an ad within their current app session, or if the user has been inactive for 30 minutes.</p> |
+| `vendor`  | string | Source of the value using exchange-curated string names. If the exchange itself is the source (as opposed to a third party), `EXCHANGE` is always used unless specified otherwise.<p><Glossary>Viewability [mobile ad viewability]</Glossary>: Set to `ias` for Integral Ad Science (<Abbr>IAS</Abbr>); set to `moat` for Moat. Dependent on the partners that the publisher supports. If only one is supported, only one is passed. If both are supported, both are passed. Does not apply to Open Measurement Viewability.</p> |
+
+### Video Object
+
+| Attribute | Description | Always Passed? |
+| --------- | ----------- | -------------- |
+| `api` | List of supported <Abbr>API</Abbr> frameworks for this impression. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.6](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. If an <Abbr>API</Abbr> is not explicitly listed, it is assumed not to be supported. | no |
+| `battr` | Blocked creative attributes. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.3](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. | yes |
+| `companiontype` | Supported <Abbr>VAST</Abbr> ad companion types. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.14](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. Some inventory supports all companion types and others static only. | yes |
+| `ext.videotype` | `"rewarded"` if it’s a rewarded request | no |
+| `h` | Height of the player in pixels. | yes |
+| `linearity` | Indicates if the impression must be linear. This is set to `1` for all requests. | yes |
+| `maxbitrate` | Maximum bitrate in <Abbr>Kbps</Abbr>. | yes |
+| `maxduration` | Maximum video ad duration in seconds. | yes |
+| `mimes` | Content <Abbr>MIME</Abbr> types supported. `video/mp4` is supported. | yes |
+| `minbitrate` | Minimum bitrate in <Abbr>Kbps</Abbr>. | yes |
+| `minduration` | Minimum video ad duration in seconds. | yes |
+| `placement` | Placement type for the impression. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.9](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. | yes |
+| `playbackmethod` | Allowed playback methods. If none specified, assume all are allowed. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.10](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. | yes |
+| `pos` | Ad position on screen. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.4](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. | no |
+| `protocols` | Array of supported video bid response protocols. <Abbr>VAST</Abbr> 2, <Abbr>VAST</Abbr> 3, and <Abbr>VAST</Abbr> 4 are supported. Protocols reflect what the specific inventory source supports as some inventory only supports 2.0, others both 2.0/3.0. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.8](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. | yes |
+| `skipafter` | Number of seconds a video must play before skipping is enabled; only applicable if the ad is skippable | yes |
+| `skipmin` | Videos of total duration greater than this number of seconds can be skippable; only applicable if the ad is skippable. | yes |
+| `startdelay` | Indicates the start delay in seconds for pre-roll, mid-roll, or post-roll ad placements. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.12](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. | yes |
+| `w` | Width of the player in pixels. | yes |
+
+### Banner Object
+
+| Attribute | Description | Always Passed? |
+| --------- | ----------- | -------------- |
+| `api` | List of supported <Abbr>API</Abbr> frameworks for this impression. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.6](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. If an <Abbr>API</Abbr> is not explicitly listed, it is assumed not to be supported. | no |
+| `battr` | Blocked creative attributes for banner. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.3](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. | yes |
+| `btype` | An array of integers indicating blocked types of banners. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.2](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. | yes |
+| `ext.bannertype` | `"rewarded"` if it’s a rewarded request | no |
+| `format` | Array of format objects representing the banner sizes permitted. Height (`h`) and width (`w`) available to pass. If none are specified, then AppLovin recommends that you use the `Bidrequest.imp.banner.h` and `Bidrequest.imp.w` attributes. | no |
+| `h` | Height of the impression in pixels. | yes |
+| `id` | A unique identifier for this object. Values usually start at `1` and increase with each object; should be unique within an impression. | no |
+| `pos` | Ad position on screen. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.4](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. AppLovin <Abbr>RTB</Abbr> will always pass `1` = Above the Fold. | yes |
+| `w` | Width of the impression in pixels. | yes |
+
+### Native Object
+
+AppLovin native ads use [Open<Abbr>RTB</Abbr> Dynamic Native Ads <Abbr>API</Abbr> Specification Version 1.2](https://www.iab.com/wp-content/uploads/2018/03/OpenRTB-Native-Ads-Specification-Final-1.2.pdf).
+The impression object contains the native object.
+The native object contains the request field with the <Abbr>JSON</Abbr> string representation of the native request.
+AppLovin does not support video assets.
+
+| Attribute | Description | Always Passed? |
+| --------- | ----------- | -------------- |
+| `api` | List of supported <Abbr>API</Abbr> frameworks for this impression. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.6](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. If an <Abbr>API</Abbr> is not explicitly listed, it is assumed not to be supported. | no |
+| `battr` | Blocked creative attributes for the native ad. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.3](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A143%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C550%2C0%5D) for details. | yes |
+| `eventtrackers` | Array of <Glossary>tracking [tracker]</Glossary> objects to run with the ad, in response to the declared supported methods in the request. Replaces `imptrackers` and `jstracker`, which are deprecated. See [Open<Abbr>RTB</Abbr> Spec 1.2](https://www.iab.com/wp-content/uploads/2018/03/OpenRTB-Native-Ads-Specification-Final-1.2.pdf) section 4.7: Event Trackers Request Object for details. | no |
+| `request` | Request payload complying with the Native Ad Specification. Note that this is a string. | yes |
+| `request.assets` | An array of Asset Objects. Any bid must comply with the array of elements expressed by the Exchange. | yes |
+| <code>request.assets[<var>n</var>].data</code> | Data object for ratings, prices, etc. See [Data Object](#data-object) definition below. | yes |
+| <code>request.assets[<var>n</var>].id</code> | Unique asset <Abbr>ID</Abbr>, assigned by exchange. | yes |
+| <code>request.assets[<var>n</var>].img.hmin</code> | The minimum requested height of the image, in pixels. Use this option for any rescaling of images by the client. Either `h` or `hmin` should be transmitted. If only `h` is included, it should be considered an exact requirement. Set for icon image with a value of 80—require 1:1 aspect ratio. Set for main image with a value of 417—require 1.91:1 aspect ratio (1200×627, 1200×628, and 800×418 recommended). | no |
+| <code>request.assets[<var>n</var>].img.type</code> | Type <Abbr>ID</Abbr> of the image element supported by the publisher. The publisher can display this information in an appropriate format. See Open<Abbr>RTB</Abbr> Native spec 1.2 [Table 7.4 and 7.5](https://www.iab.com/wp-content/uploads/2018/03/OpenRTB-Native-Ads-Specification-Final-1.2.pdf) for details. | yes |
+| <code>request.assets[<var>n</var>].img.wmin</code> | The minimum requested width of the image, in pixels. Use this option for any rescaling of images by the client. Either `w` or `wmin` should be transmitted. If only `w` is included, it should be considered an exact requirement. Set for icon image with a value of 80—require 1:1 aspect ratio. Set for main image with a value of 800—require 1.91:1 aspect ratio (1200×627, 1200×628, and 800×418 recommended). | no |
+| <code>request.assets[<var>n</var>].required</code> | Set to `1` if asset is required (exchange will not accept a bid without it). | yes |
+| `request.context` | The context in which the ad appears; set to `1501`. | yes |
+| `request.privacy` | Set to `1` when the native ad supports buyer-specific privacy notice. Field is absent when the native ad doesn’t support custom privacy links or if support is unknown. | no |
+| `request.seq` | (see the layout types). `0` for the first ad, `1` for the second ad, and so on. This is not the sequence number of the content in the stream. | no |
+| `ver` | Version of the Native Ad Specification to which the request complies; set to `1.2`. | yes |
+
+## Bid Response
+### Size
+
+The maximum size of the bid response is 4<Abbr>KB</Abbr>.
+
+### No Bids
+
+To communicate a no-bid response, pass an empty response with a status code of 204.
+
+### Win/Loss/Billing Notifications
+
+AppLovin <Abbr>RTB</Abbr> calls the win, loss, and billing notice <Abbr>URL</Abbr>s that the requester supplies in the request’s `nurl`, `lurl`, and `burl` fields respectively.
+AppLovin <Abbr>RTB</Abbr> calls the win <Abbr>URL</Abbr> when the auction completes and AppLovin sends the ad to the device.
+It calls the loss <Abbr>URL</Abbr> either during the auction, if the associated ad fails to load properly, or after a different winning ad loads.
+It calls the billing <Abbr>URL</Abbr> when the device renders the ad—that is, when the video starts playing, or, for graphic ads, when the device displays the ad.
+
+The requester may embed macros into the specification of these notification <Abbr>URL</Abbr>s.
+AppLovin <Abbr>RTB</Abbr> substitutes appropriate values for those macros in the <Abbr>URL</Abbr> before AppLovin <Abbr>RTB</Abbr> requests the <Abbr>URL</Abbr>.
+The following list shows the macros that the requester may embed in these <Abbr>URL</Abbr>s:
+
+These macros are case-sensitive; specify them in ALL CAPS.
+Enclose these macros in `${…}` (e.g. `${AUCTION_ID}`).
+
+| Macro                        | Description |
+| ---------------------------- | ----------- |
+| `AUCTION_BID_ID`             | <Abbr>ID</Abbr> of the bid, from the `BidResponse.bidid` attribute. |
+| `AUCTION_ID`                 | <Abbr>ID</Abbr> of the bid request, from the `BidRequest.id` attribute. |
+| `AUCTION_LOSS`               | Loss reason code, as found in [Table 5.25](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A171%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C152%2C0%5D) of the Open<Abbr>RTB</Abbr> 2.5 spec. Only sent on `lurl`. Note that loss code “103 Lost to a Bid for a <Glossary>PMP</Glossary> Deal” is used when the impression is won by a Direct Sold campaign at a higher priority. |
+| `AUCTION_MINIMUM_BID_TO_WIN` | Second highest bid price. If there is no winner, floor price is sent. Is only sent on `nurl`. Value passed is `0` when there is only one bid: the winning bid. |
+| `AUCTION_PRICE`              | The auction clearing price. Uses the same currency and units as the bid. May be up to six decimals. |
+
+#### Example Win Bid <Abbr>URL</Abbr> with Macros
+
+```plaintext
+https://example.com/endpoint/auction=${AUCTION_ID}&amp;price=${AUCTION_PRICE}
+```
+
+### Ad Markup Standard
+
+<Abbr>DSP</Abbr> bidders must include ad markup in the bid response. AppLovin <Abbr>RTB</Abbr> does not support returning the ad markup in response to the win notice.
+
+Your ad markup must comply with AppLovin’s <Abbr>RTB</Abbr> ad markup standard.
+AppLovin’s <Abbr>RTB</Abbr> servers check the ad markup’s compliance as soon as they receive the bid, and then they perform the following sanity checks on the ad markup:
+
+- Ad markup is properly escaped.
+- Ad markup is <Abbr>URL</Abbr>-encoded, except for <Abbr>VAST</Abbr> ads.
+- <Abbr>HTML</Abbr> of the ad markup is a snippet.
+- When you bid with a rich media ad, put the content of the node in a `CDATA` construct.
+  `CDATA` in <Abbr>XML</Abbr> requires no encoding whatsoever.
+  However if you pass an <Abbr>XML</Abbr> document in a <Abbr>JSON</Abbr>-context, you must apply <Abbr>JSON</Abbr> syntax and escaping rules, as follows:
+  - All double quotes are escaped as `\"`.
+  - Apostrophes are not escaped.
+  - The <Abbr>XML</Abbr> doc is stripped of all tab and newline characters.
+    ([The Example <Abbr>VAST</Abbr> Ad Markup](#vast-support) below is formatted for easy readability.
+    Do not send extra whitespace in your actual ad markup.)
+
+To verify that an ad markup snippet is valid <Abbr>JSON</Abbr> content (along with its `CDATA`), you can pass that snippet into [the on-line <Abbr>JSON</Abbr>Lint validator](https://jsonlint.com/).
+
+<Abbr>SDK</Abbr> bidders are not required to pass ad markup because all creatives should be rendered via your <Abbr>SDK</Abbr>.
+<Abbr>SDK</Abbr> bidders may use the `admarkup` field to pass custom data, which can be configured to be returned to your <Abbr>SDK</Abbr> at load time via the adapters.
+
+### Bid Response Components
+There are three components to the bid response:
+
+[`bidresponse`](#bid-response-object)
+: top-level object
+
+[`seatbid`](#seatbid-object)
+: collection of bids made by the bidder on behalf of a specific seat
+
+[`bid`](#bid-object)
+: an offer to buy a specific impression under certain business terms
+
+
+### Bid Response Object
+
+| Attribute | Type | Description | Required? |
+| --------- | ---- | ----------- | --------- |
+| `bidid`   | string | Bidder-generated response <Abbr>ID</Abbr> to assist with logging/tracking. | no |
+| `cur`     | string | Currently only accepts, and defaults to, `"USD"`. | no |
+| `id`      | string | <Abbr>ID</Abbr> of the bid request to which this is a response (this must match `bidrequest.id`). | yes |
+| `nbr`     | integer | Reason for not bidding. Refer to [List 5.24](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A171%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C454%2C0%5D) of the Open<Abbr>RTB</Abbr> 2.5 spec. | recommended |
+| `seatbid` | object array | Array of [seatbid objects](#seatbid-object); one or more are required if a bid is to be made. | yes |
+
+### Seatbid Object
+
+| Attribute | Type | Description | Required? |
+| --------- | ---- | ----------- | --------- |
+| `bid`     | object array | Array of [bid objects](#bid-object); one or more are required if a bid is to be made. | yes |
+| `seat`    | string | <Abbr>ID</Abbr> of the bidder seat on whose behalf this bid is made. A bid response may contain bids from multiple “seats” or contain multiple bids from the same seat. <em>Must</em> be an alphanumeric string, maximum 40 characters, ideally minimum 8 characters. Not currently supported. | no |
+
+### Bid Object
+
+| Attribute | Type | Description | Required? |
+| --------- | ---- | ----------- | --------- |
+| `adid` | string | <Abbr>ID</Abbr> of a preloaded ad to be served if the bid wins. | no |
+| `adm` | string | The main means of conveying ad markup in case the bid wins; supersedes the win notice if markup is included in both. Substitution macros may be included. Refer to [supported macros](#win-loss-billing-notifications). For native ad format `adm_native` is supported. | yes |
+| `adomain` | string array | An array of advertiser domain names. AppLovin <Abbr>RTB</Abbr> uses only the first domain in the array.<p>Advertiser domains must match the top-level domain name for the advertiser landing page, <em>not</em> the full landing page <Abbr>URL</Abbr>. For app store landing pages, `adomain` should match the app owner’s top-level domain name, <em>not</em> the full app store <Abbr>URL</Abbr>.</p><p> The value of `adomain` <em>must not</em> contain “`http://`”, “`https://`”, or any “`/`” (slash) characters.</p><p>Example: `yourapp.com` (but <em>not</em> `yourapp.com/something` or `https://yourapp.com`).</p> | yes |
+| `api` | integer | See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.6](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A147%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C319%2C0%5D) for details. | no |
+| `apis` | integer array | List of supported <Abbr>API</Abbr> frameworks for this impression. One of the following:<table><tbody><tr><td><tt>1</tt></td><td><Abbr>VPAID</Abbr>1.0</td></tr><tr><td><tt>2</tt></td><td><Abbr>VPAID</Abbr>2.0</td></tr><tr><td><tt>3</tt></td><td><Abbr>MRAID</Abbr>-1</td></tr><tr><td><tt>4</tt></td><td><Abbr>ORMMA</Abbr></td></tr><tr><td><tt>5</tt></td><td><Abbr>MRAID</Abbr>-2</td></tr><tr><td><tt>6</tt></td><td><Abbr>MRAID</Abbr>-3</td></tr><tr><td><tt>7</tt></td><td><Abbr>OMID</Abbr>-1</td></tr></tbody></table> | &#xA0; |
+| `attr` | integer array | Required when applicable. Creative attributes, an array of values taken from this list:<table><tbody><tr><td>`1`</td><td>Audio Ad (Auto-Play)</td></tr><tr><td>`2`</td><td>Audio Ad (User Initiated)</td></tr><tr><td>`3`</td><td>Expandable (Automatic)</td></tr><tr><td>`4`</td><td>Expandable (User Initiated–Click)</td></tr><tr><td>`5`</td><td>Expandable (User Initiated–Rollover)</td></tr><tr><td>`6`</td><td>In-Banner Video Ad (Auto-Play)</td></tr><tr><td>`7`</td><td>In-Banner Video Ad (User Initiated)</td></tr><tr><td>`8`</td><td>Pop (e.g. Over, Under, or Upon Exit)</td></tr><tr><td>`9`</td><td>Provocative or Suggestive Imagery</td></tr><tr><td>`10`</td><td>Shaky, Flashing, Flickering, Extreme Animation, Smileys</td></tr><tr><td>`11`</td><td>Surveys</td></tr><tr><td>`12`</td><td>Text Only</td></tr><tr><td>`13`</td><td>User Interactive (e.g. Embedded Games)</td></tr><tr><td>`14`</td><td>Windows Dialog or Alert Style</td></tr><tr><td>`15`</td><td>Has Audio On/Off Button</td></tr><tr><td>`16`</td><td>Ad Provides Skip Button (e.g.<Abbr>VPAID</Abbr>-rendered skip button on pre-roll video)</td></tr><tr><td>`17`</td><td>Adobe Flash</td></tr></tbody></table>When present, this must be accurate and reflect the actual creative, otherwise it is a policy violation. This field is not required for serving <Abbr>VAST</Abbr> video but is required for serving <Abbr>HTML</Abbr> or <Abbr>MRAID</Abbr> in-banner video. | recommended |
+| `bundle` | string | The advertiser’s application iTunes <Abbr>ID</Abbr> or Android package name. If this is not an application install ad, leave this field blank. Do not pass the publisher’s application bundle or AppLovin <Abbr>RTB</Abbr> will reject the response.<p>Examples: `com.example.app` on Android, `628677149` on <Abbr>iOS</Abbr>.</p> | required if `ext.skadn` is present; recommended in all cases |
+| `burl` | string | Billing notice <Abbr>URL</Abbr> called by the exchange when a winning bid becomes billable. <Abbr>DSP</Abbr>s must use `burl` for impression and spend tracking. AppLovin will only investigate discrepancies when `burl` is used for tracking. | yes |
+| `cat` | string array | <Abbr>IAB</Abbr> content categories of the creative. Refer to [section 5.1](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A130%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C643%2C0%5D) of the OpenRTB 2.5 spec. | yes |
+| `cid` | string | Campaign <Abbr>ID</Abbr> to assist with ad quality checking. The collection of creatives for which `iurl` should be representative. | recommended |
+| `crid` | string | Uniquely identifies a creative for a campaign. Do not assign a new creative <Abbr>ID</Abbr> to the same creative just to indicate that the creative is appearing in a new impression. | yes |
+| `dealid` | string | Reference to the `deal.id` from the bid request if this bid pertains to an inventory package. Do not pass unless bidding against an inventory package. | yes, for inventory packages |
+| `ext` | object | Placeholder for bidder-specific extensions to Open<Abbr>RTB</Abbr>. | no |
+| `ext.crtype` | string | This field describes the type of ad you are serving. Valid values are:<ul><li>`HTML`</li><li>`MRAID 1.0`</li><li>`MRAID 2.0`</li><li>`MRAID 3.0`</li><li>`native`</li><li>`VAST 2.0`</li><li>`VAST 3.0`</li><li>`VAST 4.0`</li></ul> AppLovin can hardcode the `crtype` for you if you buy only one `crtype`. Contact your AppLovin account manager if you would like to do this. Passing `crtype` in `bid.crtype` is also supported. | recommended |
+| `ext.clicktrackers` | string array | Click tracking <Abbr>URL</Abbr>s (first- and third-party) to be consistently tracked when AppLovin records the click event. This does not apply to native. | yes, if running <Abbr>HTML</Abbr> ads + <Abbr>SKAD</Abbr> (<Abbr>SK</Abbr>AdNetwork) |
+| `ext.duration` | integer | Video duration, in seconds. | yes, for <Abbr>CTV</Abbr> inventory |
+| `ext.imptrackers ` | string array | Impression tracking <Abbr>URL</Abbr> to be used by third-party tracking needs. This does not apply for native. See [native object](#native-object) `eventtrackers`. | no |
+| `ext.skadn` | object | Parameters required to support Apple’s <Abbr>SK</Abbr>AdNetwork attribution <Abbr>API</Abbr>, via `loadProduct()`. | no |
+| `ext.skadn.campaign` | string | Campaign <Abbr>ID</Abbr> (2.0–3.0) or Source <Abbr>ID</Abbr> (4.0+). This should be an integer between 1 and 100 for <Abbr>SK</Abbr>AdNetwork versions 2.0–3.0, or between 0 and 9999 for versions 4.0+, expressed as a string. | if `ext.skadn` is present |
+| `ext.skadn.fidelities` | object array | Supports multiple fidelity types introduced in SKAdNetwork v2.2. | if `ext.skadn` is present |
+| <code>….fidelities[<var>n</var>].fidelity</code> | integer | The fidelity-type of the attribution to track. | if `ext.skadn` is present |
+| <code>….fidelities[<var>n</var>].nonce</code> | string | An <Abbr>ID</Abbr> unique to each ad response. Refer to Apple’s documentation for [the proper <Abbr>UUID</Abbr> format requirements](https://developer.apple.com/documentation/storekit/skstoreproductparameteradnetworknonce). | if `ext.skadn` is present |
+| <code>….fidelities[<var>n</var>].signature</code> | string | <Abbr>SK</Abbr>AdNetwork signature as specified by Apple. | if `ext.skadn` is present |
+| <code>….fidelities[<var>n</var>].timestamp</code> | string | Unix time in milliseconds, string used at the time of `signature`. | if `ext.skadn` is present |
+| `ext.skadn.itunesitem` | string | <Abbr>ID</Abbr> of advertiser’s app in Apple’s app store. Should match `BidResponse.seatbid.bid.bundle`. | if `ext.skadn` is present |
+| `ext.skadn.network` | string | Ad network identifier used in signature. Should match one of the items in the `skadnetids` array in the request. | if `ext.skadn` is present |
+| `ext.skadn.nonce` | string | An <Abbr>ID</Abbr> unique to each ad response. Refer to Apple’s documentation for [the proper <Abbr>UUID</Abbr> format requirements](https://developer.apple.com/documentation/storekit/skstoreproductparameteradnetworknonce). <Callout type="note">With the release of <Abbr>SK</Abbr>AdNetwork v2.2, this field is deprecated in favor of `BidResponse.seatbid.bid.ext.skadn.fidelities.nonce` to support multiple fidelity-types.</Callout> | if `ext.skadn` is present |
+| `ext.skadn.productpage` | string | Custom Product Page <Abbr>ID</Abbr> (available as of <Abbr>SDK</Abbr> 11.1.1). | no |
+| `ext.skadn.signature` | string | <Abbr>SK</Abbr>AdNetwork signature as specified by Apple. <Callout type="note">With the release of <Abbr>SK</Abbr>AdNetwork 2.2, this field is deprecated in favor of `BidResponse.seatbid.bid.ext.skadn.fidelities.signature` to support multiple fidelity-types.</Callout> | if `ext.skadn` is present |
+| `ext.skadn.skoverlay` | object | Parameters to control a potential <Abbr>SK</Abbr>Overlay (available as of <Abbr>SDK</Abbr> 10.0.0). The overlay can be triggered (with delay, or `0` for no delay) after video starts, companion ad renders, or user dismisses the overlay but the ad remains open. <Callout type="note">AppLovin does not track clicks on <Abbr>SK</Abbr>Overlay, as Apple does not provide a click <Glossary>callback [postback]</Glossary>.</Callout> | no |
+| `….skoverlay.position` | integer | Position of the overlay. `0` = bottom, `1` = bottomRaised. Defaults to `0`. | no |
+| `….skoverlay.dismissable` | integer | Whether or not the user can dismiss the overlay (`1` means it can be dismissed, `0` means it is static on the screen). Defaults to `1`. | no |
+| `….skoverlay.video_delay` | integer | Number of seconds after the video starts to show the overlay. Keep this unset (null) to not trigger based on video start. | no |
+| `….skoverlay.companion_delay` | integer | Number of seconds after the companion ad renders to show the overlay. Keep this unset (null) to not trigger based on companion ad render. | if `ext.skadn.skoverlay` is present |
+| `….skoverlay.sk_dismiss_delay` | integer | Number of seconds after the presented StoreKit screen is dismissed before showing the overlay. Keep this unset (null) to not trigger based on StoreKit dismiss (available as of <Abbr>SDK</Abbr> 11.3.4). if `ext.skadn.skoverlay` is present |
+| `ext.skadn.sourceapp` | string | <Abbr>ID</Abbr> of publisher’s app in Apple’s app store. Should match `BidRequest.imp.ext.skad.sourceapp`. | if `ext.skadn` is present |
+| `ext.skadn.timestamp` | string | Unix time in milliseconds string used at the time of `signature`. <Callout type="note">With the release of <Abbr>SK</Abbr>AdNetwork 2.2, this field is deprecated in favor of `BidResponse.seatbid.bid.ext.skadn.fidelities.timestamp` to support multiple fidelity-types.</Callout> | if `ext.skadn` is present |
+| `ext.skadn.version` | string | Version of <Abbr>SK</Abbr>AdNetwork desired. Must be 2.0 or above. | if `ext.skadn` is present |
+| `ext.vendor` | string array | Name of viewability vendor(s) that measure viewability for the ad that is shown. You should only declare viewability vendors in the bid response when you collect viewability measurement for an impression. Set to `"ias"` for Integral Ad Science (<Abbr>IAS</Abbr>). Set to `"moat"` for Moat. Buyers are required to respond with the vendor in the bid response when they return a display campaign for viewability. Does not apply to Open Measurement Viewability. | for campaigns that measure viewability |
+| `h` | integer | Height of the creative in density-independent pixels. | recommended |
+| `id` | string | Bidder-generated bid <Abbr>ID</Abbr> to assist with logging/tracking. | yes |
+| `impid` | string | <Abbr>ID</Abbr> of the [Impression object](#impression-object) in the related bid request. | yes |
+| `lurl` | string | Loss notice <Abbr>URL</Abbr> called by the exchange when a bid is known to be lost. Substitution macros may be included. Refer to [supported macros](#win-loss-billing-notifications). | no |
+| `nurl` | string | Win notice <Abbr>URL</Abbr> called by the exchange if the bid wins the impression opportunity. | recommended |
+| `price` | float | Bid price expressed as <Abbr>CPM</Abbr>, although the actual transaction is for a unit impression only. Note that while the type indicates float, integer math is highly recommended when handling currencies (for example, `BigDecimal` in Java). | yes |
+| `protocol` | integer | Video response protocol of the markup if applicable. See Open<Abbr>RTB</Abbr> Spec 2.5 [Table 5.8](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A150%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C538%2C0%5D) for details. | no |
+| `w` | integer | Width of the creative in density-independent pixels. | recommended |
+
+### Tracking Fields
+
+The following table shows the tracking fields available to <Glossary>demand-side platforms</Glossary>, and their recommended uses.
+
+<Callout type="note">
+Impressions and spend tracking must be done through the bid response field `burl`.
+AppLovin only investigates discrepancies if `burl` is used for tracking.
+</Callout>
+
+| Tracker | Method | Recommended Use |
+| ------- | ------ | --------------- |
+| `bidresponse.bid.burl` | Fired server-side. `X-Device-IP` and `X-Device-User-Agent` are sent as headers in the server-to-server callbacks:<dl><dt>`X-Device-IP`</dt><dd>Actual user device <Abbr>IP</Abbr> address</dd><dt>`X-Device-User-Agent`</dt><dd>Actual user device <Abbr>UA</Abbr></dd></dl> | Impression and spend tracking for the buyer (<Abbr>DSP</Abbr>) |
+| `bidresponse.bid.ext.imptrackers` | Fired server-side. `X-Device-IP` and `X-Device-User-Agent` are sent as headers in the server-to-server callbacks: <dl><dt>`X-Device-IP`</dt><dd>Actual user device <Abbr>IP</Abbr> address</dd><dt>`X-Device-User-Agent`</dt><dd>Actual user device <Abbr>UA</Abbr></dd></dl> | Impression tracking by partners |
+| `bidresponse.bid.adm` | <ul><li><Abbr>HTML</Abbr> Fired client-side</li><li><Abbr>VAST</Abbr>`&lt;ImpressionTracker&gt;` node Fired server-side. `X-Device-IP` and `X-Device-User-Agent` are sent as headers in the server-to-server callbacks:<dl><dt>`X-Device-IP`</dt><dd>Actual user device <Abbr>IP</Abbr> address</dd><dt>`X-Device-User-Agent`</dt><dd>Actual user device <Abbr>UA</Abbr></dd></dl></li></ul> | <ul><li><Abbr>HTML</Abbr>: Invalid Traffic (<Abbr>IVT</Abbr>) tracking</li><li><Abbr>VAST</Abbr>: Impression tracking by partners</li></ul> |
+| `bidresponse.bid.adm.native.eventtrackers` | Fired client-side | <ul><li>Invalid Traffic (<Abbr>IVT</Abbr>) tracking</li><li> Open Measurement <Abbr>SDK</Abbr> (<Abbr>OMSDK</Abbr>)</li><li>Impression tracking by partners</li></ul>Supports `img` and `js` tags as defined in “methods” in 7.7 Event Tracking Methods Table of [Open <Abbr>RTB</Abbr> 1.2 Native Ads Spec](https://www.iab.com/wp-content/uploads/2018/03/OpenRTB-Native-Ads-Specification-Final-1.2.pdf).<p><Abbr>DSP</Abbr>s are encouraged to use `native.eventtrackers` rather than `native.imptrackers` or `native.jstracker` as those fields are pending deprection by <Abbr>IAB</Abbr> (in favor of `eventtrackers`).</p> |
+| `bidresponse.bid.adm.native.imptrackers` | Fired client-side (being deprecated in favor of `eventtrackers`) | Invalid Traffic (<Abbr>IVT</Abbr>) tracking |
+| `bidresponse.bid.adm.native.jstracker` | Fired client-side (being deprecated in favor of `eventtrackers`) | Open Measurement <Abbr>SDK</Abbr> (<Abbr>OMSDK</Abbr>) |
+
+## Creative Types
+
+The following details on creative types apply to <Abbr>DSP</Abbr> bidders in the AppLovin Exchange.
+
+<Callout type="tip">
+When you introduce a new creative format, AppLovin recommends that you test with the AppLovin <Abbr>DSP</Abbr> Sample App before you go live.
+</Callout>
+
+<Callout type="note">
+<Abbr>SDK</Abbr> bidders must handle the rendering of creatives via their own <Abbr>SDK</Abbr>.
+They should reach out to their AppLovin contact with questions.
+</Callout>
+
+### <Abbr>VAST</Abbr> Support
+
+<Abbr>VAST</Abbr> videos auto-play on Android and <Abbr>iOS</Abbr>.
+AppLovin supports only Linear videos.
+Videos should be at least 5 seconds long and at most 30 seconds long.
+Video file sizes should be below 4<Abbr>MB</Abbr> (for optimal playback, AppLovin recommends video files to be smaller than 2<Abbr>MB</Abbr>).
+AppLovin aspect-fits the video in the middle of the screen, which depends on the device size.
+
+The `adm` (or ad markup field) must contain the entire <Abbr>VAST</Abbr> 2.0 <Abbr>XML</Abbr> payload, <Abbr>VAST</Abbr> 3.0 <Abbr>XML</Abbr> payload, or <Abbr>VAST</Abbr> 4.0 <Abbr>XML</Abbr> payload.
+AppLovin does not support <Abbr>URL</Abbr>-encoded <Abbr>VAST</Abbr> tags. Embed <Abbr>VAST</Abbr> in `bid.adm`.
+
+#### Impression Tracking
+
+AppLovin fires tags on the server side that you send through the `<impression>` node. You can send more than one such node.
+
+#### Click Tracking
+
+AppLovin fires the tag on the client side that you send through the `<ClickTracking>` node.
+If you use a <Glossary>deep link</Glossary>, you must include it in the `<ClickThrough>` node.
+
+If you use a deep-link in an <Abbr>iOS</Abbr> ad, the `ext.skadn` object must be `null`.
+Otherwise the App Store will be opened within the ad and the `<ClickThrough>` node will be dismissed.
+
+#### Companion Ads
+
+AppLovin <Abbr>RTB</Abbr> expects a full-screen companion ad in the response for <Abbr>VAST</Abbr> ads.
+The request specifies the phone screen dimensions.
+The AppLovin <Abbr>SDK</Abbr> aspect-fits the ad in the middle of the screen.
+Since these are video end cards, use something in the ~1.33 aspect ratio range (for example, 1024×768 for landscape) and high quality images for best results with companion ads.
+
+
+AppLovin supports only `<HTMLResource>` and `<StaticResource>`.
+Support for `<HTMLResource>` as a companion ad is off by default.
+
+####
+Example <Abbr>VAST</Abbr> Ad Markup
+
+```json
+{
+  "adm": "<VAST version=\"2.0\">
+    <Ad id=\"applovin-video\">
+      <InLine>
+        <AdSystem version=\"AppLovin\">AppLovin Ad Server</AdSystem>
+        <AdTitle><![CDATA[AppLovin Video]]></AdTitle>
+        <Description><![CDATA[AppLovin Video]]></Description>
+        <Impression id=\"AL_Imp\" />
+        <Creatives>
+          <Creative sequence=\"1\" id=\"1\">
+            <Linear>
+              <Duration>00:00:13</Duration>
+              <VideoClicks>
+                <ClickThrough id=\"AL_Click\"><![CDATA[https://rtb.applovin.com/redirect?clcode=3!1563.1466706706!FgcnDB8CXKyVimq2aZHmpR2JxNmwsN1NMK7UlK6FqhOI54WxpITXiYcxUEVgXRIwedrcfVmD_DpD3lfBLqzpw5qF7sPXmXQ_kY1NLKQ2kdQn4cwctkm--RBq1Cmz5mX8RJRytc-G3KeJ9usTmgmXTSFtLvHGSGHIM7Pwfq_KiEAQiKweR20lp_iyQXVNwiUJmpFFoQpAm9bNU5JegcmPfIIBnesZKk5pmdJDpUEnjlFdNAqRCzci_qO-f6RtTdYEvJBqnh9usSgEdxnfLh-hHpNx5CovcfTejFfF94CTaTV_K6wEHXQOjZdT-yfdeydAQEkl3bUxiT8cXrEuCu73WHFVOoYwoLJLLAipuLCNCkj9DSvZ6JTnoQkPRlpBjSJQmmYXNv2HDKXYKSgIA-g-wRaTuRZ0lMi4OHNBK_N4ClACeg2TOFYTp3cHWnh6gEr-ZfWQ4FUzgGCLQRXm0Ez7wjCRM0vfoVsdVEZrctobQI7_im9tT4UmTjNgxP7dKlLHRwhl68fBqGUMobFSsohmuucakp5BXlSPyQIh91MoTOOsbR2UTMZXjFholy7qDgDxNxKzaQk0AFX6Vf0w**&did=104934ef84eee135bb&eventid=7d2a138bf9102f05dcbf9540b5f5dd2a317cc&ssl=1]]></ClickThrough>
+              </VideoClicks>
+              <MediaFiles>
+                <MediaFile delivery=\"progressive\" bitrate=\"932\" width=\"570\" height=\"320\" type=\"video/mp4\"><![CDATA[https://vid.applovin.com/468779_570x320.mp4]]></MediaFile>
+              </MediaFiles>
+            </Linear>
+          </Creative>
+          <Creative sequence=\"1\" id=\"1\">
+            <CompanionAds>
+              <Companion width=\"1024\" height=\"768\">
+                <StaticResource creativeType=\"image/gif\"><![CDATA[https://img.applovin.com/1461768_1024x768.gif]]></StaticResource>
+                <CompanionClickThrough><![CDATA[https://rtb.applovin.com/redirect?clcode=3!1563.1466706806!FgcnDB8CXKHpfIyVimq2aZHmpR2JxNmwsN1NMK7UlK6FqhOI54WxpITXiYcxUEVgXRIwedrcfVmD_DpD3lfBLqzpw5qF7sPXmXQ_kY1NLKQ2kdQn4cwctkm--RBq1Cmz5mX8RJRytc-G3KeJ9usTmgmXTSFtLvHGSGHIM7Pwfq_KiEAQiKweR20lp_iyQXVNwiUJmpFFoQpAm9bNU5JegcmPfIIBnesZKk5pmdJDpUEnjlFdNAqRCzci_qO-f6RtTdYEvJBqnh9usSgEdxnfLh-hHpNx5CovcfTejFfF94CTaTV_K6wEHXQOjZdT-yfdeydAQEkl3bUxiT8cXrEuCu73WHFVOoYwoLJLLAipuLCNCkj9DSvZ6JTnoQkPRlpBjSJQmmYXNv2HDKXYKSgIA-g-wRaTuRZ0lMi4OHNBK_N4ClACeg2TOFYTp3cHWnh6gEr-ZfWQ4FUzgGCLQRXm0Ez7wjCRM0vfoVsdVEZrctobQI7_im9tT4UmTjNgxP7dKlLHRwhl68fBqGUMobFSsohmuucakp5BXlSPyQIh91MoTOOsbR2UTMZXjFholy7qDgDxNxyGKzaQk0AFX6Vf0w**&did=104924ef84eee135bb&eventid=7d82abf9102f05dcbf9540b5f5dd2a317cc&ssl=1]]></CompanionClickThrough>
+              </Companion>
+            </CompanionAds>
+          </Creative>
+        </Creatives>
+        <Extensions>
+        </Extensions>
+      </InLine>
+    </Ad>
+  </VAST>"
+}
+```
+
+### <Abbr>MRAID</Abbr> Support
+
+<Abbr>MRAID</Abbr> ads must include a loading indicator to signal that the ad is loading.
+There is no limit on ad duration for regular <Abbr>MRAID</Abbr> ads, but rewarded <Abbr>MRAID</Abbr> ads have a maximum of 30<Abbr>s (seconds)</Abbr>.
+AppLovin supports `mraid.open` only for click trackers.
+
+Rewarded <Abbr>MRAID</Abbr> placements (playable ads) are off by default.
+If you are interested in these, please contact your AppLovin point of contact.
+
+#### Close Button
+
+Remove any close button from your <Abbr>MRAID</Abbr> ad.
+AppLovin supplies the close button on all <Abbr>MRAID</Abbr> ads.
+
+### <Abbr>HTML</Abbr> Support
+
+AppLovin <Abbr>RTB</Abbr> centers all <Abbr>HTML</Abbr> ads.
+The resulting ad position depends on the ad size and the screen size.
+AppLovin supplies the close button.
+
+### Native Support
+
+AppLovin native ads use [Open<Abbr>RTB</Abbr> Dynamic Native Ads <Abbr>API</Abbr> Specification Version 1.2](https://www.iab.com/wp-content/uploads/2018/03/OpenRTB-Native-Ads-Specification-Final-1.2.pdf).
+
+The impression object contains the native object.
+The native object contains the `request` field with the <Abbr>JSON</Abbr> string representation of the native request.
+
+#### Native Request Information
+
+| Field | Description |
+| ----- | ----------- |
+| `context` | The context in which the ad appears; currently not used and always set to `1501`. |
+| `plcmtcnt` | The placement count (AppLovin requests only one placement per request). |
+| `plcmttype` | The design/format/layout of the ad unit being offered. `1` means in the feed of the content; `2` means in the atomic unit of the content. |
+| `ver` | The version of the Native Ad Specification to which the request complies; set to `1.2`. |
+
+#### Native Request Assets
+
+| <Abbr>ID</Abbr> | Field | Type | Description |
+| --------------- | ----- | ---- | ----------- |
+| `1` (required) | `title` | N/A | Title of the native ad. Maximum length is 140 characters. Always passes `Bidrequest.imp.native.request.assets.len`, the maximum length of the text in the `title` element. |
+| `2` (required) | `img` | 3 | Main image of the native creative. Minimum size is 627×627. Recommended size is 1200×627. |
+| `3` (optional) | `img` | 1 | Icon image of the native creative. Minimum size is 50×50. |
+| `4` (optional) | `data` | 2 | Descriptive text associated with the text product or service being advertised. Maximum length is 140 characters.<p>`Bidrequest.imp.native.request.assets.data` contains `.type` and `.len` objects. The `type` contains the Type <Abbr>ID</Abbr> of the element supported by the publisher. The `len` is the maximum length of the text in the element’s response.</p> |
+| `5` (required) | `data` | 12 | <Abbr>CTA</Abbr> description—descriptive text describing a “call to action” button for the destination <Abbr>URL</Abbr>. Maximum length is 15 characters.<p>`Bidrequest.imp.native.request.assets.data` contains `.type` and `.len` objects. The `type` contains the Type <Abbr>ID</Abbr> of the element supported by the publisher. The `len` is the maximum length of the text in the element’s response.</p> |
+| `6` (optional) | `data` | 3 | Rating of the product being offered to the user. For example, an app’s rating in an app store on a 0–5 scale. |
+| `8` (optional) | `data` | 1 | “Sponsored By” message which should contain the brand name of the sponsor. Maximum length is 25 characters. |
+
+#### Native Response Information
+
+Native response must have `native.link.url` with the destination link <Abbr>URL</Abbr>.
+
+The AppLovin <Abbr>SDK</Abbr> does not support native video.
+
+### <Abbr>CTV</Abbr> Support
+
+AppLovin <Abbr>RTB</Abbr> supports Connected TV (<Abbr>CTV</Abbr>) inventory.
+The following will help with a successful integration: 
+
+- <Abbr>CTV</Abbr> requests support video only, so there is no `banner` object under [the `imp` object](#imp-object).
+- <Abbr>VAST</Abbr> is the only supported format for Connected <Abbr>TV</Abbr> inventory.
+  AppLovin does not support <Abbr>MRAID</Abbr> or <Abbr>VPAID</Abbr>.
+- Only the mp4 video <Abbr>MIME</Abbr> type is supported.
+- [`seatbid.bid.ext.duration`](#bid-object) is mandatory.
+
+For <Abbr>VAST</Abbr> InLine:
+
+- The bitrate should fall between [`minbitrate` and `maxbitrate`](#video-object) sent in [the bid request](#bid-request).
+- The width and height should be equal to [`imp.video.w` and `imp.video.h`](#video-object) in [the bid request](#bid-request).
+
+### Ad Caching
+
+The AppLovin <Abbr>SDK</Abbr> caches certain ads to improve ad display responsiveness.
+Cached ads are shown only in the same session.
+The <Abbr>SDK</Abbr> caches ads for up to four hours, but normally the period between cache and show is only a few minutes.
+
+Video
+: AppLovin caches only inline video ads.
+  For optimal responsiveness, the maximum video file size allowed is 4MB.
+  Try to keep video file sizes below 2MB.
+
+<Abbr>MRAID</Abbr>
+: AppLovin does not cache <Abbr>MRAID</Abbr> ads.
+  While AppLovin does not have a size limit, keep your creative assets in your <Abbr>MRAID</Abbr> markup as lean as possible to ensure your ads are responsive when the publisher attempts to render them.
+  All <Abbr>MRAID</Abbr> ads must include a loading indicator to signal when the ad is loading.
+  The AppLovin close button appears after three seconds, regardless of loading status.
+
+### Example Bid Request
+```json
+{
+  "app": {
+    "bundle": "com.example.game",
+    "cat": ["IAB9-30"],
+    "id": "188e1f4c72744d3da3134a25",
+    "name": "Example Game",
+    "publisher": {
+      "id": "41c8cd761e099946e85842c11debfb4d"
+    },
+    "storeurl": "https://play.google.com/store/apps/details?id=com.example.game"
+  },
+  "at": 2,
+  "bcat": ["IAB8-5","IAB8-18","IAB11-4","IAB25","IAB26"],
+  "device": {
+    "carrier": "telekomde",
+    "connectiontype": 3,
+    "devicetype": 4,
+    "dnt": 0,
+    "geo": {
+      "city": "Barrington",
+      "country": "USA",
+      "metro": "",
+      "type": 2,
+      "zip": ""
+    },
+    "h": 1280,
+    "hwv": "hllte",
+    "ifa": "e1020eb8-fc74-454d-b420-a9763d8bc556",
+    "ip": "203.0.113.12",
+    "js": 1,
+    "language": "de",
+    "lmt": 0,
+    "make": "samsung",
+    "model": "SM-N7505",
+    "os": "Android",
+    "osv": "5.1.1",
+    "ua": "Mozilla/5.0 (Linux; Android 4.3; SM-N7505 Build/JSS15J) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/40.0.2214.89 Mobile Safari/537.36",
+    "w": 720
+  },
+  "id": "94dedeadbeefc4b8fcba406639bbf15912766bdc",
+  "imp": [
+    {
+      "banner": {
+        "api": [
+          3,
+          5
+        ],
+        "battr": [
+          1,
+          2,
+          5,
+          8,
+          9,
+         14,
+         17
+        ],
+        "btype": [
+          1,
+          4
+        ],
+        "h": 480,
+        "pos": 1,
+        "w": 320
+      },
+     "displaymanager": "applovin",
+     "displaymanagerver": "6.1.4",
+     "id": "1",
+     "instl": 1,
+     "secure": 0,
+     "tagid": "0652dbc39a23edfd",
+     "video": {
+        "battr": [
+          1,
+          2,
+          3,
+          7,
+          8,
+          9,
+         14,
+         13
+        ],
+        "companiontype": [
+          1,
+          2,
+          3
+        ],
+        "h": 480,
+        "linearity": 1,
+        "mimes": [
+          "video/mp4"
+        ],
+        "protocols": [
+          2,
+          3
+        ],
+        "w": 320
+      }
+    }
+  ]
+}
+```
+
+### Example Native Bid Request
+```json
+{
+  "app": {
+    "bundle": "com.example.game",
+    "cat": [
+      "IAB24"
+    ],
+    "id": "81a292321de8ed119cb833e0a80c4231",
+    "name": "Example Game",
+    "publisher": {
+      "id": "41c8cd761e099946e85842c11debfb4d"
+    },
+    "storeurl": "https://play.google.com/store/apps/details?id=com.example.game"
+  },
+  "at": 2,
+  "badv": [
+  ],
+  "device": {
+    "carrier": "verizon",
+    "connectiontype": 2,
+    "devicetype": 4,
+    "dnt": 0,
+    "geo": {
+      "city": "Redwood City",
+      "country": "USA",
+      "metro": "",
+      "type": 2
+    },
+    "h": 0,
+    "hwv": "",
+    "ifa": "12341234-1234-1234-1234-123412341234",
+    "ip": "255.255.255.255",
+    "ipv6": "2a00:79e1:abc:6b01:d516:20e2:582d:339a",
+    "js": 1,
+    "language": "en",
+    "lmt": 0,
+    "make": "",
+    "model": "",
+    "os": "Android",
+    "osv": "8.0.0",
+    "ua": "Mozilla/5.0 (Linux; Android 8.0.0; en_US; Moto Z (2) Build/ODXS27.000-00-00) AppleWebKit/000.00 (KHTML, like Gecko) Version/4.0 Chrome/30.0.0.0 Mobile Safari/000.00",
+    "w": 0
+  },
+  "id": "d628d2709c061c14ea4a2e17a52da1778534d1f5",
+  "imp": [
+    {
+      "displaymanager": "applovin",
+      "displaymanagerver": "6.0.0",
+      "ext": { },
+      "id": "1",
+      "native": {
+        "api": [],
+        "battr": [
+          1,
+          2,
+          5,
+          8,
+          9,
+         14,
+         17,
+          3,
+          4,
+         13
+        ],
+        "request": "{"native":{"assets":[{"id":1,"required":1,"title":{"len":140}},{"id":2,"img":{"hmin":800,"type":3,"wmin":417},"required":1},{"id":3,"img":{"hmin":50,"type":1,"wmin":50},"required":1},{"data":{"len":140,"type":2},"id":4,"required":0},{"data":{"len":15,"type":12},"id":5,"required":1},"context":1501,"plcmtcnt":1,"plcmttype":1,"ver":"1.2"}}",
+        "ver": "1.2"
+      },
+      "secure": 0,
+      "tagid": "5ba489fc7ec59a27:NOTIFYCLEAN"
+    }
+  ]
+}
+```
+
+#### Example <Abbr>CTV</Abbr> Bid Request
+
+```json
+{
+  "id": "eb3ebe82eb5223c2525d46bd3bef213649466b0a",
+  "at": 1,
+  "bcat": [
+    "IAB11-4",
+    "IAB8-5",
+    "test1",
+    "IAB8-18",
+    "IAB25-7",
+    "IAB25-1",
+    "IAB25-5",
+    "IAB25-2",
+    "IAB25-3",
+    "IAB26-1",
+    "IAB25-4",
+    "IAB26-4",
+    "IAB26-2",
+    "IAB26-3",
+    "IAB25-6",
+    "test2"
+  ],
+  "tmax": 1000,
+  "badv": [
+    "test2",
+    "test1"
+  ],
+  "app": {
+    "name": "APPINT",
+    "bundle": "com.applovin.appint",
+    "cat": [],
+    "id": "a9dad9c29f02533c9462db5555561e79",
+    "publisher": {
+      "id": "61310",
+      "ext": {}
+    },
+    "content": {
+      "contentrating": "TV-PG",
+      "genre": "Documentary,Science",
+      "episode": 2,
+      "season": "7",
+      "ext": {
+        "channel": "AppLovin Test"
+      }
+    },
+    "storeurl": "https://channelstore.roku.com/details/196460",
+    "ext": {}
+  },
+  "device": {
+    "ifa": "66dcd4a1-a0ed-b2b8-7e1a-3d2ea2ecc889",
+    "ip": "204.14.60.221",
+    "language": "en",
+    "devicetype": 3,
+    "js": 0,
+    "geo": {
+      "type": 2,
+      "ipservice": 3,
+      "lat": 42.2441,
+      "lon": -75.2871,
+      "long": -75.2871,
+      "city": "Sidney Center",
+      "country": "USA",
+      "region": "ny",
+      "dma": "502",
+      "metro": "502",
+      "zip": "13839",
+      "ext": {
+        "org": "DTC Cable",
+        "isp": "DTC Cable"
+      }
+    },
+    "ext": {},
+    "make": "Roku",
+    "model": "DVP",
+    "os": "Roku OS",
+    "dnt": 0,
+    "lmt": 0
+  },
+  "imp": [
+    {
+      "id": "1",
+      "displaymanager": "applovin",
+      "instl": 0,
+      "secure": 1,
+      "tagid": "2f850a687d1acfdb:",
+      "bidfloor": 22.58823529411765,
+      "bidfloorcur": "USD",
+      "exp": 14400,
+      "video": {
+        "w": 1920,
+        "h": 1080,
+        "battr": [
+          1,
+          2,
+          5,
+          8,
+          9,
+          14,
+          17,
+          3,
+          4,
+          13
+        ],
+        "mimes": [
+          "video/mp4",
+          "video/ogg",
+          "video/webm"
+        ],
+        "placement": 1,
+        "pos": 1,
+        "minduration": 1,
+        "maxduration": 120,
+        "startdelay": -1,
+        "minbitrate": 1,
+        "maxbitrate": 280000,
+        "linearity": 1,
+        "sequence": 1,
+        "protocols": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "podid": "pod_1",
+        "podseq": 0,
+        "slotinpod": 0,
+        "ext": {
+          "maxsequence": 1
+        }
+      },
+      "rwdd": 0,
+      "ext": {}
+    }
+  ],
+  "user": {
+    "ext": {
+      "gdpr": 0
+    },
+    "id": "66dcd4a1-a0ed-b2b8-7e1a-3d2ea2ecc889"
+  },
+  "regs": {
+    "coppa": 0,
+    "ext": {
+      "ccpa": 0,
+      "gdpr": 0
+    }
+  },
+  "source": {
+    "ext": {
+      "schain": {
+        "ver": "1.0",
+        "complete": 1,
+        "nodes": [
+          {
+            "asi": "applovin.com",
+            "sid": "61310",
+            "rid": "eb3ebe82eb5223c2525d46bd3bef213649466b0a",
+            "hp": 1
+          }
+        ]
+      }
+    }
+  }
+}
+
+### Example Bid Response
+```json
+{
+  "id": "5e1eb292d6b7ea9cf3da74ddb385996a62d3a6e9",
+  "seatbid": [
+    {
+      "bid": [
+        {
+          "id": "8JxH4DHN4KMF21Vd",
+          "impid": "1",
+          "price": 15,
+          "adid": "1093919",
+          "adm": "&lt;a href=\"https://click.url/click/8JxH4DHN4KMF21Vd?uid=05D02DC6-0132-4C2C-A879-79BB026BE3F8&amp;partner=applovin&amp;ts=2018-07-09T18-19-01Z&amp;ad=1093919\"&gt;&lt;img src=\"https://assets.dsp.io/ad_assets/files/320x50.png\" height=\"50\" width=\"320\" alt=\"\"/&gt;&lt;/a&gt;",
+          "adomain": [
+            "advertiser.com"
+          ],
+          "bundle": "123123123",
+          "iurl": "https://assets.dsp.io/ad_assets/files/320x50.png",
+          "cid": "12345",
+          "crid": "crid123",
+          "cat": [
+            "IAB22-2"
+          ],
+          "h": 50,
+          "w": 320,
+          "ext": {
+            "crtype": "HTML",
+            "imptrackers": [
+                "https://example.dsp.events/win/8JxH4DHN4KMF21Vd?ts=2018-07-09T18-19-01Z&amp;ad=1093919&amp;uid=05D02DC6-0132-4C2C-A879-79BB026BE3F8&amp;auction=${AUCTION_ID}&amp;price=${AUCTION_PRICE}&amp;partner=applovin"
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "bidid": "8JxH4DHN4KMF21Vd",
+  "cur": "USD"
+}
+```
+
+### Example Native Ad Response
+```json
+{
+  "bidid":"9aa2a2950894c95b9b02476a5ba5438dc6de8dc1",
+  "cur":"USD",
+  "id":"65de6af36e6fb32778afa94a996ec4c2b514145d",
+  "seatbid":[
+    {
+      "bid":[
+        {
+          "adm":"{\"native\":{\"assets\":[{\"id\":100,\"title\":{\"text\":\"Test Ad\"}},{\"id\":200},{\"id\":300,\"img\":{\"h\":null,\"url\":\"https://assets.com/main_image.png_\",\"w\":null}},{\"id\":310,\"img\":{\"h\":80,\"url\":\"https://assets.com/icon_image.png\",\"w\":80}},{\"data\":{\"value\":\"Test Ad Subline\"},\"id\":420},{\"data\":{\"value\":\"Continue\"},\"id\":430},{\"data\":{\"value\":\"4.5\"},\"id\":410}],\"imptrackers\":[\"https://adserver.com/impression_tracker\"],\"link\":{\"url\":\"https://adserver.com/click_destination\"}}}\n",
+          "adomain":[
+            "somegame.com"
+          ],
+          "bundle":"com.game.example",
+          "cat":[
+            "IAB1"
+          ],
+          "crid":"74650.0!3ILDTypkALKe8xfw2WJLmxfNOftiOg2u3yeGIKEULAU*",
+          "ext": {
+            "crtype":"native"
+          },
+          "id": "1",
+          "impid": "1",
+          "iurl": "https://assets.com/preview.png",
+          "price": 1.0
+        }
+      ],
+      "seat":"A00000001"
+    }
+  ]
+}
+```
+
+## Changelog
+| Release Date | Notes |
+| ------------ | ----- |
+| <Abbr>Jul.</Abbr> 2023 | Compressed/gzip <Abbr>oRTB</Abbr> required. Adhere to [Open<Abbr>RTB</Abbr> <Abbr>API</Abbr> Specification version 2.5 section 2.4: Data Encoding](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A53%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C229%2C0%5D). |
+| May 2023 | Tracking <Abbr>URL</Abbr>s&#xA0;embedded in the <Abbr>VAST</Abbr> <Abbr>XML</Abbr> for video ads do not fire consistently for apps using Android <Abbr>SDK</Abbr> version 11.8.2 (released March 13, 2023) or 11.9.0 (released April 10, 2023). Issue is resolved as of <Abbr>SDK</Abbr> version 11.10.0 (released May, 21 2023). |
+| <Abbr>Apr.</Abbr> 2023 | Smart Throttling enabled for all <Abbr>DSP</Abbr> buyers. |
+| <Abbr>Apr.</Abbr> 5, 2023 | Include only those <Abbr>SK</Abbr>AdNetwork <Abbr>ID</Abbr>(s) in the <code>imp[<var>n</var>].ext.skadn</code> bid request object that are integrated into the app and that belong exclusively to the <Abbr>DSP</Abbr> that the request is being sent to. |
+| <Abbr>Feb.</Abbr> 21, 2023 | The `imp.tagid` bid request field is now unique to the ad unit. Prior to this, `imp.tagid` was not passed consistently, and a single value was used at the app/package level. |
+| <Abbr>Jan.</Abbr> 2023 | Add support for <Abbr>CTV</Abbr> |
+| <Abbr>Sep.</Abbr> 30, 2022 | Add `X-Device-IP` and `X-Device-User-Agent` headers to server-to-server impression callbacks. <ul><li>`X-Device-IP`: Actual user device <Abbr>IP</Abbr> address</li><li>`X-Device-User-Agent`: Actual user device <Abbr>UA</Abbr>.</li></ul> |
+| May 11, 2022 | <Abbr>VAST</Abbr> Wrapper tags no longer supported for Android Rewarded. |
+| <Abbr>Feb.</Abbr> 24, 2022 | Add support for Native format as of AppLovin <Abbr>SDK</Abbr> iOS 11.1.2 / Android 11.1.3. |
+| <Abbr>Dec.</Abbr> 31, 2021 | Add support for passing <Abbr>IDFV</Abbr> in the `device.ext.ifv` field. Only passed when <Abbr>IDFA</Abbr> is not available. Currently passed for <Abbr>iOS</Abbr> only. |

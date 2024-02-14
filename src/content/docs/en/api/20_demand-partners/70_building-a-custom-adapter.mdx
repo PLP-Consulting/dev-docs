@@ -1,0 +1,213 @@
+---
+title: "Building a Custom Adapter"
+description: "You can write a custom adapter if you want to support an ad network that is not listed in the AppLovin MAX Mediation Matrix."
+slug: en/api/demand-partners/building-a-custom-adapter
+---
+You can write a custom adapter if you want to support an <Glossary>ad network</Glossary> that is not listed in the AppLovin MAX Mediation Matrix.
+
+# Android tab
+
+<div>
+## Getting Started
+
+Implement a subclass of `com.applovin.mediation.adapters.MediationAdapterBase`.
+This subclass enables the interface between your mediation adapter and the AppLovin MAX <Glossary>SDK</Glossary>.
+That interface handles various functions of your <Abbr>SDK</Abbr>, including initialization, versioning, and resource cleanup.
+
+1. Create a subclass of `MediationAdapterBase` in the `com.applovin.mediation.adapters` package of your application.
+   The name of this class should contain the network name (for example, <code>com.<var>mycompanyname</var>.<var>MyNetwork</var>MediationAdapter</code>).
+1. Override the `initialize(final MaxAdapterInitializationParameters parameters, final Activity activity, final OnCompletionListener onCompletionListener)` method and implement code that initializes your ad network <Abbr>SDK</Abbr>.
+   If you need to access the app <Abbr>ID</Abbr> set in the <Abbr>UI</Abbr>, you can do so by means of `parameters.getServerParameters().getString( "app_id", null );`.
+   This logic executes in parallel with the initialization of the AppLovin <Abbr>SDK</Abbr>.
+   Call `onCompletionListener.onCompletion()` after you initialize the ad network, and pass that completion handler one of the following values:
+   * While the ad network <Abbr>SDK</Abbr> is initializing: `InitializationStatus.INITIALIZING`
+   * If the ad network <Abbr>SDK</Abbr> initializes successfully: `InitializationStatus.INITIALIZED_SUCCESS`
+   * If the ad network <Abbr>SDK</Abbr> fails to initialize: `InitializationStatus.INITIALIZED_FAILURE` (with a relevant error message)
+   * If the ad network <Abbr>SDK</Abbr> does not have an initialization callback status: `InitializationStatus.DOES_NOT_APPLY`
+   * If the ad network explicitly initialized, but without a status: `InitializationStatus.INITIALIZED_UNKNOWN`
+1. Override the `getSdkVersion()` method and implement code that returns the network <Abbr>SDK</Abbr> version string from that method.
+1. Override the `getAdapterVersion()` method and implement code that returns the version number of the mediation adapter from that method.
+   All of AppLovin’s adapters use a five-number versioning scheme:
+   The leftmost four numbers correspond to the network <Abbr>SDK</Abbr> version and the last number denotes the minor version number which refers to the adapter release.
+1. Override the `onDestroy()` method and implement the clean-up logic for the network <Abbr>SDK</Abbr> objects in that method.
+
+## <Glossary>Banner Ads</Glossary>
+
+1. Implement the `MaxAdViewAdapter` interface in your `com.mycompanyname.MyNetworkMediationAdapter` class.
+1. Override the `loadAdViewAd()` method which requests an ad.
+   Call the `parameters.getThirdPartyAdPlacementId()` method to get the placement <Abbr>ID</Abbr> you need for your ad logic.
+1. Call the appropriate `MaxAdViewAdapterListener` methods to notify the AppLovin MAX <Abbr>SDK</Abbr> about banner lifecycle events:
+   * When an ad loads successfully, call `MaxAdViewAdapterListener.onAdViewAdLoaded()`.
+   * When an ad load fails, call `MaxAdViewAdapterListener.onAdViewAdLoadFailed()` with an appropriate `MaxAdapterError`.
+   * Optionally, make the following banner lifecycle events notification calls as appropriate: `onAdViewAdClicked()`, `onAdViewAdCollapsed()`, `onAdViewAdDisplayed()`, `onAdViewAdDisplayFailed()`, `onAdViewAdExpanded()`, `onAdViewAdHidden()`.
+
+## <Glossary>Interstitials</Glossary>
+
+1. Implement the `MaxInterstitialAdapter` interface in your `com.mycompanyname.MyNetworkMediationAdapter` class.
+1. Override the `loadInterstitialAd()` method which requests an ad. Call the `parameters.getThirdPartyAdPlacementId()` method to get the placement <Abbr>ID</Abbr> you need for your ad logic.
+1. Override the `showInterstitialAd()` method which shows the loaded ad.
+   Call the `parameters.getThirdPartyAdPlacementId()` method to get the placement <Abbr>ID</Abbr> you need for your ad logic.
+   If the ad is not ready, call `MaxInterstitialAdapterListener.onInterstitialAdDisplayFailed( MaxAdapterError.AD_NOT_READY )`.
+1. Call the appropriate `MaxInterstitialAdapterListener` methods to notify the AppLovin MAX <Abbr>SDK</Abbr> about interstitial lifecycle events:
+   * When an ad loads successfully, call `MaxInterstitialAdapterListener.onInterstitialAdLoaded()`.
+   * When an ad load fails, call `MaxInterstitialAdapterListener.onInterstitialAdLoadFailed()` with an appropriate `MaxAdapterError`.
+   * When an ad is hidden, call `MaxInterstitialAdapterListener.onInterstitialAdHidden()`.
+   * Optionally, make the following interstitial lifecycle events notification calls as appropriate: `onInterstitialAdClicked()`, `onInterstitialAdDisplayFailed()`.
+
+## <Glossary rewarded-video-ads>Rewarded Ads</Glossary>
+
+1. Implement the `MaxRewardedAdapter` interface in your `com.mycompanyname.MyNetworkMediationAdapter` class.
+1. Override the `loadRewardedAd()` method which requests an ad.
+   Call the `parameters.getThirdPartyAdPlacementId()` method to get the placement <Abbr>ID</Abbr> you need for your ad logic.
+1. Override the `showRewardedAd()` method which shows the loaded ad.
+   Call the `parameters.getThirdPartyAdPlacementId()` method to get the placement <Abbr>ID</Abbr> you need for your ad logic.
+   If the ad is not ready, call `MaxRewardedAdapterListener.onRewardedAdDisplayFailed( MaxAdapterError.AD_NOT_READY )`.
+1. Call the appropriate `MaxRewardedAdapterListener` methods to notify the AppLovin MAX <Abbr>SDK</Abbr> about rewarded video lifecycle events:
+   * When an ad loads successfully, call `MaxRewardedAdapterListener.onRewardedAdLoaded()`.
+   * When an ad load fails, call `MaxRewardedAdapterListener.onRewardedAdLoadFailed()` with an appropriate `MaxAdapterError`.
+   * When an ad starts playing, call `MaxRewardedAdapterListener.onRewardedAdDisplayed()`.
+   * If a reward should be presented to the user, call `MaxRewardedAdapterListener.onUserRewarded()` with an appropriate `MaxReward` amount and currency.
+     If no amount is available, default to `MaxReward.DEFAULT_AMOUNT`.
+     AppLovin recommends that you call this immediately before `MaxRewardedAdapterListener.onRewardedAdHidden()`.
+   * When an ad is hidden, call `MaxRewardedAdapterListener.onRewardedAdHidden()`.
+   * Optionally, make the following rewarded video lifecycle event notification call as appropriate: `onRewardedAdClicked()`.
+
+## <Glossary native-ads>Native Ads</Glossary>
+
+1. Implement the `MaxNativeAdAdapter` interface in your `com.mycompanyname.MyNetworkMediationAdapter` class.
+1. Override the `loadNativeAd()` method which requests an ad.
+1. Call the appropriate `MaxNativeAdAdapterListener` methods to notify the AppLovin MAX <Abbr>SDK</Abbr> about native ad lifecycle events:
+   * When an ad loads successfully, call `MaxNativeAdAdapterListener.onNativeAdLoaded()`.
+   * When an ad load fails, call `MaxNativeAdAdapterListener.onNativeAdLoadFailed()` with an appropriate `MaxAdapterError`.
+   * When an ad displays, call `MaxNativeAdAdapterListener.onNativeAdDisplayed()`.
+   * When the user clicks on an ad, call `MaxNativeAdAdapterListener.onNativeAdClicked()`.
+
+## Privacy
+
+MAX offers three boolean flags represented by a `Boolean` object that indicates whether the user provides privacy consent (or that are `null` if the user has indicated neither consent or no consent).
+To obtain the value of these flags, use the following methods of the `parameters` object passed into each method:
+
+`MaxAdapterParameters.hasUserConsent()`
+: for the <Glossary>GDPR</Glossary> consent flag.
+  You can find out about how to determine if <Abbr>GDPR</Abbr> applies to the user in the Privacy page of this documentation for your platform.
+
+`MaxAdapterParameters.isDoNotSell()`
+: for the multi-state targeted advertising consent flag.
+  AppLovin currently does not have an <Abbr>API</Abbr> to indicate whether the user belongs in a region to which this applies.
+
+`MaxAdapterParameters.isAgeRestrictedUser()`
+: for the <Abbr>COPPA</Abbr> flag
+
+</div>
+
+# iOS tab
+
+<div>
+## Getting Started
+
+Implement a subclass of `ALMediationAdapter`.
+This subclass enables the interface between your mediation adapter and the AppLovin MAX <Glossary sdk>SDK</Glossary>.
+That interface handles various functions of your <Abbr>SDK</Abbr>, including initialization, versioning, and resource cleanup.
+
+1. Create a `.m` and `.h` extending from `ALMediationAdapter` in your project.
+   The name of this class should contain the network name (for example, <code><var>MyNetwork</var>MediationAdapter</code>).
+1. Implement the `- (void)initializeWithParameters:(id&lt;MAAdapterInitializationParameters&gt;)parameters completionHandler:(void (^)(MAAdapterInitializationStatus NSString *_Nullable))completionHandler` method and implement code that initializes your ad network <Abbr>SDK</Abbr>.
+   If you need to access the app <Abbr>ID</Abbr> set in the <Abbr>UI</Abbr>, you can do so by means of `parameters.serverParameters[@"app_id"]`.
+   This logic executes in parallel with the initialization of the AppLovin <Abbr>SDK</Abbr>.
+   Call `completionHandler` after you initialize the ad network, and pass that handler one of the following values:
+   * While the ad network <Abbr>SDK</Abbr> is initializing: `MAAdapterInitializationStatusInitializing`
+   * If the ad network <Abbr>SDK</Abbr> initializes successfully: `MAAdapterInitializationStatusInitializedSuccess`
+   * If the ad network <Abbr>SDK</Abbr> fails to initialize: `MAAdapterInitializationStatusInitializedFailure` (with a relevant error message)
+   * If the ad network <Abbr>SDK</Abbr> does not have an initialization callback status: `MAAdapterInitializationStatusDoesNotApply` (with `null` as the error message)
+   * If the ad network explicitly initialized, but without a status: `MAAdapterInitializationStatusInitializedUnknown`
+1. Implement the `- (NSString *)SDKVersion` method and implement code that returns the network <Abbr>SDK</Abbr> version string from that method.
+1. Implement the `- (NSString *)adapterVersion` method and implement code that returns the version number of the mediation adapter from that method.
+   All of AppLovin’s adapters use a five-number versioning scheme:
+   The leftmost four numbers correspond to the network <Abbr>SDK</Abbr> version and the last number denotes the minor version number which refers to the adapter release.
+1. Implement the `- (void)destroy` method and implement the clean-up logic for the network <Abbr>SDK</Abbr> objects in that method.
+
+## <Glossary banner-ads>Banner Ads</Glossary>
+
+1. Implement the `MAAdViewAdapter` protocol in your `MyNetworkMediationAdapter` class.
+1. Implement the `- (void)loadAdViewAdForParameters:(id&lt;MAAdapterResponseParameters&gt;)parameters adFormat:(MAAdFormat *)adFormat andNotify:(id&lt;MAAdViewAdapterDelegate&gt;)delegate` method which requests an ad.
+   Call the `parameters.thirdPartyAdPlacementIdentifier` method to get the Placement <Abbr>ID</Abbr> you need for your ad logic.
+1. Call the appropriate `MAAdViewAdapterDelegate` methods to notify the AppLovin MAX <Abbr>SDK</Abbr> about banner lifecycle events:
+   * When an ad loads successfully, call `-[MAAdViewAdapterDelegate didLoadAdForAdView]`.
+   * When an ad load fails, call `-[MAAdViewAdapterDelegate didFailToLoadAdViewAdWithError:]` with an appropriate `MAAdapterError`.
+   * Optionally, make the following banner lifecycle event notification calls as appropriate: `didClickAdViewAd`, `didCollapseAdViewAd`, `didDisplayAdViewAd`, `didExpandAdViewAd`, `didFailToDisplayAdViewAdWithError`, `didHideAdViewAd`.
+
+## <Glossary interstitial-ads>Interstitials</Glossary>
+
+1. Implement the `MAInterstitialAdapter` protocol in your `MyNetworkMediationAdapter` class.
+1. Declare the `- (void)loadInterstitialAdForParameters:(id&lt;MAAdapterResponseParameters&gt;)parameters andNotify:(id&lt;MAInterstitialAdapterDelegate&gt;)delegate` method which requests an ad.
+   Call the `parameters.thirdPartyAdPlacementIdentifier` method to get the placement <Abbr>ID</Abbr> you need for your ad logic.
+1. Declare the `- (void)showInterstitialAdForParameters:(id&lt;MAAdapterResponseParameters&gt;)parameters andNotify:(id&lt;MAInterstitialAdapterDelegate&gt;)delegate` method which shows the loaded ad.
+   Call the `parameters.thirdPartyAdPlacementIdentifier` method to get the placement <Abbr>ID</Abbr> you need for your ad logic.
+   If the ad is not ready, call `-[MAInterstitialAdapterDelegate didFailToDisplayInterstitialAdWithError: MAAdapterError.adNotReady]`.
+1. Call the appropriate `MAInterstitialAdapterDelegate` methods to notify the AppLovin MAX <Abbr>SDK</Abbr> about interstitial lifecycle events:
+   * When an ad loads successfully, call `-[MAInterstitialAdapterDelegate didLoadInterstitialAd:]`.
+   * When an ad load fails, call `-[MAInterstitialAdapterDelegate didFailToLoadInterstitialAdWithError:]` with an appropriate `MAAdapterError`.
+   * When an ad displays successfully, call `-[MAInterstitialAdapterDelegate didDisplayInterstitialAd]`.
+   * When an ad is hidden, call `-[MAInterstitialAdapterDelegate didHideInterstitialAd:]`.
+   * Optionally, make the following interstitial lifecycle event notification calls as appropriate: `didClickInterstitialAd`, `didFailToDisplayInterstitialAdWithError`.
+
+## <Glossary rewarded-video-ads>Rewarded Ads</Glossary>
+
+1. Implement the `MARewardedAdapter` protocol in your `MyNetworkMediationAdapter` class.
+1. Declare the `- (void)loadRewardedAdForParameters:(id&lt;MAAdapterResponseParameters&gt;)parameters andNotify:(id&lt;MARewardedAdapterDelegate&gt;)delegate;` method which requests an ad.
+   Call the `parameters.thirdPartyAdPlacementIdentifier` method to get the placement <Abbr>ID</Abbr> you need for your ad logic.
+1. Declare the `- (void)showRewardedAdForParameters:(id&lt;MAAdapterResponseParameters&gt;)parameters andNotify:(id&lt;MARewardedAdapterDelegate&gt;)delegate;` method which shows the loaded ad.
+   Call the `parameters.thirdPartyAdPlacementIdentifier` method to get the placement <Abbr>ID</Abbr> you need for your ad logic.
+   If the ad is not ready, call `-[MARewardedAdapterDelegate didFailToDisplayRewardedAdWithError: MAAdapterError.adNotReady]`.
+1. Call the appropriate `MARewardedAdapterDelegate` methods to notify the AppLovin MAX <Abbr>SDK</Abbr> about rewarded video lifecycle events:
+   * When an ad loads successfully, call `-[MARewardedAdapterDelegate didLoadRewardedAd:]`.
+   * When an ad load fails, call `-[MARewardedAdapterDelegate didFailToLoadRewardedAdWithError:]` with an appropriate `MAAdapterError`.
+   * When an ad starts playing, call `-[MARewardedAdapterDelegate didDisplayRewardedAd:]`.
+   * If a reward should be presented to the user, call `-[MARewardedAdapterDelegate didRewardUserWithReward:]` with an appropriate `MAReward` amount and currency.
+     If no amount is available, default to `MAReward.defaultAmount`.
+     AppLovin recommends that you call this immediately before `-[MARewardedAdapterDelegate didHideRewardedAd:]`.
+   * When an ad is hidden, call `-[MARewardedAdapterDelegate didHideRewardedAd:]`.
+   * Optionally, make the following rewarded video lifecycle event notification call as appropriate: `didClickRewardedInterstitialAd`.
+
+## <Glossary native-ads>Native Ads</Glossary>
+
+1. Implement the `MANativeAdAdapter` protocol in your `MyNetworkMediationAdapter` class.
+1. Implement the `- (void)loadNativeAdForParameters:(id&lt;MAAdapterResponseParameters&gt;)parameters andNotify:(id&lt;MANativeAdAdapterDelegate&gt;)delegate;` method which requests an ad.
+1. Call the appropriate `MANativeAdAdapterDelegate` methods to notify the AppLovin MAX <Abbr>SDK</Abbr> about native ad lifecycle events:
+   * When an ad loads successfully, call `-[MANativeAdAdapterDelegate didLoadAdForNativeAd:]`.
+   * When an ad load fails, call `-[MANativeAdAdapterDelegate didFailToLoadNativeAdWithError:]` with an appropriate `MAAdapterError`.
+   * When an ad displays, call `-[MANativeAdAdapterDelegate didDisplayNativeAdWithExtraInfo:]`.
+   * When the user clicks on an ad, call `-[MANativeAdAdapterDelegate didClickNativeAd:]`.
+
+## Privacy
+
+MAX offers three boolean flags represented by an `NSNumber` object that indicates whether the user provides privacy consent (or that are `nil` if the user has indicated neither consent or no consent).
+To obtain the value of these flags, use the following <Abbr>API</Abbr>s of the `parameters` object passed into each method:
+
+`-[MAAdapterParameters hasUserConsent]`
+: for the <Glossary>GDPR</Glossary> consent flag.
+  You can find out how to determine if <Abbr>GDPR</Abbr> applies to the user in the Privacy page of this documentation for your platform.
+
+`-[MAAdapterParameters isDoNotSell]`
+: for the multi-state targeted advertising consent flag.
+  AppLovin currently does not have an <Abbr>API</Abbr> to indicate whether the user belongs in the relevant region.
+
+`-[MAAdapterParameters isAgeRestrictedUser]`
+: for the <Abbr>COPPA</Abbr> flag
+
+</div>
+
+## Testing
+
+You can test your custom adapter by using the MAX Demo App and Mediation Debugger (see the platform-specific documentation under “Testing Networks”).
+To get an ad request easily, you can raise the <Glossary>CPM</Glossary> of your placement in the <Glossary>waterfall</Glossary>.
+
+## Troubleshooting
+
+If your custom adapter does not appear to be included in the waterfall as you expect, use the following checklist to fix the most common issues that might be causing this:
+
+1. Disable Test Mode (see the Test Mode platform-specific documentation under “Testing Networks”)
+1. Make sure that the app package name, ad unit, and <Abbr>SDK</Abbr> key all match.
+1. Test with a physical device.
+1. Set the <Abbr>CPM</Abbr> of the custom network high enough that it has a high chance of winning in the waterfall.
+

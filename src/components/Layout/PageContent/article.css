@@ -486,3 +486,15 @@ abbr[title] {
   cursor: help;
   text-decoration: none;
 }
+
+table {
+  font-family: inherit;
+}
+
+th {
+  text-align: center;
+}
+
+td code {
+  word-break: normal;
+}
