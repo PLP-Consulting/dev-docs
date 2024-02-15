@@ -1,0 +1,44 @@
+---
+title: "SKAdNetwork (SKAN)"
+description: "AppLovin SDK fully supports Apple’s SKAdNetwork attribution by allowing DSPs to submit signed clicks to the SKAdNetwork API."
+slug: en/api/demand-partners/demand-side-platforms/skadnetwork-skan
+---
+
+AppLovin <Glossary>SDK</Glossary> fully supports Apple’s [<Abbr>SK</Abbr>AdNetwork attribution](https://developer.apple.com/documentation/storekit/skadnetwork) by allowing <Glossary>DSPs</Glossary> to submit signed clicks to the <Glossary>SKAdNetwork</Glossary> <Abbr>API</Abbr>.
+Please review [the bid request/response specification](applovin-ortb-specification) for integration details.
+
+<Callout type="note">
+<Abbr>SK</Abbr>AdNetwork attribution requires a <Abbr>SK</Abbr>AdNetwork <Abbr>ID</Abbr> which you can obtain by registering with Apple.
+</Callout>
+
+## How It Works
+1. The AppLovin <Abbr>SDK</Abbr> retrieves the `SKAdNetworkItems` from the source app’s `Info.plist`.
+1. AppLovin Exchange includes the [`imp.ext.skadn`](applovin-ortb-specification#impression-object) object in the [bid request](applovin-ortb-specification#bid-request) sent to those demand sources that are included in the source app’s `Info.plist`.
+1. If the winning ad requires <Abbr>SK</Abbr>AdNetwork support then the [bid response](applovin-ortb-specification#bid-response) includes [`seatbid.bid.ext.skadn`](applovin-ortb-specification#bid-object).
+1. If the user clicks on the ad, Apple considers the source app for install <Glossary>attribution</Glossary> using <Abbr>SK</Abbr>AdNetwork.
+1. If <Abbr>SK</Abbr>AdNetwork determines that the click from the <Abbr>DSP</Abbr>’s ad led to the install, Apple sends the <Glossary>postback</Glossary> directly to the <Abbr>DSP</Abbr>.
+ 
+## Creative Type Specification
+
+The following recommendations show you how to properly handle clicks, according to each of the AppLovin-supported <Glossary>Creative</Glossary> Types:
+
+### <Abbr>VAST</Abbr>
+
+When the <Abbr>SK</Abbr>AdNetwork (`skadn` object) is included in the bid response the `<ClickThrough>` node is ignored.
+Use the `<ClickTracking>` node if click tracking is needed.
+
+### <Abbr>HTML</Abbr>
+
+AppLovin accepts click-tracking <Abbr>URL</Abbr>s via the [bid response](applovin-ortb-specification#bid-response) [`seatbid.bid.ext.clicktrackers`](applovin-ortb-specification#bid-object) array.
+This is supported on all <Abbr>SDK</Abbr> versions that support <Abbr>SKAN</Abbr>, but not on versions earlier than that.
+Only include this object when AppLovin includes <Abbr>SKAN</Abbr> parameters in the [bid request](applovin-ortb-specification#bid-request).
+When the user clicks an ad, the AppLovin <Abbr>SDK</Abbr> renders the StoreKit, asynchronously hits each <Abbr>URL</Abbr>, and follows redirects (response codes in the 300s).
+
+### <Abbr>MRAID</Abbr>
+
+There is nothing special you need to do here; the AppLovin <Abbr>SDK</Abbr> handles clicks properly.
+
+## Considerations
+- Custom Product Page <Abbr>ID</Abbr> (available as of <Abbr>SDK</Abbr> 11.1.1) via `ext.skadn.productpage`.
+- <Abbr>SK</Abbr>Overlay support added (available as of <Abbr>SDK</Abbr> 10.0.0).
+  Note: Apple does not provide a callback for clicks on the overlay so AppLovin and <Abbr>DSP</Abbr> click tracking does not work.

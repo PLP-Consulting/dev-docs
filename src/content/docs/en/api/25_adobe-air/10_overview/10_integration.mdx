@@ -1,0 +1,193 @@
+---
+title: "Integration"
+description: "This page shows you how to download, configure, and initialize the AppLovin MAX AIR Extension."
+slug: en/max/adobe-air/overview/integration
+---
+import AppIds from "@content/en/api/partials/_app-ids.mdx";
+import SdkKey from "@content/en/api/partials/_sdk-key.mdx";
+import Ios15 from "@content/en/api/partials/_ios15.mdx";
+
+This section shows you how to download, configure, and initialize the AppLovin MAX AIR Extension.
+
+## Download the Latest Adobe AIR Extension
+
+*Missing download link here*
+
+<Callout type="tip">
+  If you want to receive release updates, subscribe to
+  [the AppLovin MAX Adobe AIR Extension GitHub repository](https://github.com/AppLovin/AppLovin-MAX-AIR).
+</Callout>
+
+## Import the Extension
+
+Add the <code>AppLovinMAX-<var>version</var>.ane</code> file to your project’s libraries folder (generally `lib/`) and `com.applovin.air` `extensionID` to your application descriptor <Abbr>XML</Abbr> file (generally <code><var>app-name</var>-app.xml</code>) within the `extensions` element as shown below:
+
+```xml
+<extensions>
+  <extensionID>com.applovin.air</extensionID>
+</extensions>
+```
+
+## Android Manifest
+
+This section explains how you adjust your Android Manifest in your application descriptor <Abbr>XML</Abbr> file by adding the appropriate permissions, activities, providers, and services.
+You must make these additions to your Android Manifest in order to properly initialize AppLovin MAX <Glossary>SDK</Glossary> and show ads.
+
+### Permissions
+
+Add the following `uses-permission` elements to your application descriptor <Abbr>XML</Abbr> file inside the `manifestAdditions` element as shown below:
+
+```xml
+<manifestAdditions>
+  <![CDATA[
+    <manifest android:installLocation="auto">
+      ⋮
+      <uses-permission android:name="android.permission.INTERNET"/>
+      <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+      ⋮
+      <application>
+      ⋮
+      </application>
+    </manifest>
+  ]]>
+</manifestAdditions>
+```
+
+### Activities, Providers, and Services
+
+Add the following activities, providers, and services inside the `<application>` element on your Android Manifest of your application descriptor <Abbr>XML</Abbr> file:
+
+```xml
+<manifestAdditions>
+  <![CDATA[
+    <manifest android:installLocation="auto">
+      ⋮
+      <application>
+        ⋮
+        <provider
+          android:name="com.applovin.sdk.AppLovinInitProvider"
+          android:authorities="<var>your-application-package-name</var>.applovininitprovider"
+          android:exported="false"
+          android:initOrder="101" />
+
+        <activity
+          android:name="com.applovin.adview.AppLovinInterstitialActivity"
+          android:configChanges="orientation|screenSize|smallestScreenSize|screenLayout|uiMode"
+          android:hardwareAccelerated="true"
+          android:screenOrientation="behind" />
+        <activity
+          android:name="com.applovin.adview.AppLovinFullscreenActivity"
+          android:configChanges="keyboard|keyboardHidden|locale|orientation|screenLayout|screenSize|smallestScreenSize|uiMode"
+          android:exported="false"
+          android:hardwareAccelerated="true"
+          android:launchMode="singleTop"
+          android:screenOrientation="behind" />
+        <activity
+          android:name="com.applovin.sdk.AppLovinWebViewActivity"
+          android:configChanges="keyboardHidden|orientation|screenSize|uiMode" />
+        <activity
+          android:name="com.applovin.mediation.MaxDebuggerActivity"
+          android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+          android:name="com.applovin.mediation.MaxDebuggerDetailActivity"
+          android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+          android:name="com.applovin.mediation.MaxDebuggerMultiAdActivity"
+          android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+          android:name="com.applovin.mediation.MaxDebuggerAdUnitsListActivity"
+          android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+          android:name="com.applovin.mediation.MaxDebuggerAdUnitDetailActivity"
+          android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+          android:name="com.applovin.mediation.MaxDebuggerTestLiveNetworkActivity"
+          android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <service
+          android:name="com.applovin.impl.sdk.utils.AppKilledService"
+          android:exported="false"
+          android:stopWithTask="false" />
+        <service
+          android:name="com.applovin.impl.adview.activity.FullscreenAdService"
+          android:exported="false"
+          android:stopWithTask="false" />
+                ⋮
+      </application>
+    </manifest>
+  ]]>
+</manifestAdditions>
+```
+
+Then update the value of the `authorities` attribute in the `com.applovin.sdk.AppLovinInitProvider` `provider` element with your package name.
+
+## Initialize the <Abbr>SDK</Abbr>
+
+Attach the `SdkInitializedEvent` event handler and initialize the <Abbr>SDK</Abbr> as soon as your app launches, as in the code sample below.
+
+Ad assets that are fully cached result in a better user experience.
+Therefore, always initialize the AppLovin <Abbr>SDK</Abbr> on startup so as to give <Glossary>mediated</Glossary> <Glossary>networks</Glossary> the maximum amount of time to cache ads.
+This is especially important with video ads.
+
+<AppIds />
+
+<Callout type="tip">
+You may want to tag users with your own internal user <Abbr>ID</Abbr> so that you can then receive the <Abbr>ID</Abbr> in an <Glossary>impression</Glossary>-level user revenue <Abbr>API</Abbr> or in <Abbr>S2S</Abbr>-rewarded <Glossary>postbacks</Glossary>.
+If so, set the user <Abbr>ID</Abbr> before you initialize the <Abbr>SDK</Abbr>.
+</Callout>
+
+```actionscript-3
+AppLovinMAXEvents.setSdkInitializedEvent(function (sdkConfiguration:SdkConfiguration):void
+{
+  // Start loading ads
+});
+
+AppLovinMAX.setUserId("<var>user_id</var>");
+AppLovinMAX.initialize("<var>your_sdk_key</var>");
+```
+
+<SdkKey />
+
+## iOS 14 Support
+
+In <Glossary>iOS</Glossary> 14, Apple introduced global privacy changes that you need to comply with.
+This section explains how to comply with these changes and thereby avoid a material drop in revenue.
+
+<Callout type="related">
+- [“What is iOS 14.5? What Devs Need to Know to Stay Ahead of the Game”](https://www.applovin.com/blog/what-is-ios-14-5-what-devs-need-to-know/) from AppLovin’s Blog.
+- [“Debunking iOS 14.5 Myths for Advertisers and Developers”](https://www.applovin.com/blog/debunking-ios-14-5-myths-advertisers-and-developers/) from AppLovin’s Blog.
+</Callout>
+
+### <Abbr>SK</Abbr>AdNetwork
+
+Update your app’s `Info.plist` in your application descriptor <Abbr>XML</Abbr> file inside the `InfoAdditions` tag with network-specific identifiers.
+See [the <Abbr>SK</Abbr>AdNetwork documentation](skadnetwork) for instructions.
+
+### Consent and Data <Abbr>API</Abbr>s
+
+In order to ensure you obtain consent from your users in applicable jurisdictions on behalf of our monetization partners and correctly pass consent flag values to AppLovin, please review [Privacy–Consent and Data APIs](privacy).
+
+<Ios15 />
+
+The final result should look something like this:
+```xml
+⋮
+<iPhone>
+  <InfoAdditions>
+    <![CDATA[
+      ⋮
+      <key>NSAdvertisingAttributionReportEndpoint</key>
+      <string>https://postbacks-app.com</string>
+      ⋮
+    ]]>
+  </InfoAdditions>
+</iPhone>
+```
+
+<Callout type="tip">
+You can check the value of your app’s <Abbr>SK</Abbr>AdNetwork endpoint by using the [Mediation Debugger](../testing-networks/mediation-debugger).
+</Callout>
+
+<Callout type="note">
+To forward the <Abbr>SK</Abbr>AdNetwork postbacks to one or more third-party endpoints of your choice (including your <Glossary>MMP</Glossary>), please contact your account team.
+</Callout>

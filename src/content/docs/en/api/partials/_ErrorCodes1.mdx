@@ -1,0 +1,17 @@
+## MAX Error Codes
+
+| Code  | Description | <u>L</u>oad / <u>D</u>isplay |
+| ----- | ----------- | ---------------------------- |
+| −1    | The system is in an unexpected state. This error code represents an error that could not be categorized into one of the other defined errors. See the message field in the error object for more details. | L/D |
+| 204   | No ads are currently eligible for your device (no fill). MAX returned no eligible ads from any mediated networks for this app/device. | L |
+| −5001 | The ad failed to load due to no networks being able to fill. MAX returned eligible ads from mediated networks, but all ads failed to load. See the `adLoadFailureInfo` field in the error object for more details. | L |
+| −1000 | The ad request failed due to a generic network error. See the message field in the error object for more details. | L |
+| −1001 | The ad request timed out due to a slow internet connection. | L |
+| −1009 | The ad request failed because the device is not connected to the internet. | L |
+| −23   | You are attempting to show a fullscreen ad (<Glossary>interstitial</Glossary> or <Glossary>rewarded</Glossary>) while another fullscreen ad was still showing. | D |
+| −24   | You are attempting to show a fullscreen ad before it has been loaded. | D |
+| −5201 | The internal state of the <Glossary>SDK [sdk]</Glossary> is invalid. There are various ways this can occur. | L |
+| −5205 | The adapter did not have an ad ready when attempting to display. | L |
+| −5209 | Unspecified internal error. | L |
+| −5601 | The <Abbr>SDK</Abbr> failed to load an ad because it could not find the top `Activity`. | L |
+| −5602 | The <Abbr>SDK</Abbr> failed to display an ad because the user has the “Don’t Keep Activities” developer setting enabled. | D |

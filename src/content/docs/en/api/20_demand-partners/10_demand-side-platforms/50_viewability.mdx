@@ -1,0 +1,102 @@
+---
+title: "Viewability"
+description: "AppLovin integrates the Open Measurement SDK and thereby allows you to measure viewability for ALX creatives."
+slug: en/api/demand-partners/demand-side-platforms/viewability
+---
+
+AppLovin integrates the Open Measurement (<Abbr>OM</Abbr>) <Glossary>SDK</Glossary> and thereby allows you to measure <Glossary>viewability</Glossary> for <Glossary>ALX</Glossary> <Glossary>creatives</Glossary>.
+AppLovin supports <Abbr>OM</Abbr> for <Abbr>VAST</Abbr> on <Abbr>SDK</Abbr> versions 11.0+, and for additional formats on <Abbr>SDK</Abbr> versions 11.3.0+.
+
+The formats supported on <Abbr>SDK</Abbr> 11.3.0+ are:
+
+- <Glossary>Banner</Glossary> <Abbr>HTML</Abbr>/<Abbr>MRAID</Abbr>
+- <Glossary>MREC</Glossary> <Abbr>HTML</Abbr>/<Abbr>MRAID</Abbr>
+- <Glossary>Interstitial</Glossary> <Abbr>VAST</Abbr> <Abbr>XML</Abbr> and <Abbr>VAST</Abbr> Tags
+- Interstitial <Abbr>HTML</Abbr>/<Abbr>MRAID</Abbr>
+- <Glossary>Native [native-ads]</Glossary>
+- <Glossary>Rewarded</Glossary> <Abbr>VAST</Abbr> <Abbr>XML</Abbr> and <Abbr>VAST</Abbr> tags
+  
+<Callout type="note">
+Please reach out to your third party viewability vendor (including <Abbr>IAS</Abbr> &amp; Moat) to validate your viewability tags before running viewability campaigns through AppLovin.
+</Callout>
+
+## Setting Up Viewability Tags
+
+In order to measure viewability for <Abbr>ALX</Abbr> creatives, you must have a direct relationship with one of the supported viewability vendors.
+You can find a list of supported viewability vendors under [Member Companies](https://iabtechlab.com/working-groups/open-measurement-working-group/#Member_Companies) on the Open Measurement Working Group page.
+Work with your third party viewability vendor to set up the viewability tags discussed in this section.
+
+
+Viewability tags are specific to each viewability vendor.
+However, in general you can set up viewability tags in the ways described below, depending on the ad format:
+
+- For <Abbr>HTML</Abbr> tags, include your viewability vendors’ <Abbr>OMID</Abbr>/JavaScript tag in the <Abbr>HTML</Abbr> code.
+  Work with your viewability vendor to obtain the tag and for guidance on where to insert it in your <Abbr>HTML</Abbr>.
+- You can implement <Abbr>VAST</Abbr> <Abbr>XML</Abbr> video measurement tags in-app by adding either an `<Extension>` or `<AdVerifications>` node to your <Abbr>VAST</Abbr> tag.
+  For each third-party viewability vendor, work directly with your viewability vendor account representative to learn the specific way they recommend that you integrate the <Abbr>VAST</Abbr> `<Extension>` or `<AdVerifications>` node.
+
+For most verification vendors, the following instructions indicate how to implement the verification nodes:
+
+- For <Abbr>VAST</Abbr> versions pre-4.1, include an extension node below the <Abbr>VAST</Abbr> <Abbr>XML</Abbr>, with the `<AdVerification>` node nested inside, as shown here:
+```xml
+<Extension type="AdVerifications">
+  <AdVerifications>
+    <Verification vendor="vendor name">
+      <JavaScriptResource apiFramework="omid" browserOptional="true">
+        <![CDATA[]]>
+      </JavaScriptResource>
+      <TrackingEvents>
+        <Tracking event="verificationNotExecuted">
+          <![CDATA[]]>
+        </Tracking>
+      </TrackingEvents>
+      <VerificationParameters>
+        <![CDATA[“Vendor name”]]>
+      </VerificationParameters>
+    </Verification>
+  </AdVerifications>
+</Extension>
+```
+- For VAST 4.1, include the `<AdVerifications>` node directly below the <Abbr>VAST</Abbr> <Abbr>XML</Abbr>, as shown here:
+```xml
+<AdVerifications>
+  <Verification vendor="vendor name">
+    <JavaScriptResource apiFramework="omid" browserOptional="true">
+      <![CDATA[]]>
+    </JavaScriptResource>
+    <TrackingEvents>
+      <Tracking event="verificationNotExecuted">
+        <![CDATA[]]>
+      </Tracking>
+    </TrackingEvents>
+    <VerificationParameters>
+      <![CDATA[“Vendor name”]]>
+    </VerificationParameters>
+  </Verification>
+</AdVerifications>undefined</Extension>
+``` 
+
+## Testing Your Viewability Tags
+
+To test your viewability tags, set up your viewability bid responses as per [the test app instructions](dsp-testing), and run test impressions in the test app.
+
+From there, you can work with your viewability vendor to confirm <Glossary>tracking</Glossary> is correct.
+They will instruct you to collect charles logs and track certain calls made by their tags, and/or review reporting in their own viewability platform.
+
+<Callout type="note">
+<Abbr>OMSDK</Abbr> tags and <Glossary>postback</Glossary> calls must use secure (<Abbr>HTTPS</Abbr>) <Abbr>URL</Abbr>s.
+</Callout>
+
+## Bid Responses
+
+To help your viewability partner communicate with the AppLovin <Abbr>SDK</Abbr> properly, you can include the <Abbr>OMID</Abbr>-1 <Abbr>API</Abbr> (value = “7”) in the <Abbr>API</Abbr> array of your bid response ([`bidresponse.bid.apis`](applovin-ortb-specification#bid-object)).
+Refer to [the AppLovin Open<Abbr>RTB</Abbr> 2.5 spec](applovin-ortb-specification) for details.
+
+## Reporting
+
+You can receive viewability reporting on your ads if you have a direct relationship with a third-party viewability vendor.
+In order to collect viewability measurement on your campaigns, include the third-party measurement tags in your creatives and bid responses by following the instructions above and those from your vendor.
+
+All apps on supported <Abbr>SDK</Abbr> versions automatically integrate with and opt into <Abbr>OMSDK</Abbr>.
+You can receive viewability reporting for your integrated ads on apps that run a supported <Abbr>SDK</Abbr> version.
+

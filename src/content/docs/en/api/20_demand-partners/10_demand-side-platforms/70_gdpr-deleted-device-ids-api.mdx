@@ -1,0 +1,98 @@
+---
+title: "GDPR Deleted Device IDs API"
+description: "You promptly delete any personal data on request. AppLovin recommends that you automate the deletion process by means of this API."
+slug: en/api/demand-partners/demand-side-platforms/gdpr-deleted-device-ids-api
+---
+
+As a participant in AppLovin’s auction, and as a party to a <Abbr>DPA</Abbr> signed with AppLovin, you have acknowledged that you will promptly delete any personal data when a person has requested deletion.
+These deletions must be done no less frequently than on a weekly basis.
+AppLovin recommends that you automate the deletion process by means of this <Abbr>API</Abbr>, preferably on a daily basis.
+
+The available <Abbr>API</Abbr> is:
+
+|  Endpoint   | Purpose |
+| ----------- | ------- |
+| `list_idfa` | List device advertising <Abbr>ID</Abbr>s for which, in a given period of time, the owner of the device requested deletion of personal data. |
+
+## Authentication
+
+The <Glossary>GDPR</Glossary> <Abbr>API</Abbr> requires your <Abbr>GDPR</Abbr> <Abbr>API</Abbr> key in the `api_key` parameter of the request.
+You can find your <Abbr>GDPR</Abbr> <Abbr>API</Abbr> key in your AppLovin account ([<UILabel>Account &gt; General &gt; Keys</UILabel>](https://dash.applovin.com/account#keys)).
+
+## Building the Query
+
+To get a list of all device <Abbr>ID</Abbr>s for which the device owner requested information deletion, for <Abbr>GDPR</Abbr> compliance, make an <Abbr>HTTP</Abbr> `GET` request to the list <Abbr>API</Abbr>:
+
+```plaintext
+https://api.applovin.com/gdpr_dsp/list_idfa
+```
+
+## Query Parameters
+
+| Name | Type | Description | Required |
+| ---- | ---- | ----------- | -------- |
+| `api_key` | String | <Glossary>DSP</Glossary> <Abbr>GDPR</Abbr> <Abbr>API</Abbr> Key | Yes |
+| `start_date` | Date | Valid format is <code><var>YYYY</var>-<var>MM</var>-<var>DD</var></code>. Maximum look-back window is seven days. | No |
+| `end_date` | Date | Valid format is <code><var>YYYY</var>-<var>MM</var>-<var>DD</var></code> | No |
+
+## Response
+
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| `code` | Integer | `200` for success |
+| `identifiers` | List of Objects | A list of all device <Abbr>ID</Abbr>s that the device owners requested to be deleted |
+
+## Errors
+
+This <Abbr>API</Abbr> uses <Abbr>HTTP</Abbr> status codes to indicate errors:
+
+| <Abbr>HTTP</Abbr> Response Code | Description |
+| ------------------------------- | ----------- |
+| `200` | Success. |
+| `400` | Request is not formatted properly, is missing data, or has an invalid date range specified. |
+| `403` | Authentication failed. Check the validity of the <Abbr>API</Abbr> Key. |
+| `500` | Service is unavailable. |
+
+## Example Request
+
+<code>curl <span>https</span>://api.applovin.com/gdpr_dsp/list_idfa?api_key=<var>your-<Abbr>GDPR</Abbr>-<Abbr>API</Abbr>-key</var></code>
+
+**With date range:**
+
+<code>curl <span>https</span>://api.applovin.com/gdpr_dsp/list_idfa?api_key=<var>your-<Abbr>GDPR</Abbr>-<Abbr>API</Abbr>-key</var>&start_date=2018-07-20&end_date=2018-07-27</code>
+
+## Example Response
+```json
+{
+  {
+  "code": 200,
+  "identifiers": [
+    {
+      "identifier": "03464f18-0657-4823-ba98-3d92a8b8e44a"
+    },
+    {
+      "identifier": "0576a8c3-735a-479a-9fdd-47c20c7b74a0"
+    },
+    {
+      "identifier": "0b20fdb7-8cc7-4dd3-9c34-803b4ebb7fcd"
+    },
+    {
+      "identifier": "0ee90410-5b07-4fca-b9b2-eaab0d9670c9"
+    },
+    {
+      "identifier": "1195ff98-6b12-482f-83ef-095f51e46a70"
+    },
+    {
+      "identifier": "18bd1239-434a-412b-9bf3-c4bb621db66b"
+    },
+    {
+      "identifier": "241d6332-4d86-4b18-b03e-b3072adaa8c5"
+    },
+    {
+      "identifier": "29a24673-b0a8-4ac0-862b-15f3abbfc3c3"
+    }
+  ],
+  "count": 8
+  }
+}
+```

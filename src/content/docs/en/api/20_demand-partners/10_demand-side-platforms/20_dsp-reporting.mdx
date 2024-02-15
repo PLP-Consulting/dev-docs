@@ -1,0 +1,107 @@
+---
+title: "DSP Reporting"
+description: "DSPs see their performance on AppLovin RTB by means of the same performance metrics that AppLovin uses."
+slug: en/api/demand-partners/demand-side-platforms/dsp-reporting
+---
+
+<Glossary>DSPs</Glossary> see their performance on AppLovin <Glossary>RTB</Glossary> by means of the same performance metrics that AppLovin uses.
+You access these metrics via the AppLovin <Abbr>DSP</Abbr> Report <Abbr>API</Abbr>s.
+
+All AppLovin numbers are final for billing.
+Please contact AppLovin immediately should you see discrepancies between numbers from your <Abbr>DSP</Abbr> and the AppLovin <Abbr>API</Abbr>.
+
+## <Abbr>URL</Abbr>
+
+Send report requests via an <Abbr>HTTP</Abbr> `GET` to the following base <Abbr>URL</Abbr>:
+
+```plaintext
+https://r.applovin.com/report
+```
+
+### Example Final <Abbr>URL</Abbr>
+
+```
+https://r.applovin.com/report?api_key=<var>api-key</var>&start=2017-05-01&end=2017-05-01&report_type=dsp_report&columns=platform,country,impressions,spend&sort_impressions=DESC&limit=100&format=csv
+```
+
+### Required Parameters
+
+| parameter | purpose | usage |
+| --------- | ------- | ----- |
+| `api_key` | Management Key. You obtain this from [<UILabel>Account &gt; General &gt; Keys</UILabel>](https://www.applovin.com/account#keys). | <code>api_key=<var>management-key</var></code> |
+| `start` | Dates | <code>start=<var>YYYY</var>-<var>MM</var>-<var>DD</var></code> |
+| `end` | Dates | <code>end=<var>YYYY</var>-<var>MM</var>-<var>DD</var></code> |
+| `columns` | Columns. See [Reporting Columns](#reporting-columns) below. | <code>columns=<var>api-columns</var></code> |
+| `report_type` | Miscellany | `report_type=`[`dsp_report`\|`dsp_latency`]<sup>*</sup> |
+| `format` | Miscellany | `format=`[`csv`\|`json`] |
+
+<sup>*</sup> As of <time datetime="2024-03-01">March 1, 2024</time>, the `dsp_latency` type is deprecated. Please reach out to your AppLovin representative if you have any questions.
+
+### Optional Parameters
+
+| parameter | purpose | usage |
+| --------- | ------- | ----- |
+| <code>filter_<var>x</var></code> | Filtering Columns. Replace <var>x</var> with the column name. Separate multiple filter values with commas. | `filter_country=us,gb` |
+| <code>sort_<var>x</var></code> | Sorting Columns. Replace <var>x</var> with the column name. | `sort_requests=`[`ASC`\|`DESC`] |
+
+## Basic Reporting Columns
+
+| reporting column  | description |
+| ----------------- | ----------- |
+| `ad_type`         | Ad type: `BANNER`, `INTER`, `NATIVE` |
+| `bundle`          | &#xA0; |
+| `campaign_domain` | [`bid.adomain`](https://support.applovin.com/hc/en-us/articles/11623322707085#bid-object) value in bid responses |
+| `country`         | Country |
+| `day`             | Date (<var>MM</var>/<var>DD</var>/<var>YY</var>) |
+| `device_type`     | Device (Phone, Tablet, Other) |
+| `hour`            | 00:00–23:00 |
+| `impressions`     | <Glossary>Impressions</Glossary> |
+| `platform`        | Platform (<Glossary>iOS</Glossary>/<Glossary>Android</Glossary>/Fire<Abbr>OS</Abbr>) |
+| `size`            | Ad Size (`BANNER`, `MREC`, `NATIVE`, `INTER`, or `LEADER`) |
+| `spend`           | Spend |
+
+## Latency Reporting Columns
+<Callout type="note">
+As of <time datetime="2024-03-01">March 1, 2024</time>, the `dsp_latency` report type is deprecated. Please reach out to your AppLovin representative if you have any questions.
+</Callout>
+
+|  reporting column   | description |
+| ------------------- | ----------- |
+| `availability_zone` | Data center location |
+| `bids`              | Successful bids by <Abbr>DSP</Abbr> |
+| `country`           | Country |
+| `day`               | Date (<var>MM</var>/<var>DD</var>/<var>YY</var>) |
+| `errors`            | Number of unsuccessful bids by <Abbr>DSP</Abbr> + AppLovin throttled bids |
+| `latency`           | <Glossary>Latency</Glossary> |
+| `platform`          | Platform (<Abbr>iOS</Abbr>/Android/Fire<Abbr>OS</Abbr>) |
+| `requests`          | Requests Sent |
+| `response_code`     | Response Code (see following table) |
+| `size`              | Ad Size (`BANNER`, `MREC`, `NATIVE`, `INTER`, or `LEADER`) |
+
+## Response Codes
+
+| code | response text | description |
+| ---- | ------------- | ----------- |
+|  100 | `HTTP_UNEXPECTED_RESPONSE` | Received an unexpected <Abbr>HTTP</Abbr> response code |
+|  200 | `HTTP_OKAY`<sup>*</sup> | Successful bid response. See note below. |
+|  204 | `HTTP_NO_CONTENT` | No bid response |
+|  300 | `HTTP_UNEXPECTED_REDIRECT` | Temporary Redirect status response code indicates that the resource requested has been temporarily moved to the <Abbr>URL</Abbr> given by the `Location` headers. |
+|  400 | `HTTP_BAD_REQUEST` | Request malformed |
+|  403 | `HTTP_FORBIDDEN` | Forbidden response status code indicates that the server understands the request but refuses to authorize it. |
+|  404 | `HTTP_NOT_FOUND` | Endpoint not found or invalid | 
+|  408 | `HTTP_REQUEST_TIMEOUT` | Timeout above required response time (150<Abbr>ms</Abbr>) |
+|  500 | `HTTP_INTERNAL_SERVER_ERROR` | An error occurred on AppLovin’s service |
+|  502 | `HTTP_BAD_GATEWAY` | Bad Gateway server error response code indicates that the server, while acting as a gateway or proxy, received an invalid response from the upstream server. |
+|  503 | `HTTP_SERVICE_UNAVAILABLE` | Service Unavailable server error response code indicates that the server is not ready to handle the request. |
+| 2000 | `NETWORK_ALLOCATION_ERROR` | Networking error | 
+| 2010 | `NETWORK_QPS_ERROR` | Networking error |
+| 2020 | `NETWORK_SOCKET_ERROR` | Networking error |
+
+<sup>*</sup> 200 (`HTTP_OKAY`) responses include bids that were filtered for the below reasons.
+Use the loss notification <Abbr>URL</Abbr> with the loss reason macro (`AUCTION_LOSS`) to get more granular details:
+
+- invalid native markup
+- invalid <Abbr>VAST</Abbr>
+- bid with a blocked category
+- bid with a blocked ad domain
+- bid with a blocked package

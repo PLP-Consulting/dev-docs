@@ -1,0 +1,17 @@
+---
+title: "Error Handling"
+description: "Your ad display delegate or callback interface will receive an error code if an ad failed to load or failed to display."
+slug: en/max/adobe-air/overview/error-handling
+---
+import ErrorCodes1 from "@content/en/api/partials/_ErrorCodes1.mdx"; 
+import ErrorCodes2 from "@content/en/api/partials/_ErrorCodes2.mdx"; 
+
+Your ad display delegate or <Glossary>callback [postback]</Glossary> interface will receive a call if an ad failed to load or failed to display.
+This call will be accompanied by an error code.
+This page describes the error codes you may see.
+
+You can retrieve the error code by means of the `AdEventInfo.getErrorCode()` method, which is part of the ad event object that is returned to you in the failure event.
+
+<ErrorCodes1 />
+
+<ErrorCodes2 />

@@ -1,0 +1,67 @@
+---
+title: "DSP Testing"
+description: "After you finish integrating AppLovin RTB, you can use the AppLovin DSP Platform app to QA your ads."
+slug: en/api/demand-partners/demand-side-platforms/dsp-testing
+---
+
+After you finish [integrating](applovin-ortb-specification) AppLovin <Glossary>RTB</Glossary>, you can use the AppLovin <Glossary>DSP</Glossary> Platform app to <Abbr>QA</Abbr> your ads.
+Make sure to test and confirm that all ad formats and <Glossary>creative</Glossary> types are rendering correctly on the test app before you go live on the <Glossary>AppLovin Exchange</Glossary>.
+
+The bundle <Abbr>ID</Abbr> / package name for the AppLovin test app is `com.applovin.apps.dspdemo`.
+You can find the app at the following <Abbr>URL</Abbr>s:
+
+<Glossary>Android [android]</Glossary>
+: [`https://play.google.com/store/apps/details?id=com.applovin.apps.dspdemo`](https://play.google.com/store/apps/details?id=com.applovin.apps.dspdemo)
+  
+<Glossary>iOS [ios]</Glossary>
+: [`https://apps.apple.com/us/app/applovin-dsp-platform/id1590263203`](https://apps.apple.com/us/app/applovin-dsp-platform/id1590263203)
+  
+The <Abbr>DSP</Abbr> Sample requires fully secure creatives.
+This includes all <Glossary>tracking [tracker]</Glossary> pixels.
+If a <Abbr>URL</Abbr> is not secure (<Abbr>HTTP</Abbr> rather than <Abbr>HTTPS</Abbr>) it may not be called.
+
+## Test App Functionalities
+
+The AppLovin <Abbr>DSP</Abbr> Platform has two main testing functionalities:
+
+Testing your Bidder
+: Use the <UILabel><Abbr>DSP</Abbr> Integrations</UILabel> functionality to run an end-to-end test of your <Glossary>bidder [in-app bidding]</Glossary> on the AppLovin Exchange for each ad format that AppLovin supports.
+  
+Testing your Bid Response
+: Use the <UILabel>Ad Debugging</UILabel> feature under <UILabel>Advanced</UILabel> to test a bid response without pushing it to your bidder.
+  
+![DSP Integrations. Interstitials: Full screen ads; Graphic or video. Rewarded Videos: Full screen rewarded ads. Native: Medium template ads. Banners: 320 by 50 Banner ads. MRECs: 300 by 250 Rectangular ads. Advanced. Ad Debugging: Debug custom bid responses and ad markup. Settings: Account and Request Settings. AppLovin DSP Demo. SDK Version: 11.0.0. iOS Version: 15.3.1.](/images/dsp-testing-01.png)
+
+## Testing Your Bidder (<Abbr>e2e</Abbr>)
+
+Use the <UILabel><Abbr>DSP</Abbr> Integrations</UILabel> section of the app to test your bidder on the AppLovin Exchange end-to-end.
+
+1. Install the AppLovin <Abbr>DSP</Abbr> Platform test app for [Android](https://play.google.com/store/apps/details?id=com.applovin.apps.dspdemo) or [iOS](https://apps.apple.com/us/app/applovin-dsp-platform/id1590263203).
+1. The app asks for your <Abbr>DSP</Abbr> Key.
+   Enter the <Abbr>DSP</Abbr>/<Glossary>SDK</Glossary> Key found in the [<UILabel>Keys</UILabel>](https://dash.applovin.com/o/account#keys) page of your AppLovin dashboard.
+1. Ensure your bidder is targeting the AppLovin <Abbr>DSP</Abbr> Platform app bundle <Abbr>ID</Abbr> with the campaign you want to test end-to-end.
+   Verify that your bid response is valid <Abbr>JSON</Abbr>.
+   The AppLovin <Abbr>DSP</Abbr> Platform bundle <Abbr>ID</Abbr> is `com.applovin.apps.dspdemo` for Android and `1590263203` for iOS.
+1. Open the app and identify the <Abbr>DSP</Abbr> Integrations section.
+1. Select an ad format to validate that your bidder is able to successfully win the auction and render the ad.
+  
+## Testing Your Bid Response and Creative
+
+Test your bid response without pushing it to your bidder via the <UILabel>Advanced &gt; Ad Debugging</UILabel> section.
+
+1. Install the AppLovin <Abbr>DSP</Abbr> Platform test app for [Android](https://play.google.com/store/apps/details?id=com.applovin.apps.dspdemo) or [iOS](https://apps.apple.com/us/app/applovin-dsp-platform/id1590263203).
+1. The app asks for your <Abbr>DSP</Abbr> Key.
+   Enter the <Abbr>DSP</Abbr>/<Abbr>SDK</Abbr> Key found in the [<UILabel>Keys</UILabel>](https://dash.applovin.com/o/account#keys) page of your AppLovin dashboard.
+1. Select <UILabel>Advanced &gt; Ad Debugging</UILabel>.
+1. Paste your <Abbr>JSON</Abbr> bid response into the text field.
+1. Select the ad format that corresponds to your bid response.
+1. If your bid response is valid, AppLovin renders the creative on the screen.
+   Otherwise, AppLovin returns an error message.
+  
+## Launch
+
+When you are ready to launch, AppLovin completes quality-assurance testing and then sets your bidder live with real traffic.
+Make sure to turn off test ads and begin using real campaigns at this time.
+Applovin begins by sending 1% of live traffic to your endpoint(s).
+If AppLovin <Glossary>impression</Glossary> and revenue numbers are aligned, your AppLovin account team continues to increase traffic to your bidder, from 1% to 10% to 100%.
+

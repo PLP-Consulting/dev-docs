@@ -1,0 +1,46 @@
+---
+title: "Creative Format Specifications"
+description: "These specifications are ad format agnostic and apply to all ad types supported by AppLovin."
+slug: en/api/demand-partners/demand-side-platforms/creative-format-specifications
+---
+
+These specifications are ad format agnostic and apply to all ad types supported by AppLovin.
+
+AppLovin recommends that you leverage [the testing process](dsp-testing) to fully understand the user experience for the <Glossary>creative</Glossary> as served through <Glossary>AppLovin Exchange</Glossary>.
+
+## <Abbr>HTML</Abbr>
+
+- Use <Abbr>HTML</Abbr> snippets, not full <Abbr>HTML</Abbr> documents.
+- Escape <Abbr>HTML</Abbr> ad markup.
+- <Abbr>PNG</Abbr>, <Abbr>JPG</Abbr>/<Abbr>JPEG</Abbr>, and <Abbr>GIF</Abbr> are the supported media formats.
+- [<Abbr>MRAID</Abbr>](https://www.iab.com/guidelines/mraid/) 1.0 and 2.0 are supported.
+  
+## <Abbr>VAST</Abbr>
+
+<Glossary>Inventory</Glossary> that supports [<Abbr>VAST</Abbr>](https://www.iab.com/guidelines/vast/) will pass [the `bid_request.imp.video` object](applovin-ortb-specification#video-object) in the [bid request](applovin-ortb-specification#bid-request).
+
+- The <Abbr>VAST</Abbr> creative must be completely secure, including all <Glossary>tracking</Glossary> and redirect <Abbr>URL</Abbr>s.
+- AppLovin supports <Abbr>VAST</Abbr> 2.0, 3.0, and 4.0.
+  - <Abbr>VPAID</Abbr> is not supported.
+- <Abbr>VAST</Abbr> InLine and Wrapper
+- <Abbr>VAST</Abbr> capable inventory is compliant with <Abbr>MRAID</Abbr>.
+- Fullscreen (<Glossary>Interstitial</Glossary> and <Glossary>Rewarded</Glossary>) placements only
+- Supported media <Abbr>MIME</Abbr> types:
+
+  <Glossary>Android [android]</Glossary>: `video/mp4`, `video/3gpp`
+      
+  <Glossary>iOS [ios]</Glossary>: `video/mp4`, `video/3gpp`, `video/3gpp2`, `video/quicktime`, `video/x-m4v`
+
+- Not supported media <Abbr>MIME</Abbr> types:
+  - Flash (`flv`, `swf`) is not supported.
+- Video file size limits:
+  - Max file size (<Abbr>iOS</Abbr> &amp; Android): Recommended 2<Abbr>MB</Abbr> (recommended maximum file size is 10<Abbr>MB</Abbr>).
+    Videos that are over 2<Abbr>MB</Abbr> can experience poor performance.
+  -   If the request to retrieve the video file exceeds 30 seconds, it is considered a timeout.
+- Both landscape and vertical video are supported.
+- <Abbr>VAST</Abbr>-capable inventory supports companion (<Abbr>a.k.a.</Abbr> endcard) creative.
+  - <Abbr>MRAID</Abbr> companion (<Abbr>a.k.a.</Abbr> endcard) creative is supported.
+  - When multiple companion resources are sent, AppLovin uses the following order (if the first one fails, it tries the next one, and so on):
+    1. StaticResource
+    1. IFrameResource
+    1. HTMLResource

@@ -1,0 +1,32 @@
+## Google Play Families Policy (Android)
+
+This section concerns updates to the [Google Play Families Policy](https://support.google.com/googleplay/android-developer/answer/9898834) and outlines certain related updates to your use of the AppLovin <Abbr>SDK</Abbr>.
+You can find complete details on Google Play’s Policy Center.
+
+### Who does this policy apply to?
+
+According to Google, if you serve ads in your app and your target audience only includes children, then you must use only [Families Self-Certified Ads <Abbr>SDK</Abbr>s](https://support.google.com/googleplay/android-developer/answer/9900633/?sjid=4660822843944323705-NC).
+If the target audience for your app includes both children and older users you must comply with [Google Play Families Policy](https://support.google.com/googleplay/android-developer/answer/9893335) and ensure that ads shown to children come exclusively from Families Self-Certified Ads <Abbr>SDK</Abbr>s.
+
+### What does this mean for your use of the AppLovin <Abbr>SDK</Abbr> and MAX?
+
+As explained in [AppLovin’s Terms of Use](https://www.applovin.com/terms/), the AppLovin Services are not to be used in apps exclusively designed for, or exclusively directed to, children.
+AppLovin does not knowingly collect personal information from children or serve advertisements to children.
+
+As for mixed audience or “everyone” apps that may include children as users, as explained in [AppLovin Policies for Publishers](https://www.applovin.com/policies-publishers/), you must include and honor all age-related flags.
+If you flag a user as an age-restricted user, AppLovin will not collect personal information from or serve advertisements to that user.
+Additionally, because Google requires that ads shown to children come exclusively from Families Self-Certified Ads <Abbr>SDK</Abbr>s, those ads <Abbr>SDK</Abbr>s that have not self-certified compliance with Google Play policies, such as the Families Self-Certified Ads <Abbr>SDK</Abbr> requirements, are not eligible to participate in MAX auctions.
+
+These are the main requirements and implications:
+
+If your app is designed primarily for children under the age of 13:
+: <ul><li>Google Play requires that you participate in [Designed for Families](https://play.google.com/about/families/) program and comply with [Google Play’s Families Policy Requirements](https://support.google.com/googleplay/android-developer/topic/9877766#!?zippy_activeEl=families-policy#families-policy).</li><li>AppLovin Services are not to be used in apps exclusively directed to children. Please see [AppLovin’s Terms of Use](https://www.applovin.com/terms/).</li></ul>
+  
+If your app is designed for everyone, including children:
+: <ul><li>You must adhere to [Google Play’s Families Policy Requirements](https://support.google.com/googleplay/android-developer/topic/9877766#!?zippy_activeEl=families-policy#families-policy).</li><li>Visit the <UILabel>Manage Applications</UILabel> page under <UILabel>AppDiscovery</UILabel> in the AppLovin <Abbr>UI</Abbr> and select the setting <UILabel>Please check this box if your application needs to comply with Google Play’s Families policy</UILabel>. You must review the age data of your users and identify any age-restricted users in your AppLovin <Abbr>SDK</Abbr> integration. For integration instructions, see [“How to set <Abbr>GDPR</Abbr> flags”](https://support.applovin.com/hc/en-us/articles/4426832096141-How-to-set-GDPR-flags). If you enable this setting then your app will not transmit the Advertising <Abbr>ID</Abbr> for children and users of unknown age.</li></ul>
+
+If your app is not designed for children:
+: <ul><li>You must still meet the requirements outlined in the [Google Play Developer Program Policies](https://play.google.com/about/developer-content-policy.html) and [Developer Distribution Agreement](https://play.google.com/intl/ALL_us/about/developer-distribution-agreement.html).</li></ul>
+
+For complete details regarding the [Families Policy](https://support.google.com/googleplay/android-developer/answer/9900633), including tips regarding how to determine the target audience for your app, please review Google Play’s Policy Center.
+
