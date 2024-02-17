@@ -93,47 +93,47 @@ The following code snippets show how you pass your App content <Abbr>URL</Abbr> 
 ### Java
 ```java
 // Interstitial Ad
-interstitialAd = new MaxInterstitialAd( "<var>ad_unit_id</var>", this );
-interstitialAd.setExtraParameter( "content_url", "<var>value</var>" );
+interstitialAd = new MaxInterstitialAd( "«ad_unit_id»", this );
+interstitialAd.setExtraParameter( "content_url", "«value»" );
 
 // Rewarded Ad
-rewardedAd = MaxRewardedAd.getInstance( "<var>ad_unit_id</var>", this );
-rewardedAd.setExtraParameter( "content_url", "<var>value</var>" );
+rewardedAd = MaxRewardedAd.getInstance( "«ad_unit_id»", this );
+rewardedAd.setExtraParameter( "content_url", "«value»" );
 
 // Banner Ad
-bannerAd = new MaxAdView( "<var>ad_unit_id</var>", this );
-bannerAd.setExtraParameter( "content_url", "<var>value</var>" );<br>
+bannerAd = new MaxAdView( "«ad_unit_id»", this );
+bannerAd.setExtraParameter( "content_url", "«value»" );<br>
 
 // MRec Ad
-mrecAd = new MaxAdView( "<var>ad_unit_id</var>", MaxAdFormat.MREC, this );
-mrecAd.setExtraParameter( "content_url", "<var>value</var>" );<br>
+mrecAd = new MaxAdView( "«ad_unit_id»", MaxAdFormat.MREC, this );
+mrecAd.setExtraParameter( "content_url", "«value»" );<br>
 
 // Native Ad
-nativeAdLoader = new MaxNativeAdLoader( "<var>ad_unit_id</var>", this );
-nativeAdLoader.setExtraParameter( "content_url", "<var>value</var>" );
+nativeAdLoader = new MaxNativeAdLoader( "«ad_unit_id»", this );
+nativeAdLoader.setExtraParameter( "content_url", "«value»" );
 ```
 
 ### Kotlin
 ```kotlin
 // Interstitial Ad
-var interstitialAd = MaxInterstitialAd( "<var>ad_unit_id</var>", this )
-interstitialAd.setExtraParameter( "content_url", "<var>value</var>" )
+var interstitialAd = MaxInterstitialAd( "«ad_unit_id»", this )
+interstitialAd.setExtraParameter( "content_url", "«value»" )
 
 // Rewarded Ad
-var rewardedAd = MaxRewardedAd.getInstance( "<var>ad_unit_id</var>", this )
-rewardedAd.setExtraParameter( "content_url", "<var>value</var>" )
+var rewardedAd = MaxRewardedAd.getInstance( "«ad_unit_id»", this )
+rewardedAd.setExtraParameter( "content_url", "«value»" )
 
 // Banner Ad
-var bannerAd = MaxAdView( "<var>ad_unit_id</var>", this )
-bannerAd.setExtraParameter( "content_url", "<var>value</var>" )
+var bannerAd = MaxAdView( "«ad_unit_id»", this )
+bannerAd.setExtraParameter( "content_url", "«value»" )
 
 // MRec Ad
-var mrecAd = MaxAdView( "<var>ad_unit_id</var>", MaxAdFormat.MREC, this )
-mrecAd.setExtraParameter( "content_url", "<var>value</var>" )
+var mrecAd = MaxAdView( "«ad_unit_id»", MaxAdFormat.MREC, this )
+mrecAd.setExtraParameter( "content_url", "«value»" )
 
 // Native Ad
-var nativeAdLoader = MaxNativeAdLoader( "<var>ad_unit_id</var>", this )
-nativeAdLoader.setExtraParameter( "content_url", "<var>value</var>" )
+var nativeAdLoader = MaxNativeAdLoader( "«ad_unit_id»", this )
+nativeAdLoader.setExtraParameter( "content_url", "«value»" )
 ```
 
 ## Unified Identifiers
@@ -146,53 +146,53 @@ See the code examples below for how to pass the tokens:
 ### Java
 ```java
 // App Open Ad
-appOpenAd = new MaxAppOpenAd( "<var>ad_unit_id</var>", this );
-appOpenAd.setExtraParameter( "uid2_token", "<var>value</var>" );
+appOpenAd = new MaxAppOpenAd( "«ad_unit_id»", this );
+appOpenAd.setExtraParameter( "uid2_token", "«value»" );
 
 // Banner Ad
-bannerAd = new MaxAdView( "<var>ad_unit_id</var>", this );
-bannerAd.setExtraParameter( "uid2_token", "<var>value</var>" );
+bannerAd = new MaxAdView( "«ad_unit_id»", this );
+bannerAd.setExtraParameter( "uid2_token", "«value»" );
 
 // Interstitial Ad
-interstitialAd = new MaxInterstitialAd( "<var>ad_unit_id</var>", this );
-interstitialAd.setExtraParameter( "uid2_token", "<var>value</var>" );
+interstitialAd = new MaxInterstitialAd( "«ad_unit_id»", this );
+interstitialAd.setExtraParameter( "uid2_token", "«value»" );
 
 // MRec Ad
-mrecAd = new MaxAdView( "<var>ad_unit_id</var>", MaxAdFormat.MREC, this );
-mrecAd.setExtraParameter( "uid2_token", "<var>value</var>" );
+mrecAd = new MaxAdView( "«ad_unit_id»", MaxAdFormat.MREC, this );
+mrecAd.setExtraParameter( "uid2_token", "«value»" );
 
 // Native Ad
-nativeAdLoader = new MaxNativeAdLoader( "<var>ad_unit_id</var>", this );
-nativeAdLoader.setExtraParameter( "uid2_token", "<var>value</var>" );
+nativeAdLoader = new MaxNativeAdLoader( "«ad_unit_id»", this );
+nativeAdLoader.setExtraParameter( "uid2_token", "«value»" );
 
 // Rewarded Ad
-rewardedAd = MaxRewardedAd.getInstance( "<var>ad_unit_id</var>", this );
-rewardedAd.setExtraParameter( "uid2_token", "<var>value</var>" );
+rewardedAd = MaxRewardedAd.getInstance( "«ad_unit_id»", this );
+rewardedAd.setExtraParameter( "uid2_token", "«value»" );
 ```
 
 ### Kotlin
 ```kotlin
 // App Open Ad
-var appOpenAd = MaxAppOpenAd( "<var>ad_unit_id</var>", this )
-appOpenAd.setExtraParameter( "uid2_token", "<var>value</var>" )
+var appOpenAd = MaxAppOpenAd( "«ad_unit_id»", this )
+appOpenAd.setExtraParameter( "uid2_token", "«value»" )
 
 // Banner Ad
-var bannerAd = MaxAdView( "<var>ad_unit_id</var>", this )
-bannerAd.setExtraParameter( "uid2_token", "<var>value</var>" )
+var bannerAd = MaxAdView( "«ad_unit_id»", this )
+bannerAd.setExtraParameter( "uid2_token", "«value»" )
 
 // Interstitial Ad
-var interstitialAd = MaxInterstitialAd( "<var>ad_unit_id</var>", this )
-interstitialAd.setExtraParameter( "uid2_token", "<var>value</var>" )
+var interstitialAd = MaxInterstitialAd( "«ad_unit_id»", this )
+interstitialAd.setExtraParameter( "uid2_token", "«value»" )
 
 // MRec Ad
-var mrecAd = MaxAdView( "<var>ad_unit_id</var>", MaxAdFormat.MREC, this )
-mrecAd.setExtraParameter( "uid2_token", "<var>value</var>" )
+var mrecAd = MaxAdView( "«ad_unit_id»", MaxAdFormat.MREC, this )
+mrecAd.setExtraParameter( "uid2_token", "«value»" )
 
 // Native Ad
-var nativeAdLoader = MaxNativeAdLoader( "<var>ad_unit_id</var>", this )
-nativeAdLoader.setExtraParameter( "uid2_token", "<var>value</var>" )
+var nativeAdLoader = MaxNativeAdLoader( "«ad_unit_id»", this )
+nativeAdLoader.setExtraParameter( "uid2_token", "«value»" )
 
 // Rewarded Ad
-var rewardedAd = MaxRewardedAd.getInstance( "<var>ad_unit_id</var>", this )
-rewardedAd.setExtraParameter( "uid2_token", "<var>value</var>" )
+var rewardedAd = MaxRewardedAd.getInstance( "«ad_unit_id»", this )
+rewardedAd.setExtraParameter( "uid2_token", "«value»" )
 ```

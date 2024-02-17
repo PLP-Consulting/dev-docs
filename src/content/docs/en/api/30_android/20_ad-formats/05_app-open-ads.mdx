@@ -75,7 +75,7 @@ public class ExampleAppOpenManager
 
     this.context = context;
 
-    appOpenAd = new MaxAppOpenAd( "<var>ad_unit_ID</var>", context);
+    appOpenAd = new MaxAppOpenAd( "«ad_unit_ID»", context);
     appOpenAd.setListener( this );
     appOpenAd.loadAd();
   }
@@ -86,7 +86,7 @@ public class ExampleAppOpenManager
 
     if ( appOpenAd.isReady() )
     {
-      appOpenAd.showAd( "<var>test_placement</var>" );
+      appOpenAd.showAd( "«test_placement»" );
     }
     else
     {
@@ -151,7 +151,7 @@ class ExampleAppOpenManager(applicationContext: Context?) : LifecycleObserver, M
 
     context = applicationContext
 
-    appOpenAd = MaxAppOpenAd("<var>ad_unit_ID</var>", applicationContext!!)
+    appOpenAd = MaxAppOpenAd("«ad_unit_ID»", applicationContext!!)
     appOpenAd.setListener(this)
     appOpenAd.loadAd()
   }
@@ -162,7 +162,7 @@ class ExampleAppOpenManager(applicationContext: Context?) : LifecycleObserver, M
 
     if (appOpenAd.isReady)
     {
-      appOpenAd.showAd("<var>test_placement</var>")
+      appOpenAd.showAd("«test_placement»")
     }
     else
     {

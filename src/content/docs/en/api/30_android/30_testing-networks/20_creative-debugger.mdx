@@ -11,8 +11,9 @@ import NetworkName from "@content/en/api/partials/_NetworkName.mdx";
 <CreativeDebugger1 />
 
 <Callout type="note">
-This gesture is currently available for full-screen ads only.
-It is enabled by default for both development and production builds.
+This gesture is available for all ads with <Abbr>SDK</Abbr> 11.6.0 or later.
+For <Abbr>SDK</Abbr> versions before 11.6.0, the gesture is available for full-screen ads only.
+It is enabled by default for both development and production builds in all <Abbr>SDK</Abbr> versions.
 </Callout>
 
 <CreativeDebugger2 />
@@ -21,8 +22,28 @@ It is enabled by default for both development and production builds.
 
 The following code shows you how to disable the creative debugger with the MAX <Abbr>SDK</Abbr>:
 
-```actionscript-3
-AppLovinMAX.setCreativeDebuggerEnabled( false );
+#### Java
+```java
+AppLovinSdk.getInstance( context ).getSettings().setCreativeDebuggerEnabled( false );
+```
+
+#### Kotlin
+```kotlin
+AppLovinSdk.getInstance( context ).settings.setCreativeDebuggerEnabled( false )
+```
+
+### Using the Creative Debugger Display <Abbr>API</Abbr>
+
+In <Abbr>SDK</Abbr> versions 11.6.0 and above, you can display the Creative Debugger by making the following call:
+
+#### Java
+```java
+AppLovinSdk.getInstance( context ).showCreativeDebugger();
+```
+
+#### Kotlin
+```kotlin
+AppLovinSdk.getInstance( context ).showCreativeDebugger()
 ```
 
 ## Creative <Abbr>ID</Abbr>
@@ -31,21 +52,42 @@ You can also retrieve the creative <Abbr>ID</Abbr> of displayed ads of various m
 You can do this either by using the creative debugger, or by using the MAX <Abbr>SDK</Abbr>.
 The following code shows you how to do this with the MAX <Abbr>SDK</Abbr>:
 
-```actionscript-3
-creativeId = adEventInfo.getCreativeId();
+#### Java
+```java
+String creativeId = ad.getCreativeId();
+```
+
+#### Kotlin
+```kotlin
+val creativeId = ad.creativeId
 ```
 
 <CreativeDebugger3 />
 
 <NetworkName />
 
-```actionscript-3
-private function onInterstitialLoaded(adEventInfo:AdEventInfo):void
+#### Java
+```java
+void onAdLoaded(final MaxAd ad)
 {
-  trace("Ad Info	Ad Unit ID: " + adEventInfo.getAdUnitId() +
-        "	Network Name: " + adEventInfo.getNetworkName() +
-        "	Placement: " + adEventInfo.getPlacement() +
-        "	Creative ID: " + adEventInfo.getCreativeId() +
-        "	Revenue: " + adEventInfo.getRevenue())
+  String networkName = ad.getNetworkName();
+}
+
+void onAdDisplayFailed(final MaxAd ad, final int errorCode)
+{
+  String networkName = ad.getNetworkName();
+}
+```
+
+#### Kotlin
+```kotlin
+fun onAdLoaded(ad: MaxAd)
+{
+  val networkName = ad.networkName
+}
+
+fun onAdDisplayFailed(ad: MaxAd, errorCode: Int)
+{
+  val networkName = ad.networkName
 }
 ```

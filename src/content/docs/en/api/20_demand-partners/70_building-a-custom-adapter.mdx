@@ -111,7 +111,7 @@ That interface handles various functions of your <Abbr>SDK</Abbr>, including ini
 
 1. Create a `.m` and `.h` extending from `ALMediationAdapter` in your project.
    The name of this class should contain the network name (for example, <code><var>MyNetwork</var>MediationAdapter</code>).
-1. Implement the `- (void)initializeWithParameters:(id&lt;MAAdapterInitializationParameters&gt;)parameters completionHandler:(void (^)(MAAdapterInitializationStatus NSString *_Nullable))completionHandler` method and implement code that initializes your ad network <Abbr>SDK</Abbr>.
+1. Implement the `- (void)initializeWithParameters:(id<MAAdapterInitializationParameters>)parameters completionHandler:(void (^)(MAAdapterInitializationStatus NSString *_Nullable))completionHandler` method and implement code that initializes your ad network <Abbr>SDK</Abbr>.
    If you need to access the app <Abbr>ID</Abbr> set in the <Abbr>UI</Abbr>, you can do so by means of `parameters.serverParameters[@"app_id"]`.
    This logic executes in parallel with the initialization of the AppLovin <Abbr>SDK</Abbr>.
    Call `completionHandler` after you initialize the ad network, and pass that handler one of the following values:
@@ -129,7 +129,7 @@ That interface handles various functions of your <Abbr>SDK</Abbr>, including ini
 ## <Glossary banner-ads>Banner Ads</Glossary>
 
 1. Implement the `MAAdViewAdapter` protocol in your `MyNetworkMediationAdapter` class.
-1. Implement the `- (void)loadAdViewAdForParameters:(id&lt;MAAdapterResponseParameters&gt;)parameters adFormat:(MAAdFormat *)adFormat andNotify:(id&lt;MAAdViewAdapterDelegate&gt;)delegate` method which requests an ad.
+1. Implement the `- (void)loadAdViewAdForParameters:(id<MAAdapterResponseParameters>)parameters adFormat:(MAAdFormat *)adFormat andNotify:(id<MAAdViewAdapterDelegate>)delegate` method which requests an ad.
    Call the `parameters.thirdPartyAdPlacementIdentifier` method to get the Placement <Abbr>ID</Abbr> you need for your ad logic.
 1. Call the appropriate `MAAdViewAdapterDelegate` methods to notify the AppLovin MAX <Abbr>SDK</Abbr> about banner lifecycle events:
    * When an ad loads successfully, call `-[MAAdViewAdapterDelegate didLoadAdForAdView]`.
@@ -139,9 +139,9 @@ That interface handles various functions of your <Abbr>SDK</Abbr>, including ini
 ## <Glossary interstitial-ads>Interstitials</Glossary>
 
 1. Implement the `MAInterstitialAdapter` protocol in your `MyNetworkMediationAdapter` class.
-1. Declare the `- (void)loadInterstitialAdForParameters:(id&lt;MAAdapterResponseParameters&gt;)parameters andNotify:(id&lt;MAInterstitialAdapterDelegate&gt;)delegate` method which requests an ad.
+1. Declare the `- (void)loadInterstitialAdForParameters:(id<MAAdapterResponseParameters>)parameters andNotify:(id<MAInterstitialAdapterDelegate>)delegate` method which requests an ad.
    Call the `parameters.thirdPartyAdPlacementIdentifier` method to get the placement <Abbr>ID</Abbr> you need for your ad logic.
-1. Declare the `- (void)showInterstitialAdForParameters:(id&lt;MAAdapterResponseParameters&gt;)parameters andNotify:(id&lt;MAInterstitialAdapterDelegate&gt;)delegate` method which shows the loaded ad.
+1. Declare the `- (void)showInterstitialAdForParameters:(id<MAAdapterResponseParameters>)parameters andNotify:(id<MAInterstitialAdapterDelegate>)delegate` method which shows the loaded ad.
    Call the `parameters.thirdPartyAdPlacementIdentifier` method to get the placement <Abbr>ID</Abbr> you need for your ad logic.
    If the ad is not ready, call `-[MAInterstitialAdapterDelegate didFailToDisplayInterstitialAdWithError: MAAdapterError.adNotReady]`.
 1. Call the appropriate `MAInterstitialAdapterDelegate` methods to notify the AppLovin MAX <Abbr>SDK</Abbr> about interstitial lifecycle events:
@@ -154,9 +154,9 @@ That interface handles various functions of your <Abbr>SDK</Abbr>, including ini
 ## <Glossary rewarded-video-ads>Rewarded Ads</Glossary>
 
 1. Implement the `MARewardedAdapter` protocol in your `MyNetworkMediationAdapter` class.
-1. Declare the `- (void)loadRewardedAdForParameters:(id&lt;MAAdapterResponseParameters&gt;)parameters andNotify:(id&lt;MARewardedAdapterDelegate&gt;)delegate;` method which requests an ad.
+1. Declare the `- (void)loadRewardedAdForParameters:(id<MAAdapterResponseParameters>)parameters andNotify:(id<MARewardedAdapterDelegate>)delegate;` method which requests an ad.
    Call the `parameters.thirdPartyAdPlacementIdentifier` method to get the placement <Abbr>ID</Abbr> you need for your ad logic.
-1. Declare the `- (void)showRewardedAdForParameters:(id&lt;MAAdapterResponseParameters&gt;)parameters andNotify:(id&lt;MARewardedAdapterDelegate&gt;)delegate;` method which shows the loaded ad.
+1. Declare the `- (void)showRewardedAdForParameters:(id<MAAdapterResponseParameters>)parameters andNotify:(id<MARewardedAdapterDelegate>)delegate;` method which shows the loaded ad.
    Call the `parameters.thirdPartyAdPlacementIdentifier` method to get the placement <Abbr>ID</Abbr> you need for your ad logic.
    If the ad is not ready, call `-[MARewardedAdapterDelegate didFailToDisplayRewardedAdWithError: MAAdapterError.adNotReady]`.
 1. Call the appropriate `MARewardedAdapterDelegate` methods to notify the AppLovin MAX <Abbr>SDK</Abbr> about rewarded video lifecycle events:
@@ -172,7 +172,7 @@ That interface handles various functions of your <Abbr>SDK</Abbr>, including ini
 ## <Glossary native-ads>Native Ads</Glossary>
 
 1. Implement the `MANativeAdAdapter` protocol in your `MyNetworkMediationAdapter` class.
-1. Implement the `- (void)loadNativeAdForParameters:(id&lt;MAAdapterResponseParameters&gt;)parameters andNotify:(id&lt;MANativeAdAdapterDelegate&gt;)delegate;` method which requests an ad.
+1. Implement the `- (void)loadNativeAdForParameters:(id<MAAdapterResponseParameters>)parameters andNotify:(id<MANativeAdAdapterDelegate>)delegate;` method which requests an ad.
 1. Call the appropriate `MANativeAdAdapterDelegate` methods to notify the AppLovin MAX <Abbr>SDK</Abbr> about native ad lifecycle events:
    * When an ad loads successfully, call `-[MANativeAdAdapterDelegate didLoadAdForNativeAd:]`.
    * When an ad load fails, call `-[MANativeAdAdapterDelegate didFailToLoadNativeAdWithError:]` with an appropriate `MAAdapterError`.

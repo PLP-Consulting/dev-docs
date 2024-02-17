@@ -9,7 +9,7 @@ import AdaptiveBanners1 from "@content/en/api/partials/_AdaptiveBanners1.mdx";
 [“Why mobile banners ads persist in a video and playable world”](https://www.applovin.com/blog/mobile-banner-ads-popularity/) from AppLovin’s Blog.
 </Callout>
 
-## Loading and Showing Banners &amp; <Abbr>MREC</Abbr>s Programmatically
+## Loading and Showing Banners & <Abbr>MREC</Abbr>s Programmatically
 
 To load a <Glossary>banner</Glossary> or <Glossary>MREC</Glossary>, create a `MaxAdView` object that corresponds to your ad unit and then call its `loadAd()` method.
 To show that ad, add the `MaxAdView` object as a subview of your view hierarchy.
@@ -27,7 +27,7 @@ public class ExampleActivity extends Activity
 
   void createBannerAd()
   {
-    adView = new MaxAdView( "<var>ad_unit_ID</var>", this );
+    adView = new MaxAdView( "«ad_unit_ID»", this );
     adView.setListener( this );
 
     // Stretch to the width of the screen for banners to be fully functional
@@ -83,7 +83,7 @@ class ExampleActivity : Activity(), MaxAdViewAdListener
 
   fun createBannerAd()
   {
-    adView = MaxAdView("<var>ad_unit_ID</var>", this)
+    adView = MaxAdView("«ad_unit_ID»", this)
     adView?.setListener(this)
 
     // Stretch to the width of the screen for banners to be fully functional
@@ -132,7 +132,7 @@ public class ExampleActivity extends Activity
 
   void createMrecAd
   {
-    adView = new MaxAdView( "<var>ad_unit_ID</var>", MaxAdFormat.MREC, this );
+    adView = new MaxAdView( "«ad_unit_ID»", MaxAdFormat.MREC, this );
     adView.setListener( this );
 
     // MREC width and height are 300 and 250 respectively, on phones and tablets
@@ -186,7 +186,7 @@ class ExampleActivity : Activity(), MaxAdViewAdListener
 
   fun createMrecAd()
   {
-    adView = MaxAdView("<var>ad_unit_ID</var>", MaxAdFormat.MREC, this)
+    adView = MaxAdView("«ad_unit_ID»", MaxAdFormat.MREC, this)
     adView?.setListener(this)
 
     // MREC width and height are 300 and 250 respectively, on phones and tablets
@@ -235,7 +235,7 @@ In the case of <Abbr>MREC</Abbr>s, set `android:adFormat` accordingly:
 ```xml
 <com.applovin.mediation.ads.MaxAdView
   xmlns:maxads="http://schemas.applovin.com/android/1.0"
-  maxads:adUnitId="<var>ad_unit_ID</var>"
+  maxads:adUnitId="«ad_unit_ID»"
   android:background="@color/banner_background_color"
   android:layout_width="match_parent"
   android:layout_height="@dimen/banner_height" />
@@ -263,7 +263,7 @@ Declare the tablet banner height of 90<Abbr>dp</Abbr> in `res/values-sw600dp/att
 ```xml
 <com.applovin.mediation.ads.MaxAdView
   xmlns:maxads="http://schemas.applovin.com/android/1.0"
-  maxads:adUnitId="<var>ad_unit_ID</var>"
+  maxads:adUnitId="«ad_unit_ID»"
   maxads:adFormat="MREC"
   android:background="@color/mrec_background_color"
   android:layout_width="300dp"
@@ -313,7 +313,7 @@ Before you load the ad, set the banner extra parameter `adaptive_banner` to `tru
 ```java
 void createBannerAd()
 {
-  adView = new MaxAdView( "<var>ad_unit_ID</var>", this );
+  adView = new MaxAdView( "«ad_unit_ID»", this );
   adView.setListener( this );
 
   // Stretch to the width of the screen for banners to be fully functional
@@ -343,7 +343,7 @@ void createBannerAd()
 ```kotlin
 fun createBannerAd()
 {
-  adView = MaxAdView("<var>ad_unit_ID</var>", this)
+  adView = MaxAdView("«ad_unit_ID»", this)
   adView?.setListener(this)
 
   // Stretch to the width of the screen for banners to be fully functional
@@ -361,7 +361,7 @@ fun createBannerAd()
   // Set background or background color for banners to be fully functional
   adView?.setBackgroundColor(…)
 
-  val rootView = findViewById&lt;ViewGroup&gt;(android.R.id.content)
+  val rootView = findViewById<ViewGroup>(android.R.id.content)
   rootView.addView(adView)
 
   // Load the ad

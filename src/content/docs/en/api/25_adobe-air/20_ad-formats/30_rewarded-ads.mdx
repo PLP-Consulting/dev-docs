@@ -14,7 +14,7 @@ import SettingReward from "@content/en/api/partials/_SettingReward.mdx";
 The following code shows you how to attach listeners and load the first rewarded ad:
 
 ```actionscript-3
-var rewardedAdUnitId:String = "<var>ad_unit_ID</var>";
+var rewardedAdUnitId:String = "«ad_unit_ID»";
 var retryAttempt:Number;
 
 private function initializeRewardedAds():void
@@ -104,8 +104,8 @@ if (AppLovinMAX.isRewardedAdReady(rewardedAdUnitId))
 | `{CUSTOM_DATA}` | Custom data passed in from the integration (<Abbr>URL</Abbr>-encoded). AppLovin recommends that you keep the size of the string under 8192 characters. | `my%20custom%20data` |
 | `{DEVICE_TYPE}` | User’s device type. | `Tablet` |
 | `{EVENT_ID}` | Unique event <Abbr>ID</Abbr>, 40 hex characters | `8dc948013d71f04264b8e5c1c61933154b226e08` |
-| `{EVENT_TOKEN}` | `sha1( <var>EVENT_ID</var> + <var>Your_Event_Key</var> )` | `e000949f6d851c1f34adae08e6ef1076ba43cf31` |
-| `{EVENT_TOKEN_ALL}` | `sha256( <var>All macros alphabetically, <Abbr>URL</Abbr>-decoded</var> + <var>Your_Event_Key</var> )`<Callout type="note">If `EVENT_TOKEN` is one of your macros, it is omitted from the “All macros alphabetically” string.</Callout> | `eba615583ed59bc679a495ec58439f4b82b5460d822348eff6be5f218702a97a` |
+| `{EVENT_TOKEN}` | <code>sha1( <var>EVENT_ID</var> + <var>Your_Event_Key</var> )</code> | `e000949f6d851c1f34adae08e6ef1076ba43cf31` |
+| `{EVENT_TOKEN_ALL}` | <code>sha256( <var>All macros alphabetically, <Abbr>URL</Abbr>-decoded</var> + <var>Your_Event_Key</var> )</code><Callout type="note">If `EVENT_TOKEN` is one of your macros, it is omitted from the “All macros alphabetically” string.</Callout> | `eba615583ed59bc679a495ec58439f4b82b5460d822348eff6be5f218702a97a` |
 | `{FORMAT}` | Ad Unit format | <Glossary>`reward` [rewarded video ads]</Glossary>, <Glossary>`banner` [banner ads]</Glossary>, <Glossary>`inter` [interstitial ads]</Glossary> |
 | `{IDFA}` | <Glossary>iOS</Glossary> <Glossary>IDFA</Glossary> or <Glossary>Google Advertising <Abbr>ID</Abbr> [gaid]</Glossary> | `860635ea-65bc-eaed-d355-1b5283b30b94` |
 | `{IDFV}` | <Glossary>Identifier for Vendor</Glossary> | `4CD1C3C4-3FD7-00F5-1635-7BC6D9387E60` |
@@ -127,24 +127,24 @@ if (AppLovinMAX.isRewardedAdReady(rewardedAdUnitId))
 
 ##### Banners
 ```actionscript-3
-AppLovinMAX.createBanner(<var>ad-unit-id</var>, AdViewPosition.BOTTOM_CENTER);
-AppLovinMAX.setBannerPlacement(<var>ad-unit-id</var>, <var>placement</var>);
+AppLovinMAX.createBanner(«ad-unit-id», AdViewPosition.BOTTOM_CENTER);
+AppLovinMAX.setBannerPlacement(«ad-unit-id», «placement»);
 ```
  
 ##### <Abbr>MRECs</Abbr>
 ```actionscript-3
-AppLovinMAX.createMRec(<var>ad-unit-id</var>, AdViewPosition.CENTERED);
-AppLovinMAX.setMRecPlacement(<var>ad-unit-id</var>, <var>placement</var>);
+AppLovinMAX.createMRec(«ad-unit-id», AdViewPosition.CENTERED);
+AppLovinMAX.setMRecPlacement(«ad-unit-id», «placement»);
 ```
 
 ##### Interstitials
 ```actionscript-3
-AppLovinMAX.showInterstitial(<var>ad-unit-id</var>, <var>placement</var>);
+AppLovinMAX.showInterstitial(«ad-unit-id», «placement»);
 ```
 
 ##### Rewarded Ads
 ```actionscript-3
-AppLovinMAX.showRewardedAd(<var>ad-unit-id</var>, <var>placement</var>);
+AppLovinMAX.showRewardedAd(«ad-unit-id», «placement»);
 ```
   
 #### Setting an Internal User <Abbr>ID</Abbr>
@@ -153,5 +153,5 @@ If you want to tag users with your own internal User <Abbr>ID</Abbr>, do so with
 The maximum size of the User <Abbr>ID</Abbr> string is 8192 characters.
 
 ```actionscript-3
-AppLovinMAX.setUserId("<var>user-id</var>");
+AppLovinMAX.setUserId("«user-id»");
 ```

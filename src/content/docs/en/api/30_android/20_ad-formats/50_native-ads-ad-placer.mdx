@@ -41,12 +41,12 @@ This object configures your ad placer and provides positioning information for a
 
 #### Java
 ```java
-MaxAdPlacerSettings settings = new MaxAdPlacerSettings( "<var>ad_unit_ID</var>" );
+MaxAdPlacerSettings settings = new MaxAdPlacerSettings( "«ad_unit_ID»" );
 ```
 
 #### Kotlin
 ```kotlin
-val settings = MaxAdPlacerSettings( "<var>ad_unit_ID</var>" )
+val settings = MaxAdPlacerSettings( "«ad_unit_ID»" )
 ```
 
 #### Configure Ad Positions
@@ -125,7 +125,7 @@ public void onCreate(Bundle savedInstanceState)
   ⋮
 
   // Configure ad adapter
-  MaxAdPlacerSettings settings = new MaxAdPlacerSettings( "<var>ad_unit_ID</var>" );
+  MaxAdPlacerSettings settings = new MaxAdPlacerSettings( "«ad_unit_ID»" );
   settings.setRepeatingInterval( 5 );
   adAdapter = new MaxRecyclerAdapter( settings, originalAdapter, this );
 
@@ -154,7 +154,7 @@ override fun onCreate(savedInstanceState: Bundle?)
   ⋮
 
   // Configure ad adapter
-  val settings = MaxAdPlacerSettings( "<var>ad_unit_ID</var>" )
+  val settings = MaxAdPlacerSettings( "«ad_unit_ID»" )
   settings.repeatingInterval = 5
   adAdapter = MaxRecyclerAdapter( settings, originalAdapter, this )
 

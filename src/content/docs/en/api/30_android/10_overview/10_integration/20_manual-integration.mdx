@@ -63,7 +63,7 @@ This needs to go inside the `application` tag:
 
 ```xml
 <meta-data android:name="applovin.sdk.key"
-           android:value="<var>your-SDK-key</var>"/>
+           android:value="«your-SDK-key»"/>
 ```
 
 <SdkKey />
@@ -105,7 +105,7 @@ buildscript {
 ```groovy
 apply plugin: 'applovin-quality-service'
 applovin {
-    apiKey "<var>your-ad-review-key</var>"
+    apiKey "«your-ad-review-key»"
 }
 ```
 
@@ -115,7 +115,7 @@ plugins {
     id("applovin-quality-service")
 }
 applovin {
-    apiKey = "<var>your-ad-review-key</var>"
+    apiKey = "«your-ad-review-key»"
 }
 ```
 
@@ -176,7 +176,7 @@ public class ExampleActivity extends Activity
 
   void createInterstitialAd()
   {
-    interstitialAd = new MaxInterstitialAd( "<var>ad-unit-ID</var>", this );
+    interstitialAd = new MaxInterstitialAd( "«ad-unit-ID»", this );
     interstitialAd.setListener( this );
 
     // Load the first ad
@@ -243,7 +243,7 @@ class ExampleActivity : Activity(), MaxAdListener
 
   fun createInterstitialAd()
   {
-    interstitialAd = MaxInterstitialAd( "<var>ad-unit-ID</var>", this )
+    interstitialAd = MaxInterstitialAd( "«ad-unit-ID»", this )
     interstitialAd.setListener( this )
 
     // Load the first ad
@@ -323,7 +323,7 @@ public class ExampleActivity extends Activity
 
   void createRewardedAd()
   {
-    rewardedAd = MaxRewardedAd.getInstance( "<var>ad-unit-ID</var>", this );
+    rewardedAd = MaxRewardedAd.getInstance( "«ad-unit-ID»", this );
     rewardedAd.setListener( this );
 
     rewardedAd.loadAd();
@@ -401,7 +401,7 @@ class ExampleActivity : Activity(), MaxRewardedAdListener
 
   fun createRewardedAd()
   {
-    rewardedAd = MaxRewardedAd.getInstance( "<var>ad-unit-ID</var>", this )
+    rewardedAd = MaxRewardedAd.getInstance( "«ad-unit-ID»", this )
     rewardedAd.setListener( this )
 
     rewardedAd.loadAd()
@@ -472,9 +472,9 @@ if ( rewardedAd.isReady() )
 }
 ```
  
-## Banners &amp; <Abbr>MREC</Abbr>s
+## Banners & <Abbr>MREC</Abbr>s
 
-### Loading and Showing Banners &amp; <Abbr>MREC</Abbr>s Programmatically
+### Loading and Showing Banners & <Abbr>MREC</Abbr>s Programmatically
 
 To load a <Glossary>banner ad</Glossary> or <Glossary>MREC</Glossary>, create a `MaxAdView` object with your ad unit and call `loadAd()`.
 To show, add the `MaxAdView` object as a subview of your view hierarchy.
@@ -489,7 +489,7 @@ public class ExampleActivity extends Activity
 
   void createBannerAd()
   {
-    adView = new MaxAdView( "<var>ad-unit-ID</var>", this );
+    adView = new MaxAdView( "«ad-unit-ID»", this );
     adView.setListener( this );
 
     // Stretch to the width of the screen for banners to be fully functional
@@ -545,7 +545,7 @@ class ExampleActivity : Activity(), MaxAdViewAdListener
 
   fun createBannerAd()
   {
-    adView = MaxAdView("<var>ad-unit-ID</var>", this)
+    adView = MaxAdView("«ad-unit-ID»", this)
     adView?.setListener(this)
 
     // Stretch to the width of the screen for banners to be fully functional
@@ -594,7 +594,7 @@ public class ExampleActivity extends Activity
 
   void createMrecAd
   {
-    adView = new MaxAdView( "<var>ad-unit-ID</var>", MaxAdFormat.MREC, this );
+    adView = new MaxAdView( "«ad-unit-ID»", MaxAdFormat.MREC, this );
     adView.setListener( this );
 
     // MREC width and height are 300 and 250 respectively, on phones and tablets
@@ -648,7 +648,7 @@ class ExampleActivity : Activity(), MaxAdViewAdListener
 
   fun createMrecAd
   {
-    adView = MaxAdView("<var>ad-unit-ID</var>", MaxAdFormat.MREC, this)
+    adView = MaxAdView("«ad-unit-ID»", MaxAdFormat.MREC, this)
     adView?.setListener(this)
 
     // MREC width and height are 300 and 250 respectively, on phones and tablets
@@ -697,7 +697,7 @@ In the case of <Abbr>MREC</Abbr>s, set the `android:adFormat` accordingly:
 ```xml
 <com.applovin.mediation.ads.MaxAdView
   xmlns:maxads="http://schemas.applovin.com/android/1.0"
-  maxads:adUnitId="<var>ad-unit-ID</var>"
+  maxads:adUnitId="«ad-unit-ID»"
   android:background="@color/banner_background_color"
   android:layout_width="match_parent"
   android:layout_height="@dimen/banner_height" />
@@ -707,7 +707,7 @@ In the case of <Abbr>MREC</Abbr>s, set the `android:adFormat` accordingly:
 ```xml
 <com.applovin.mediation.ads.MaxAdView
   xmlns:maxads="http://schemas.applovin.com/android/1.0"
-  maxads:adUnitId="<var>ad-unit-ID</var>"
+  maxads:adUnitId="«ad-unit-ID»"
   maxads:adFormat="MREC"
   android:background="@color/mrec_background_color"
   android:layout_width="300dp"

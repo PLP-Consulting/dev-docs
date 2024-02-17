@@ -66,7 +66,7 @@ Add the following activities, providers, and services inside the `<application>`
         ⋮
         <provider
           android:name="com.applovin.sdk.AppLovinInitProvider"
-          android:authorities="<var>your-application-package-name</var>.applovininitprovider"
+          android:authorities="«your-application-package-name».applovininitprovider"
           android:exported="false"
           android:initOrder="101" />
 
@@ -142,8 +142,8 @@ AppLovinMAXEvents.setSdkInitializedEvent(function (sdkConfiguration:SdkConfigura
   // Start loading ads
 });
 
-AppLovinMAX.setUserId("<var>user_id</var>");
-AppLovinMAX.initialize("<var>your_sdk_key</var>");
+AppLovinMAX.setUserId("«user_id»");
+AppLovinMAX.initialize("«your_sdk_key»");
 ```
 
 <SdkKey />

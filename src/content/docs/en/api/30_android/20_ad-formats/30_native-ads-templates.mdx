@@ -46,7 +46,7 @@ public class ExampleActivity extends Activity
   {
     FrameLayout nativeAdContainer = findViewById( R.id.native_ad_layout );
 
-    nativeAdLoader = new MaxNativeAdLoader( "<var>ad_unit_ID</var>", this );
+    nativeAdLoader = new MaxNativeAdLoader( "«ad_unit_ID»", this );
     nativeAdLoader.setNativeAdListener( new MaxNativeAdListener()
     {
       @Override
@@ -93,7 +93,7 @@ class ExampleActivity : Activity()
   fun createNativeAd()
   {
     val nativeAdContainer = findViewById(R.id.native_ad_layout)
-    nativeAdLoader = MaxNativeAdLoader( "<var>ad_unit_ID</var>", this )
+    nativeAdLoader = MaxNativeAdLoader( "«ad_unit_ID»", this )
     nativeAdLoader.setNativeAdListener(object : MaxNativeAdListener() {
 
       override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, ad: MaxAd)

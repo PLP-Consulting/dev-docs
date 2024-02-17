@@ -4,12 +4,118 @@ description: "Mediation Debugger is a suite of testing tools. These tools help y
 slug: en/max/android/testing-networks/mediation-debugger
 ---
 import MediationDebugger1 from "@content/en/api/partials/_MediationDebugger1.mdx";
-import MediationDebugger2 from "@content/en/api/partials/_MediationDebugger2ios.mdx";
 
 <MediationDebugger1 />
 
-```actionscript-3
-AppLovinMAX.showMediationDebugger();
+#### Java
+```java
+AppLovinSdk.getInstance( this ).showMediationDebugger();
 ```
 
-<MediationDebugger2 />
+#### Kotlin
+```kotlin
+AppLovinSdk.getInstance( this ).showMediationDebugger()
+```
+
+## Integration Status
+
+The Mediation Debugger displays the integration status of the MAX-<Glossary>mediated [ad mediation]</Glossary> network adapters and/or <Abbr>SDK</Abbr>s found in your app.
+It flags integration issues associated with each network (such as a mismatch between the network <Abbr>SDK</Abbr> and adapter version, or missing <Glossary>SKAdNetwork</Glossary> <Abbr>ID</Abbr>s).
+It displays the integration status of mediated networks in three sections:
+
+<UILabel>Completed Integrations</UILabel>
+: You have successfully integrated these ad networks into your app.
+
+<UILabel>Incomplete Integrations</UILabel>
+: These ad networks have one or more issues you need to fix before you can integrate them successfully into your app.
+  Tap on the cell for more information.
+  You can find integration instructions in the [Preparing Mediated Networks](../preparing-mediated-networks) section of this documentation.
+
+<UILabel>Missing Integrations</UILabel>
+: You have not integrated these ad networks into your app.
+
+## Testing with Test Ads
+
+After you successfully integrate your mediated networks, AppLovin recommends that you validate your integration by loading and showing those networks’ test ads.
+
+<Callout type="note">
+Some mediated networks may have requirements that you must meet before you can load ads.
+For example, the <Abbr>SDK</Abbr> may require enough time to fully initialize (this is true, for instance, for Liftoff Monetize).
+If you do not allow sufficient time, this might cause no-fill errors.
+AppLovin recommends that you load ads during the window from 2–5 seconds after you initialize the <Abbr>SDK</Abbr>.
+</Callout>
+
+To use the Test Ads feature,
+
+1. Select a mediated network that you have successfully integrated, under the <UILabel>Completed Integrations</UILabel> section.
+1. Tap <UILabel>Enable</UILabel> under <UILabel>Test Ad</UILabel>.
+1. Restart the application so the mediated <Abbr>SDK</Abbr> initializes with test ad credentials.
+1. Select the mediated network again to enter the test-ads view seen below:
+   ![Test Ads](/images/mediation-debugger-test-ads-android.png)
+
+## Testing with Live Ads
+
+The Mediation Debugger allows you to view and test ads using your Ad Units’ waterfall configurations.
+
+<Callout type="warning">
+If you test with live traffic, some networks might flag this as fraudulent activity.
+You might also experience issues getting filled due to your waterfall configuration or the network’s targeting parameters.
+AppLovin strongly suggests that you test with live ads when you validate the integration.
+</Callout>
+
+To begin, select the <UILabel>View Ad Units</UILabel> cell, which displays the list of Ad Units associated with your app.
+Select an Ad Unit from that list to view the waterfall configuration from the MAX Ad Unit section.
+
+<Callout type="note">
+Country and <Glossary><Abbr>LAT</Abbr> (Limit Ad Traffic) [lat]</Glossary> targeting rules apply to your device when you view and test live Ad Units.
+</Callout>
+
+![Ad Units](/images/mediation-debugger-live-ads-android.png)
+
+### Full Waterfall
+
+Select an ad unit from the <UILabel>Ad Units</UILabel> list and click the <UILabel>Load</UILabel> button to request an ad for the Ad Unit.
+
+![INTER: Info, Bidding Networks. Tap to load an ad.](/images/mediation-debugger-full-waterfall-android.png)
+
+### Single Ad Source
+
+You can also select one of the mediated networks for the ad unit to be the only ad source for ad requests.
+To do so, click one of the networks in the <UILabel>Bidding Networks</UILabel> list for that ad unit.
+This isolates that network in the list. Next, click the <UILabel>Load</UILabel> button to request an ad from that network for the Ad Unit.
+
+![INTER: Info, Bidding networks. AppLovin ad loaded. Show.](/images/mediation-debugger-single-ad-source-android.png)
+
+### Within the App
+
+You can use the Mediation Debugger to force live ads from selected networks within your app’s natural environment.
+To begin, select the <UILabel>Select Live Network</UILabel> cell and follow the instructions on the screen.
+
+<Callout type="warning">
+This feature is not available when test mode is enabled.
+Several networks consider live ads on test devices to be fraudulent traffic.
+AppLovin recommends that you use test ads to validate your integration.
+You can use this feature to monitor live traffic.
+</Callout>
+
+## Sharing the Mediation Debugger
+
+Quality reviewers may ask you to share a copy of your Mediation Debugger output before you push your apps live.
+This ensures that your integration is healthy and ready to go live.
+
+To share your Mediation Debugger output, click the share button at the top right of the Mediation Debugger home screen and complete the action using your preferred method.
+
+![MAX Mediation Debugger. App Info, MAX.](/images/mediation-debugger-sharing-android.png)
+
+## app-ads.txt
+
+The Interactive Advertising Bureau created <Glossary>`app-ads.txt` [app-ads.txt]</Glossary> as a way for app publishers to prove to advertisers that they own the app that originates an ad request.
+This prevents malicious actors from making fraudulent ad requests.
+
+<Callout type="related">
+[“Fight fraud and improve eCPMs: How to implement app-ads.txt for your app”](https://www.applovin.com/blog/fight-fraud-and-improve-ecpms-how-to-implement-app-ads-txt-for-your-app/) from the AppLovin <i>Mobile Apps Blog</i>
+</Callout>
+
+Starting in <Abbr>SDK</Abbr> version 11.6.0, you can check through the Mediation Debugger whether your `app-ads.txt` file contains properly formatted entries for AppLovin.
+For more information on how to set up an `app-ads.txt` file on your domain with entries for AppLovin, visit [this link](../../max-dashboard/account/app-ads.txt-info).
+The Mediation Debugger displays a row marked <UILabel>app-ads.txt</UILabel> under the <UILabel>MAX</UILabel> section with a <UILabel>✅</UILabel> if the `app-ads.txt` file containing all entries for AppLovin was successfully found under the root domain of your developer website listed on the Google Play Store or Apple App Store.

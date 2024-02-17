@@ -217,8 +217,8 @@ It ignores the seat whitelist `wseat` array.
 
 | Attribute | Description | Always Passed? |
 | --------- | ----------- | -------------- |
-| `city` | City of the device. Based on the <Abbr>IP</Abbr> address &amp; Maxmind database. | no |
-| `country` | Country of the device. Based on the <Abbr>IP</Abbr> address &amp; Maxmind database. Passed as country code using [ISO-3166-1-alpha-3](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3). | no |
+| `city` | City of the device. Based on the <Abbr>IP</Abbr> address & Maxmind database. | no |
+| `country` | Country of the device. Based on the <Abbr>IP</Abbr> address & Maxmind database. Passed as country code using [ISO-3166-1-alpha-3](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-3). | no |
 | `dma` | Nielsen <Abbr>DMA</Abbr> code based on <Abbr>IP</Abbr> address. | no |
 | `ext` | Placeholder for exchange-specific extensions to Open<Abbr>RTB</Abbr>. | no |
 | `ext.isp` | Internet Service Provider name. | no |
@@ -227,7 +227,7 @@ It ignores the seat whitelist `wseat` array.
 | `lat` | Latitude from −90.000 to +90.000, where negative is south. Truncated to three decimal places. Blank when not available. | no |
 | `locale` | Language and country of the device. Example `us_en` signifies English as language and the United States as the country. | no |
 | `lon` | Longitude from −180.000 to +180.000, where negative is west. Truncated to three decimal places. Blank when not available. | no |
-| `metro` | Zip code of the device. Based on the <Abbr>IP</Abbr> address &amp; Maxmind database. | no |
+| `metro` | Zip code of the device. Based on the <Abbr>IP</Abbr> address & Maxmind database. | no |
 | `region` | Region code using ISO-3166-2; two-letter state code if <Abbr>USA</Abbr>. Always derived from <Abbr>IP</Abbr> address, never a reverse geocode from `lat` / `lon`. | no |
 | `type` | Source of location data; recommended when passing `lat` / `lon`. Refer to [List 5.20](https://www.iab.com/wp-content/uploads/2016/03/OpenRTB-API-Specification-Version-2-5-FINAL.pdf#%5B%7B%22num%22%3A167%2C%22gen%22%3A0%7D%2C%7B%22name%22%3A%22XYZ%22%7D%2C69%2C637%2C0%5D) in the Open<Abbr>RTB</Abbr> Spec 2.5 for more details. | no |
 | `zip` (optional) | Zip code of the user. Always derived, never a reverse geocode from `lat` / `lon`. | no |
@@ -370,7 +370,7 @@ Enclose these macros in `${…}` (e.g. `${AUCTION_ID}`).
 #### Example Win Bid <Abbr>URL</Abbr> with Macros
 
 ```plaintext
-https://example.com/endpoint/auction=${AUCTION_ID}&amp;price=${AUCTION_PRICE}
+https://example.com/endpoint/auction=${AUCTION_ID}&price=${AUCTION_PRICE}
 ```
 
 ### Ad Markup Standard
@@ -492,7 +492,7 @@ AppLovin only investigates discrepancies if `burl` is used for tracking.
 | ------- | ------ | --------------- |
 | `bidresponse.bid.burl` | Fired server-side. `X-Device-IP` and `X-Device-User-Agent` are sent as headers in the server-to-server callbacks:<dl><dt>`X-Device-IP`</dt><dd>Actual user device <Abbr>IP</Abbr> address</dd><dt>`X-Device-User-Agent`</dt><dd>Actual user device <Abbr>UA</Abbr></dd></dl> | Impression and spend tracking for the buyer (<Abbr>DSP</Abbr>) |
 | `bidresponse.bid.ext.imptrackers` | Fired server-side. `X-Device-IP` and `X-Device-User-Agent` are sent as headers in the server-to-server callbacks: <dl><dt>`X-Device-IP`</dt><dd>Actual user device <Abbr>IP</Abbr> address</dd><dt>`X-Device-User-Agent`</dt><dd>Actual user device <Abbr>UA</Abbr></dd></dl> | Impression tracking by partners |
-| `bidresponse.bid.adm` | <ul><li><Abbr>HTML</Abbr> Fired client-side</li><li><Abbr>VAST</Abbr>`&lt;ImpressionTracker&gt;` node Fired server-side. `X-Device-IP` and `X-Device-User-Agent` are sent as headers in the server-to-server callbacks:<dl><dt>`X-Device-IP`</dt><dd>Actual user device <Abbr>IP</Abbr> address</dd><dt>`X-Device-User-Agent`</dt><dd>Actual user device <Abbr>UA</Abbr></dd></dl></li></ul> | <ul><li><Abbr>HTML</Abbr>: Invalid Traffic (<Abbr>IVT</Abbr>) tracking</li><li><Abbr>VAST</Abbr>: Impression tracking by partners</li></ul> |
+| `bidresponse.bid.adm` | <ul><li><Abbr>HTML</Abbr> Fired client-side</li><li><Abbr>VAST</Abbr>`<ImpressionTracker>` node Fired server-side. `X-Device-IP` and `X-Device-User-Agent` are sent as headers in the server-to-server callbacks:<dl><dt>`X-Device-IP`</dt><dd>Actual user device <Abbr>IP</Abbr> address</dd><dt>`X-Device-User-Agent`</dt><dd>Actual user device <Abbr>UA</Abbr></dd></dl></li></ul> | <ul><li><Abbr>HTML</Abbr>: Invalid Traffic (<Abbr>IVT</Abbr>) tracking</li><li><Abbr>VAST</Abbr>: Impression tracking by partners</li></ul> |
 | `bidresponse.bid.adm.native.eventtrackers` | Fired client-side | <ul><li>Invalid Traffic (<Abbr>IVT</Abbr>) tracking</li><li> Open Measurement <Abbr>SDK</Abbr> (<Abbr>OMSDK</Abbr>)</li><li>Impression tracking by partners</li></ul>Supports `img` and `js` tags as defined in “methods” in 7.7 Event Tracking Methods Table of [Open <Abbr>RTB</Abbr> 1.2 Native Ads Spec](https://www.iab.com/wp-content/uploads/2018/03/OpenRTB-Native-Ads-Specification-Final-1.2.pdf).<p><Abbr>DSP</Abbr>s are encouraged to use `native.eventtrackers` rather than `native.imptrackers` or `native.jstracker` as those fields are pending deprection by <Abbr>IAB</Abbr> (in favor of `eventtrackers`).</p> |
 | `bidresponse.bid.adm.native.imptrackers` | Fired client-side (being deprecated in favor of `eventtrackers`) | Invalid Traffic (<Abbr>IVT</Abbr>) tracking |
 | `bidresponse.bid.adm.native.jstracker` | Fired client-side (being deprecated in favor of `eventtrackers`) | Open Measurement <Abbr>SDK</Abbr> (<Abbr>OMSDK</Abbr>) |
@@ -1032,7 +1032,7 @@ Video
           "impid": "1",
           "price": 15,
           "adid": "1093919",
-          "adm": "&lt;a href=\"https://click.url/click/8JxH4DHN4KMF21Vd?uid=05D02DC6-0132-4C2C-A879-79BB026BE3F8&amp;partner=applovin&amp;ts=2018-07-09T18-19-01Z&amp;ad=1093919\"&gt;&lt;img src=\"https://assets.dsp.io/ad_assets/files/320x50.png\" height=\"50\" width=\"320\" alt=\"\"/&gt;&lt;/a&gt;",
+          "adm": "<a href=\"https://click.url/click/8JxH4DHN4KMF21Vd?uid=05D02DC6-0132-4C2C-A879-79BB026BE3F8&partner=applovin&ts=2018-07-09T18-19-01Z&ad=1093919\"><img src=\"https://assets.dsp.io/ad_assets/files/320x50.png\" height=\"50\" width=\"320\" alt=\"\"/></a>",
           "adomain": [
             "advertiser.com"
           ],
@@ -1048,7 +1048,7 @@ Video
           "ext": {
             "crtype": "HTML",
             "imptrackers": [
-                "https://example.dsp.events/win/8JxH4DHN4KMF21Vd?ts=2018-07-09T18-19-01Z&amp;ad=1093919&amp;uid=05D02DC6-0132-4C2C-A879-79BB026BE3F8&amp;auction=${AUCTION_ID}&amp;price=${AUCTION_PRICE}&amp;partner=applovin"
+                "https://example.dsp.events/win/8JxH4DHN4KMF21Vd?ts=2018-07-09T18-19-01Z&ad=1093919&uid=05D02DC6-0132-4C2C-A879-79BB026BE3F8&auction=${AUCTION_ID}&price=${AUCTION_PRICE}&partner=applovin"
             ]
           }
         }

@@ -20,60 +20,60 @@ For <Glossary>banners</Glossary> and <Glossary>MRECs</Glossary> you must set the
 
 ##### Java
 ```java
-adView.setPlacement( "<var>placement</var>" );
+adView.setPlacement( "«placement»" );
 adView.loadAd();
 ```
 
 ##### Kotlin
 ```kotlin
-adView.setPlacement( "<var>placement</var>" )
+adView.setPlacement( "«placement»" )
 adView.loadAd()
 ```
 
 #### Interstitials
 ##### Java
 ```java
-interstitial.showAd( "<var>placement</var>" );
+interstitial.showAd( "«placement»" );
 ```
 
 ##### Kotlin
 ```kotlin
-interstitial.showAd( "<var>placement</var>" )
+interstitial.showAd( "«placement»" )
 ```
 
 #### Rewarded Ads
 ##### Java
 ```java
-rewardedAd.showAd( "<var>placement</var>" );
+rewardedAd.showAd( "«placement»" );
 ```
 
 ##### Kotlin
 ```kotlin
-rewardedAd.showAd( "<var>placement</var>" )
+rewardedAd.showAd( "«placement»" )
 ```
 
 #### Native Ads
 ##### Java
 ```java
-nativeAdLoader.setPlacement( "<var>placement</var>" );
+nativeAdLoader.setPlacement( "«placement»" );
 ```
 
 ##### Kotlin
 ```kotlin
-nativeAdLoader.setPlacement( "<var>placement</var>" )
+nativeAdLoader.setPlacement( "«placement»" )
 ```
 
 #### Native Ads (Ad Placer)
 ##### Java
 ```java
-MaxAdPlacerSettings settings = new MaxAdPlacerSettings( "<var>ad-unit-ID</var>" );
-settings.setPlacement( "<var>placement</var>" );
+MaxAdPlacerSettings settings = new MaxAdPlacerSettings( "«ad-unit-ID»" );
+settings.setPlacement( "«placement»" );
 ```
 
 ##### Kotlin
 ```kotlin
-val settings = MaxAdPlacerSettings( "<var>ad-unit-ID</var>" )
-settings.placement = "<var>placement</var>"
+val settings = MaxAdPlacerSettings( "«ad-unit-ID»" )
+settings.placement = "«placement»"
 ```
 
 <MuteAudio />
@@ -139,12 +139,12 @@ You can set or retrieve the segment name of the current user from the AppLovin <
 
 #### Java
 ```java
-AppLovinSdk.getInstance( context ).getUserSegment().setName( "<var>segment-name</var>" );
+AppLovinSdk.getInstance( context ).getUserSegment().setName( "«segment-name»" );
 ```
 
 #### Kotlin
 ```kotlin
-AppLovinSdk.getInstance( context ).userSegment.name = "<var>segment-name</var>"
+AppLovinSdk.getInstance( context ).userSegment.name = "«segment-name»"
 ```
 
 ## Creative <Abbr>ID</Abbr> and Network Name
@@ -283,9 +283,9 @@ The following example shows how you implement this feature:
 #### Java
 ```java
 AppLovinSdkSettings settings = new AppLovinSdkSettings( context );
-List&lt;String&gt; adUnitIds = new ArrayList&lt;&gt;();
-adUnitIds.add( "<var>ad_unit_id_1</var>" );
-adUnitIds.add( "<var>ad_unit_id_2</var>" );
+List<String> adUnitIds = new ArrayList<>();
+adUnitIds.add( "«ad_unit_id_1»" );
+adUnitIds.add( "«ad_unit_id_2»" );
 settings.setInitializationAdUnitIds( adUnitIds );
 
 AppLovinSdk sdk = AppLovinSdk.getInstance( settings, context );
@@ -301,11 +301,11 @@ sdk.initializeSdk( new AppLovinSdk.SdkInitializationListener() {
 #### Kotlin
 ```kotlin
 val settings = AppLovinSdkSettings( context )
-settings.initializationAdUnitIds = arrayListOf( "<var>ad_unit_id_1</var>", "<var>ad_unit_id_2</var>" )
+settings.initializationAdUnitIds = arrayListOf( "«ad_unit_id_1»", "«ad_unit_id_2»" )
 
 val sdk = AppLovinSdk.getInstance( settings, context );
 sdk.mediationProvider = "max"
-sdk.initializeSdk({ config -&gt;
+sdk.initializeSdk({ config ->
   ⋮
 })
 ```
@@ -337,7 +337,7 @@ public void onAdLoaded(final MaxAd ad)
   String waterfallInfoStr;
   for ( MaxNetworkResponseInfo networkResponse : waterfall.getNetworkResponses() )
   {
-    waterfallInfoStr = "Network -&gt; " + networkResponse.getMediatedNetwork() +
+    waterfallInfoStr = "Network -> " + networkResponse.getMediatedNetwork() +
             "\n...adLoadState: " + networkResponse.getAdLoadState() +
             "\n...latency: " + networkResponse.getLatencyMillis() + " milliseconds" +
             "\n...credentials: " + networkResponse.getCredentials();
@@ -359,7 +359,7 @@ public void onAdLoadFailed(final String adUnitId, final MaxError error)
 
   for ( MaxNetworkResponseInfo networkResponse : waterfall.getNetworkResponses() )
   {
-    System.out.println( "Network -&gt; " + networkResponse.getMediatedNetwork() +
+    System.out.println( "Network -> " + networkResponse.getMediatedNetwork() +
                         "...latency: " + networkResponse.getLatencyMillis() +
                         "...credentials: " + networkResponse.getCredentials() + " milliseconds" +
                         "...error: " + networkResponse.getError() );
@@ -376,7 +376,7 @@ override fun onAdLoaded(ad: MaxAd?) {
 
   var waterfallInfoStr: String
   for ( networkResponse in waterfall.networkResponses ) {
-    waterfallInfoStr = "Network -&gt; ${ networkResponse.mediatedNetwork }" +
+    waterfallInfoStr = "Network -> ${ networkResponse.mediatedNetwork }" +
           "\n...adLoadState: ${ networkResponse.adLoadState }" +
           "\n...latency: ${ networkResponse.latencyMillis } milliseconds" +
           "\n...credentials: ${ networkResponse.credentials }"
@@ -393,7 +393,7 @@ override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
   println( "Waterfall latency was: " + waterfall.latencyMillis + " milliseconds" )
 
   for ( networkResponse in waterfall.networkResponses ) {
-    println( "Network -&gt; ${ networkResponse.mediatedNetwork }" +
+    println( "Network -> ${ networkResponse.mediatedNetwork }" +
              "...latency: ${ networkResponse.latencyMillis } milliseconds" +
              "...credentials: ${ networkResponse.credentials }" +
              "...error: ${ networkResponse.error }" )
@@ -405,18 +405,18 @@ override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
 ```plaintext
 Waterfall Name: Default Waterfall and Test Name: Control
 Waterfall latency was: 6668 milliseconds
-Network -&gt; MaxMediatedNetworkInfo{name=ironSource, adapterClassName=com.applovin.mediation.adapters.IronSourceMediationAdapter, adapterVersion=7.1.10.1.0, sdkVersion=7.1.10.1}
+Network -> MaxMediatedNetworkInfo{name=ironSource, adapterClassName=com.applovin.mediation.adapters.IronSourceMediationAdapter, adapterVersion=7.1.10.1.0, sdkVersion=7.1.10.1}
     ...adLoadState: FAILED_TO_LOAD
     ...latency: 1542 milliseconds
     ...credentials: Bundle[{app_key=88a0872d, placement_id=0}]
     ...error: MaxAdapterError{errorCode=-5200, errorMessage="Unspecified Error", thirdPartySdkErrorCode=510, thirdPartySdkErrorMessage="Load failed - Failed to load Interstitial ad"}
 
-Network -&gt; MaxMediatedNetworkInfo{name=Mintegral, adapterClassName=com.applovin.mediation.adapters.MintegralMediationAdapter, adapterVersion=15.7.61.0, sdkVersion=MAL_15.7.61}
+Network -> MaxMediatedNetworkInfo{name=Mintegral, adapterClassName=com.applovin.mediation.adapters.MintegralMediationAdapter, adapterVersion=15.7.61.0, sdkVersion=MAL_15.7.61}
     ...adLoadState: AD_LOADED
     ...latency: 4676 milliseconds
     ...credentials: Bundle[{app_id=118244, app_key=57205cd060e7e051e5bcccaae6bd2b64, placement_id=515486}]
 
-Network -&gt; MaxMediatedNetworkInfo{name=ironSource, adapterClassName=com.applovin.mediation.adapters.IronSourceMediationAdapter, adapterVersion=7.1.10.1.0, sdkVersion=7.1.10.1}
+Network -> MaxMediatedNetworkInfo{name=ironSource, adapterClassName=com.applovin.mediation.adapters.IronSourceMediationAdapter, adapterVersion=7.1.10.1.0, sdkVersion=7.1.10.1}
     ...adLoadState: AD_LOAD_NOT_ATTEMPTED
     ...latency: -1 milliseconds
     ...credentials: Bundle[{app_key=88a0872d, placement_id=1171359}]
@@ -465,11 +465,11 @@ The following code samples show you how to customize these refresh intervals:
 #### Java
 ```java
 // Where adView is an instance of MaxAdView
-adView.setExtraParameter( "ad_refresh_seconds", <var>ad-refresh-rate</var> );
+adView.setExtraParameter( "ad_refresh_seconds", «ad-refresh-rate» );
 ```
 
 #### Kotlin
 ```kotlin
 // Where adView is an instance of MaxAdView
-adView.setExtraParameter( "ad_refresh_seconds", <var>ad-refresh-rate</var> )
+adView.setExtraParameter( "ad_refresh_seconds", «ad-refresh-rate» )
 ```

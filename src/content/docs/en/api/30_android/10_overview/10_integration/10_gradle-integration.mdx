@@ -76,7 +76,7 @@ Add the following `<meta-data>` element to your `AndroidManifest.xml`, inside th
 
 ```xml
 <meta-data android:name="applovin.sdk.key"
-       android:value="<var>sdk-key</var>"/>
+       android:value="«sdk-key»"/>
 ```
 
 <SdkKey />
@@ -121,7 +121,7 @@ buildscript {
 ```groovy
 apply plugin: 'applovin-quality-service'
 applovin {
-  apiKey "<var>ad-review-key</var>"
+  apiKey "«ad-review-key»"
 }
 ```
 
@@ -131,7 +131,7 @@ plugins {
   id("applovin-quality-service")
 }
 applovin {
-  apiKey = "<var>ad-review-key</var>"
+  apiKey = "«ad-review-key»"
 }
 ```
 

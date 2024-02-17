@@ -24,7 +24,7 @@ public class ExampleActivity extends Activity
 
   void createRewardedAd()
   {
-    rewardedAd = MaxRewardedAd.getInstance( "<var>ad_unit_ID</var>", this );
+    rewardedAd = MaxRewardedAd.getInstance( "«ad_unit_ID»", this );
     rewardedAd.setListener( this );
 
     rewardedAd.loadAd();
@@ -102,7 +102,7 @@ class ExampleActivity : Activity(), MaxRewardedAdListener
 
   fun createRewardedAd()
   {
-    rewardedAd = MaxRewardedAd.getInstance( "<var>ad_unit_ID</var>", this )
+    rewardedAd = MaxRewardedAd.getInstance( "«ad_unit_ID»", this )
     rewardedAd.setListener( this )
 
     rewardedAd.loadAd()
@@ -200,8 +200,8 @@ public void onUserRewarded(final MaxAd ad, final MaxReward reward)
 | `{CUSTOM_DATA}` | Custom data passed in from the integration (<Abbr>URL</Abbr>-encoded). AppLovin recommends that you keep the size of the string under 8192 characters. | `my%20custom%20data` | 
 | `{DEVICE_TYPE}` | User’s device type. | `Tablet` | 
 | `{EVENT_ID}` | Unique event <Abbr>ID</Abbr>, 40 hex characters | `8dc948013d71f04264b8e5c1c61933154b226e08` | 
-| `{EVENT_TOKEN}` | `sha1( <var>EVENT_ID</var> + <var>Your_Event_Key</var> )` | `e000949f6d851c1f34adae08e6ef1076ba43cf31` | 
-| `{EVENT_TOKEN_ALL}` | `sha256( <var>All macros alphabetically, <Abbr>URL</Abbr>-encoded</var> + <var>Your_Event_Key</var> )` <Callout type="note">If `EVENT_TOKEN` is one of your macros, it is omitted from the “All macros alphabetically” string.</Callout> | `eba615583ed59bc679a495ec58439f4b82b5460d822348eff6be5f218702a97a` | 
+| `{EVENT_TOKEN}` | <code>sha1( <var>EVENT_ID</var> + <var>Your_Event_Key</var> )</code> | `e000949f6d851c1f34adae08e6ef1076ba43cf31` | 
+| `{EVENT_TOKEN_ALL}` | <code>sha256( <var>All macros alphabetically, <Abbr>URL</Abbr>-encoded</var> + <var>Your_Event_Key</var> )</code> <Callout type="note">If `EVENT_TOKEN` is one of your macros, it is omitted from the “All macros alphabetically” string.</Callout> | `eba615583ed59bc679a495ec58439f4b82b5460d822348eff6be5f218702a97a` | 
 | `{FORMAT}` | Ad Unit format | <Glossary>`reward` [rewarded video ads]</Glossary>, <Glossary>`banner` [banner ads]</Glossary>, <Glossary>`inter` [interstitial ads]</Glossary> | 
 | `{IDFA}` | <Glossary>iOS</Glossary> <Glossary>IDFA</Glossary> or <Glossary>Google Advertising <Abbr>ID</Abbr> [gaid]</Glossary> | `860635ea-65bc-eaed-d355-1b5283b30b94` | 
 | `{IDFV}` | <Glossary>Identifier for Vendor</Glossary> | `4CD1C3C4-3FD7-00F5-1635-7BC6D9387E60` | 
@@ -226,12 +226,12 @@ The maximum size of the User <Abbr>ID</Abbr> string is 8192 characters.
 
 ##### Java
 ```java
-AppLovinSdk.getInstance( context ).setUserIdentifier( "<var>user-id</var>" );
+AppLovinSdk.getInstance( context ).setUserIdentifier( "«user-id»" );
 ```
 
 ##### Kotlin
 ```kotlin
-AppLovinSdk.getInstance( context ).userIdentifier = "<var>user-id</var>"
+AppLovinSdk.getInstance( context ).userIdentifier = "«user-id»"
 ```
   
 #### Custom Data
@@ -247,18 +247,18 @@ Otherwise that data will not appear in the postbacks associated with the ad.
 
 ##### Java
 ```java
-adViewAd.setCustomData( "<var>custom data</var>" ); // banners
-adView.setCustomData( "<var>custom data</var>" ); // MRECs
-MaxInterstitialAd.showAd(<var>placement</var>, <var>custom data</var>); // interstitials
-MaxRewardedAd.showAd(<var>placement</var>, <var>custom data</var>); // rewarded ads
-nativeAdLoader.setCustomData( "<var>my custom data</var>" ); // native ads
+adViewAd.setCustomData( "«custom data»" ); // banners
+adView.setCustomData( "«custom data»" ); // MRECs
+MaxInterstitialAd.showAd(«placement», «custom data»); // interstitials
+MaxRewardedAd.showAd(«placement», «custom data»); // rewarded ads
+nativeAdLoader.setCustomData( "«my custom data»" ); // native ads
 ```
 
 ##### Kotlin
 ```kotlin
-adViewAd.setCustomData( "<var>custom data</var>" ) // banners
-adView.setCustomData( "<var>custom data</var>" ) // MRECs
-MaxInterstitialAd.showAd(<var>placement</var>, <var>custom data</var>) // interstitials
-MaxRewardedAd.showAd(<var>placement</var>, <var>custom data</var>) // rewarded ads
-nativeAdLoader.setCustomData( "<var>my custom data</var>" ) // native ads
+adViewAd.setCustomData( "«custom data»" ) // banners
+adView.setCustomData( "«custom data»" ) // MRECs
+MaxInterstitialAd.showAd(«placement», «custom data») // interstitials
+MaxRewardedAd.showAd(«placement», «custom data») // rewarded ads
+nativeAdLoader.setCustomData( "«my custom data»" ) // native ads
 ```

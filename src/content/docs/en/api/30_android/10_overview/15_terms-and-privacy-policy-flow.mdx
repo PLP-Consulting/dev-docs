@@ -77,14 +77,14 @@ public class MyApplication
 
     AppLovinSdkSettings settings = new AppLovinSdkSettings( this );
     settings.<span class="pl-kos"></span><span class="pl-en x x-first x-last">getTermsAndPrivacyPolicyFlowSettings</span><span class="pl-kos"></span>().setEnabled( true );
-    settings.<span class="pl-kos"></span><span class="pl-en x x-first x-last">getTermsAndPrivacyPolicyFlowSettings</span><span class="pl-kos"></span>().setPrivacyPolicyUri( Uri.parse( "<var>https://your_company_name.com/privacy_policy</var>" ) );
+    settings.<span class="pl-kos"></span><span class="pl-en x x-first x-last">getTermsAndPrivacyPolicyFlowSettings</span><span class="pl-kos"></span>().setPrivacyPolicyUri( Uri.parse( "«https://your_company_name.com/privacy_policy»" ) );
     // Terms of Service URL is optional
-    settings.<span class="pl-kos"></span><span class="pl-en x x-first x-last">getTermsAndPrivacyPolicyFlowSettings</span><span class="pl-kos"></span>().setTermsOfServiceUri( Uri.parse( "<var>https://your_company_name.com/terms_of_service</var>" ) );
+    settings.<span class="pl-kos"></span><span class="pl-en x x-first x-last">getTermsAndPrivacyPolicyFlowSettings</span><span class="pl-kos"></span>().setTermsOfServiceUri( Uri.parse( "«https://your_company_name.com/terms_of_service»" ) );
 
     AppLovinSdk sdk = AppLovinSdk.getInstance( settings, this );
     // Set the mediation provider value to "max" to ensure proper functionality
     sdk.setMediationProvider( AppLovinMediationProvider.MAX );
-    sdk.initializeSdk( config -&gt; {
+    sdk.initializeSdk( config -> {
       ⋮
     } );
   }
@@ -109,15 +109,15 @@ class MyApplication : Application()
 
     val settings = AppLovinSdkSettings(this)
     settings.termsAndPrivacyPolicyFlowSettings.isEnabled = true
-    settings.termsAndPrivacyPolicyFlowSettings.privacyPolicyUri = Uri.parse("<var>https://your_company_name.com/privacy_policy</var>")
+    settings.termsAndPrivacyPolicyFlowSettings.privacyPolicyUri = Uri.parse("«https://your_company_name.com/privacy_policy»")
 
     // Terms of Service URL is optional
-    settings.termsAndPrivacyPolicyFlowSettings.termsOfServiceUri = Uri.parse("<var>https://your_company_name.com/terms_of_service</var>")
+    settings.termsAndPrivacyPolicyFlowSettings.termsOfServiceUri = Uri.parse("«https://your_company_name.com/terms_of_service»")
 
     val sdk = AppLovinSdk.getInstance(settings, this)
     // Set the mediation provider value to "max" to ensure proper functionality
     sdk.mediationProvider = "max"
-    sdk.initializeSdk { config -&gt;
+    sdk.initializeSdk { config ->
       ⋮
     }
   }
@@ -140,8 +140,8 @@ The final result should look similar to this:
 {
   "consent_flow_settings": {
     "consent_flow_enabled": true,
-    "consent_flow_terms_of_service": "<var>https://your_company_name.com/terms_of_service</var>",
-    "consent_flow_privacy_policy": "<var>https://your_company_name.com/privacy_policy</var>"
+    "consent_flow_terms_of_service": "«https://your_company_name.com/terms_of_service»",
+    "consent_flow_privacy_policy": "«https://your_company_name.com/privacy_policy»"
   }
 }
 ```
@@ -187,14 +187,14 @@ public class MyApplication
     // Initialize AppLovinSDK
     val sdk = AppLovinSdk.getInstance( this );
     sdk.setMediationProvider( "max" );
-    sdk.setUserIdentifier( "<var>USER_ID</var>" );
+    sdk.setUserIdentifier( "«USER_ID»" );
 
     sdk.initializeSdk( (AppLovinSdkConfiguration config) - {
 
       // Initialize other 3rd-party SDKs - do not initialize mediated advertising SDKs, MAX will automatically do that for you. Not following this step will result in noticeable integration issues
 
       // Initialize the Adjust SDK inside the AppLovin SDK's initialization callback
-      AdjustConfig adjustConfig = new AdjustConfig( this, "<var>Your Adjust App Token</var>", AdjustConfig.ENVIRONMENT_SANDBOX or AdjustConfig.ENVIRONMENT_PRODUCTION );
+      AdjustConfig adjustConfig = new AdjustConfig( this, "«Your Adjust App Token»", AdjustConfig.ENVIRONMENT_SANDBOX or AdjustConfig.ENVIRONMENT_PRODUCTION );
       Adjust.onCreate( adjustConfig );
 
       // Start loading ads
@@ -221,13 +221,13 @@ class MyApplication : Application()
     // Initialize AppLovinSDK
     val sdk = AppLovinSdk.getInstance( this )
     sdk.mediationProvider = "max"
-    sdk.userIdentifier = "<var>USER_ID</var>"
+    sdk.userIdentifier = "«USER_ID»"
 
     sdk.initializeSdk { config -
       // Initialize other 3rd-party SDKs - do not initialize mediated advertising SDKs, MAX will automatically do that for you. Not following this step will result in noticeable integration issues
 
       // Initialize the Adjust SDK inside the AppLovin SDK's initialization callback
-      val adjustConfig = AdjustConfig( this, "<var>Your Adjust App Token</var>", AdjustConfig.ENVIRONMENT_SANDBOX or AdjustConfig.ENVIRONMENT_PRODUCTION )
+      val adjustConfig = AdjustConfig( this, "«Your Adjust App Token»", AdjustConfig.ENVIRONMENT_SANDBOX or AdjustConfig.ENVIRONMENT_PRODUCTION )
       Adjust.onCreate(adjustConfig )
 
       // Start loading ads
@@ -289,7 +289,7 @@ public class MyActivity : Activity()
   private fun showAppLovinConsentFlow()
   {
     val cmpService = AppLovinSdk.getInstance(this).cmpService
-    cmpService.showCmpForExistingUser(this) { error -&gt;
+    cmpService.showCmpForExistingUser(this) { error ->
       if (null == error)
       {
         // The CMP alert was shown successfully.

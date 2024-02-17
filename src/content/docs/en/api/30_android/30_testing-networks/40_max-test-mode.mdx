@@ -6,16 +6,45 @@ slug: en/max/android/testing-networks/max-test-mode
 import MaxTestMode1 from "@content/en/api/partials/_MaxTestMode1.mdx";
 import EnableTestMode from "@content/en/api/partials/_EnableTestMode.mdx";
 import DisableTestMode from "@content/en/api/partials/_DisableTestMode.mdx";
+import Troubleshooting from "@content/en/api/partials/_Troubleshooting.mdx";
 
 <MaxTestMode1 />
 
 <Callout type="note">
-When you enable test mode, the MAX <Abbr>SDK</Abbr> outputs verbose device logging to <Glossary>Android</Glossary> Logcat or to <Glossary>iOS</Glossary> Console.
+When you enable test mode, the MAX <Abbr>SDK</Abbr> outputs verbose device logging to <Glossary>Android</Glossary> Logcat.
 </Callout>
 
 <EnableTestMode />
 
-Type the device <UILabel>Name</UILabel> and the relevant device <Abbr>ID</Abbr>:
-<Glossary>“Google Advertising ID” (<Abbr>GAID</Abbr>) [gaid]</Glossary> for Android and <Glossary>“Identifier for Advertisers” (<Abbr>IDFA</Abbr>) [idfa]</Glossary> for <Abbr>iOS</Abbr>. 
+Type the device <UILabel>Name</UILabel> and the <Glossary>“Google Advertising ID” (<Abbr>GAID</Abbr>) [gaid]</Glossary>.
 
 <DisableTestMode />
+
+## How to Enable Test Ads in the AppLovin <Abbr>SDK</Abbr>
+
+You can enable test ads for one or more <Glossary>GAIDs</Glossary> programmatically in the AppLovin <Abbr>SDK</Abbr>.
+
+<Callout type="note">
+With test ads, AppLovin will not track enabled impressions, clicks, and revenue.
+You should only use such ads to test your app integration.
+</Callout>
+
+To enable test ads for a set of <Abbr>GAID</Abbr>s, pass a list of test device advertising <Abbr>ID</Abbr>s in AppLovin <Abbr>SDK</Abbr> settings.
+Starting in <Abbr>SDK</Abbr> version 11.11.0, you must set test <Abbr>GAID</Abbr>s when you create the first <Abbr>SDK</Abbr> instance.
+The following code snippets show how to do this in Java and Kotlin.
+
+#### Java
+```java
+AppLovinSdkSettings settings = new AppLovinSdkSettings( context );
+settings.setTestDeviceAdvertisingIds(Arrays.asList("«YOUR_GAID_HERE»"));
+AppLovinSdk sdk = AppLovinSdk.getInstance( settings, context );
+```
+
+#### Kotlin
+```kotlin
+val settings = AppLovinSdkSettings(context)
+settings.testDeviceAdvertisingIds = listOf("«YOUR_GAID_HERE»")
+val sdk = AppLovinSdk.getInstance(settings, context)
+```
+
+<Troubleshooting />
