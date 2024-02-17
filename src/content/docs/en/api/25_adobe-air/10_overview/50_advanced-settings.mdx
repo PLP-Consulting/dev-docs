@@ -1,0 +1,52 @@
+---
+title: "Advanced Settings"
+description: "Ad placements, muting audio, and verbose logging."
+slug: en/max/adobe-air/overview/advanced-settings
+---
+import AdPlacements from "@content/en/api/partials/_AdPlacements.mdx"; 
+import MuteAudio from "@content/en/api/partials/_MuteAudio.mdx"; 
+import VerboseLogging from "@content/en/api/partials/_VerboseLogging.mdx"; 
+
+<AdPlacements />
+
+### Banners
+```actionscript-3
+AppLovinMAX.createBanner(bannerAdUnitId, AdViewPosition.BOTTOM_CENTER);
+AppLovinMAX.setBannerPlacement(bannerAdUnitId, <var>placement</var>);
+```
+
+### MRECs
+```actionscript-3
+AppLovinMAX.createMRec(mrecAdUnitId, AdViewPosition.CENTERED);
+AppLovinMAX.setMRecPlacement(mrecAdUnitId, <var>placement</var>);
+```
+
+### Interstitials
+```actionscript-3
+AppLovinMAX.showInterstitial(interstitialAdUnitId, <var>placement</var>);
+```
+
+### Rewarded Ads
+```actionscript-3
+AppLovinMAX.showRewardedAd(rewardedAdUnitId, <var>placement</var>);
+```
+
+<MuteAudio />
+
+```actionscript-3
+AppLovinMAX.setMuted(true);  // to mute
+AppLovinMAX.setMuted(false); // to unmute
+```
+
+<Callout type="warning">
+Set the mute state before you load ads.
+Some networks (like Google bidding and Google AdMob) return muted or unmuted videos depending on what the mute state is before ad load.
+</Callout>
+
+## Enable Verbose Logging
+Enable verbose logs with the following code:
+```actionscript-3
+AppLovinMAX.setVerboseLoggingEnabled(true);
+```
+
+<VerboseLogging />

@@ -1,0 +1,158 @@
+---
+title: "Privacy"
+description: "When you use the AppLovin SDK, you are responsible for complying with applicable privacy regulations."
+slug: en/max/android/overview/privacy
+---
+import Privacy1 from "@content/en/api/partials/_Privacy1.mdx";
+import Privacy2 from "@content/en/api/partials/_Privacy2.mdx";
+import Privacy3 from "@content/en/api/partials/_Privacy3.mdx";
+import Privacy4 from "@content/en/api/partials/_Privacy4.mdx";
+import MultiStateConsumerPrivacyLaws from "@content/en/api/partials/_MultiStateConsumerPrivacyLaws.mdx";
+import MetaCalifornia from "@content/en/api/partials/_MetaCalifornia.mdx";
+import Privacy5 from "@content/en/api/partials/_Privacy5.mdx";
+
+<Privacy1 />
+
+When you initialize the AppLovin <Abbr>SDK</Abbr>, the <Abbr>SDK</Abbr> records the values that you have set in the “Privacy States” fields—“Age Restricted User”, “Has User Consent”, and “Do Not Sell”—to the log.
+Because the AppLovin <Abbr>SDK</Abbr> records these “Privacy States” fields at initialization, you must set these values before you initialize the AppLovin <Abbr>SDK</Abbr>.
+This helps ensure that the “Privacy States” fields are set correctly.
+Please refer to the [Mediation Debugger](../testing-networks/mediation-debugger) or the section marked “Privacy States” in the logs to verify that you have correctly set these values.
+
+If the user consents to interest-based advertising, set the user consent flag accordingly, and start requesting ads through the AppLovin <Abbr>SDK</Abbr>.
+After you set the consent value for a particular user, AppLovin will continue to respect that value for the lifetime of your application or until the user revokes consent to interest-based advertising.
+
+#### Java
+```java
+AppLovinPrivacySettings.setHasUserConsent( true, context );
+```
+
+#### Kotlin
+```kotlin
+AppLovinPrivacySettings.setHasUserConsent( true, context )
+```
+
+If the user does not consent to interest-based advertising, set the user consent flag accordingly, and start requesting ads through the AppLovin <Abbr>SDK</Abbr>.
+After you set the consent value for a particular user, AppLovin will continue to respect that value for the lifetime of your application or until the user consents to interest-based advertising.
+
+#### Java
+```java
+AppLovinPrivacySettings.setHasUserConsent( false, context );
+```
+
+#### Kotlin
+```kotlin
+AppLovinPrivacySettings.setHasUserConsent( false, context )
+```
+
+You must ensure you have set the consent flag correctly.
+If you set the consent flag correctly, the “Has User Consent” value shown in the logs will be either “true” or “false”.
+As described above, after you set the consent value, AppLovin will continue to respect that value for the lifetime of your application or until the consent value changes.
+
+Refer to the [Mediation Debugger](../testing-networks/mediation-debugger) or the section marked “Privacy States” in the logs to verify that you have correctly set these values.
+
+![MAX Mediation Debugger. Age Restricted User: false. Has User Consent: true. “Do Not Sell”: false.](/images/mediation-debugger-consent.png)
+
+<Privacy2 />
+
+## <Abbr>TCF</Abbr> v2 Consent
+
+<Callout type="note">
+As of AppLovin MAX <Abbr>SDK</Abbr> version 12.0.0, if you use Google’s <Abbr>CMP</Abbr> (<Abbr>UMP</Abbr>), MAX takes care of <Abbr>CMP</Abbr> integration and ensures that the consent status is established correctly when you initialize the <Abbr>SDK</Abbr>.
+See [Google <Abbr>UMP</Abbr> Automation](terms-and-privacy-policy-flow#google-ump-automation) for more details.
+However, if you use a different <Abbr>CMP</Abbr>, you must perform this integration yourself and you must ensure that the <Abbr>CMP</Abbr> establishes consent status correctly before you initialize the <Abbr>SDK</Abbr>.
+</Callout>
+
+<Privacy3 />
+
+For Amazon, BidMachine (Android), Google, inMobi, Smaato, and Verve
+: These <Abbr>SDK</Abbr>s automatically read the <Abbr>TCF</Abbr> v2 consent strings from `NSUserDefaults` or `SharedPreferences` and you do not have to do any additional configuration to make this happen.
+
+For <Abbr>DT</Abbr> Exchange, MobileFuse, and Ogury
+: MAX <Abbr>SDK</Abbr> sends the <Abbr>TCF</Abbr> v2 consent strings to each network via adapters.
+  You can find compatible adapter and <Abbr>SDK</Abbr> versions on the individual network adapter changelogs.
+  Contact the network partner for more information.
+
+For LiftOff Monetize
+: Because it is in the [Global Vendor List (<Abbr>GVL</Abbr>)](https://github.com/InteractiveAdvertisingBureau/GDPR-Transparency-and-Consent-Framework/blob/master/TCFv2/IAB%20Tech%20Lab%20-%20Consent%20string%20and%20vendor%20list%20formats%20v2.md#the-global-vendor-list), the MAX <Abbr>SDK</Abbr> checks the consent status in the <Abbr>TCF</Abbr> v2 string and passes the consent state to the network through the adapter.
+
+For AppLovin, Chartboost, IronSource, and LINE
+: If you use Google <Abbr>UMP</Abbr> as your <Abbr>CMP</Abbr>, the MAX <Abbr>SDK</Abbr> leverages Google <Abbr>UMP</Abbr>’s [Additional Consent (<Abbr>AC</Abbr>) Mode](https://support.google.com/admanager/answer/9681920?sjid=6559733998578573619-NA) and sends the consent states in the <Abbr>AC</Abbr> string to each network via adapters.
+  If you do not use Google <Abbr>UMP</Abbr> as your <Abbr>CMP</Abbr>, contact your <Abbr>CMP</Abbr> provider to learn how to send the consent state to these networks.
+
+For Meta Audience Network
+: If you use Google <Abbr>UMP</Abbr> as your <Abbr>CMP</Abbr>, you can read the consent state by following their [Additional Consent Mode guide](https://support.google.com/admanager/answer/9681920?sjid=6559733998578573619-NA) and forward it to their <Abbr>SDK</Abbr>.
+  For specific instructions, see [Meta Audience Network Data Processing Options](#meta-audience-network-data-processing-options-for-users-in-california).
+  If you do not use Google <Abbr>UMP</Abbr> as your <Abbr>CMP</Abbr>, contact your <Abbr>CMP</Abbr> provider to learn how to send the consent state to Meta Audience Network.
+
+For Mintegral
+: On adapter versions 16.5.71.0 or above, the <Abbr>SDK</Abbr> automatically reads the <Abbr>TCF</Abbr> v2 consent strings from `NSUserDefaults` or `SharedPreferences`.
+  On other adapter versions, the MAX <Abbr>SDK</Abbr> checks the consent status in the <Abbr>TCF</Abbr> v2 string and passes the consent state to the network through the adapter.
+
+For custom networks and networks that are not compliant with <Abbr>TCF</Abbr> v2
+: Although such networks are included in the final waterfall, the MAX <Abbr>SDK</Abbr> does not pass any consent flags to them via the adapter.
+
+<Privacy4 />
+
+#### Java
+```java
+AppLovinPrivacySettings.setIsAgeRestrictedUser( true, context );
+```
+
+#### Kotlin
+```kotlin
+AppLovinPrivacySettings.setIsAgeRestrictedUser( true, context )
+AppLovinSdk.getInstance( context ).initializeSdk(…)
+```
+
+If you know that the user does not fall within an age-restricted category (i.e., age 16 or older, or as otherwise defined by applicable laws), you must set the age-restricted user flag accordingly:
+
+#### Java
+```java
+AppLovinPrivacySettings.setIsAgeRestrictedUser( false, context );
+```
+
+#### Kotlin
+```kotlin
+AppLovinPrivacySettings.setIsAgeRestrictedUser( false, context )
+AppLovinSdk.getInstance( context ).initializeSdk(…)<
+```
+
+As explained in AppLovin’s [Terms of Use Agreement](https://www.applovin.com/terms/) and [Policies for Publishers](https://www.applovin.com/policies-publishers/), AppLovin does not knowingly collect personal information from children or serve ads to children. Apps exclusively designed for, or exclusively directed to, children—for example, iOS Apps in the “Kids” category—may not use the AppLovin <Abbr>SDK</Abbr>.
+
+Again, AppLovin encourages you to review the [Mediation Debugger](../testing-networks/mediation-debugger) or the section marked “Privacy States” in the logs to verify that you have correctly set these age-related flags.
+
+<MultiStateConsumerPrivacyLaws />
+
+#### Java
+```java
+AppLovinPrivacySettings.setDoNotSell( false, context );
+```
+
+#### Kotlin
+```kotlin
+AppLovinPrivacySettings.setDoNotSell( false, context )
+```
+
+If a user <em>does</em> opt out of interest-based advertising, set the do-not-sell flag accordingly:
+
+#### Java
+```java
+AppLovinPrivacySettings.setDoNotSell( true, context );
+```
+
+#### Kotlin
+```kotlin
+AppLovinPrivacySettings.setDoNotSell( true, context )
+```
+
+AppLovin MAX supports your handling of opt-out values on behalf of supported mediation partners.
+MAX shares these set consent values via adapters.
+You must be on supported network <Abbr>SDK</Abbr>s.
+Please consult with your network partner to determine the correct <Abbr>SDK</Abbr> versions.
+
+For those networks on whose behalf MAX does not support your handling of opt-out values, you must work directly with the network to determine any support those networks may provide for purposes of your obligations for multi-state compliance.
+
+<MetaCalifornia />
+
+<Privacy5 />
+

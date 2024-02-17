@@ -1,0 +1,51 @@
+---
+title: "Creative Debugger"
+description: "With the AppLovin MAX SDK, you can expose comprehensive ad information in MAX-mediated apps."
+slug: en/max/android/testing-networks/creative-debugger
+---
+import CreativeDebugger1 from "@content/en/api/partials/_CreativeDebugger1.mdx";
+import CreativeDebugger2 from "@content/en/api/partials/_CreativeDebugger2.mdx";
+import CreativeDebugger3 from "@content/en/api/partials/_CreativeDebugger3.mdx";
+import NetworkName from "@content/en/api/partials/_NetworkName.mdx";
+
+<CreativeDebugger1 />
+
+<Callout type="note">
+This gesture is currently available for full-screen ads only.
+It is enabled by default for both development and production builds.
+</Callout>
+
+<CreativeDebugger2 />
+
+### Disabling the Creative Debugger
+
+The following code shows you how to disable the creative debugger with the MAX <Abbr>SDK</Abbr>:
+
+```actionscript-3
+AppLovinMAX.setCreativeDebuggerEnabled( false );
+```
+
+## Creative <Abbr>ID</Abbr>
+
+You can also retrieve the creative <Abbr>ID</Abbr> of displayed ads of various mediated networks.
+You can do this either by using the creative debugger, or by using the MAX <Abbr>SDK</Abbr>.
+The following code shows you how to do this with the MAX <Abbr>SDK</Abbr>:
+
+```actionscript-3
+creativeId = adEventInfo.getCreativeId();
+```
+
+<CreativeDebugger3 />
+
+<NetworkName />
+
+```actionscript-3
+private function onInterstitialLoaded(adEventInfo:AdEventInfo):void
+{
+  trace("Ad Info	Ad Unit ID: " + adEventInfo.getAdUnitId() +
+        "	Network Name: " + adEventInfo.getNetworkName() +
+        "	Placement: " + adEventInfo.getPlacement() +
+        "	Creative ID: " + adEventInfo.getCreativeId() +
+        "	Revenue: " + adEventInfo.getRevenue())
+}
+```

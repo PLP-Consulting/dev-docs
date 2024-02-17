@@ -1,0 +1,475 @@
+---
+title: "Advanced Settings"
+description: "Ad placements, muting audio, and verbose logging."
+slug: en/max/android/overview/advanced-settings
+---
+import AdPlacements from "@content/en/api/partials/_AdPlacements.mdx";
+import MuteAudio from "@content/en/api/partials/_MuteAudio.mdx";
+import VerboseLogging from "@content/en/api/partials/_VerboseLogging.mdx";
+import AdRevenueAttribution from "@content/en/api/partials/_AdRevenueAttribution.mdx";
+import WaterfallInformationAPI from "@content/en/api/partials/_WaterfallInformationAPI.mdx";
+import AdLoadStateValues from "@content/en/api/partials/_AdLoadStateValues.mdx";
+
+<AdPlacements />
+
+#### Banners / <Abbr>MREC</Abbr>s
+
+<Callout type="note">
+For <Glossary>banners</Glossary> and <Glossary>MRECs</Glossary> you must set the placement name before you load the banner or <Abbr>MREC</Abbr>.
+</Callout>
+
+##### Java
+```java
+adView.setPlacement( "<var>placement</var>" );
+adView.loadAd();
+```
+
+##### Kotlin
+```kotlin
+adView.setPlacement( "<var>placement</var>" )
+adView.loadAd()
+```
+
+#### Interstitials
+##### Java
+```java
+interstitial.showAd( "<var>placement</var>" );
+```
+
+##### Kotlin
+```kotlin
+interstitial.showAd( "<var>placement</var>" )
+```
+
+#### Rewarded Ads
+##### Java
+```java
+rewardedAd.showAd( "<var>placement</var>" );
+```
+
+##### Kotlin
+```kotlin
+rewardedAd.showAd( "<var>placement</var>" )
+```
+
+#### Native Ads
+##### Java
+```java
+nativeAdLoader.setPlacement( "<var>placement</var>" );
+```
+
+##### Kotlin
+```kotlin
+nativeAdLoader.setPlacement( "<var>placement</var>" )
+```
+
+#### Native Ads (Ad Placer)
+##### Java
+```java
+MaxAdPlacerSettings settings = new MaxAdPlacerSettings( "<var>ad-unit-ID</var>" );
+settings.setPlacement( "<var>placement</var>" );
+```
+
+##### Kotlin
+```kotlin
+val settings = MaxAdPlacerSettings( "<var>ad-unit-ID</var>" )
+settings.placement = "<var>placement</var>"
+```
+
+<MuteAudio />
+
+##### Java
+```java
+AppLovinSdk sdk = AppLovinSdk.getInstance( context );
+sdk.getSettings().setMuted( true );  // to mute
+sdk.getSettings().setMuted( false ); // to unmute
+```
+
+##### Kotlin
+```kotlin
+val sdk = AppLovinSdk.getInstance( context )
+sdk.settings.setMuted( true )  // to mute
+sdk.settings.setMuted( false ) // to unmute
+```
+
+<Callout type="warning">
+Set the mute state before you load ads.
+Some networks (like Google bidding and Google AdMob) return muted or unmuted videos depending on what the mute state is before ad load.
+</Callout>
+
+## Enable Verbose Logging
+
+Enable verbose logs by setting a boolean flag in the settings object of the <Glossary>SDK</Glossary>:
+
+### Programmatically
+##### Java
+```java
+AppLovinSdk.getInstance( context ).getSettings().setVerboseLogging( true );
+```
+
+##### Kotlin
+```kotlin
+AppLovinSdk.getInstance( context ).settings.setVerboseLogging( true )
+```
+
+### Android Manifest
+
+You can also enable verbose logging by editing your application’s <Glossary>Android</Glossary> Manifest file and adding a `<meta-data>` element like the following:
+
+```xml
+<application>
+⋮
+  <meta-data
+    android:name="applovin.sdk.verbose_logging"
+    android:value="true" />
+⋮
+</application>
+```
+
+### Verification
+
+<VerboseLogging />
+
+## Segment Name
+
+You can compartmentalize your users into “segments.”
+This can help you analyze users with particular characteristics, or can be helpful as a part of <Glossary>A/B testing</Glossary>.
+Each segment has a name of your choice, in the form of a string of 32 or fewer alphanumeric characters.
+You can set or retrieve the segment name of the current user from the AppLovin <Abbr>SDK</Abbr> by means of the `userSegment` property:
+
+#### Java
+```java
+AppLovinSdk.getInstance( context ).getUserSegment().setName( "<var>segment-name</var>" );
+```
+
+#### Kotlin
+```kotlin
+AppLovinSdk.getInstance( context ).userSegment.name = "<var>segment-name</var>"
+```
+
+## Creative <Abbr>ID</Abbr> and Network Name
+
+You can retrieve the <Glossary>creative</Glossary> <Abbr>ID</Abbr> and the network name of displayed ads of various mediated networks.
+Refer to [the Creative Debugger documentation](../testing-networks/creative-debugger) for more information.
+
+## <Abbr>DSP</Abbr> Name
+
+You can retrieve the name of the <Glossary>DSP</Glossary> for a MAX ad served from AppLovin Exchange by calling the ad’s `getDspName()` method:
+
+#### Java
+```java
+@Override
+public void onAdLoaded(final MaxAd ad)
+{
+  System.out.println( "AppLovin Exchange DSP name: " + ad.getDspName() );
+}
+```
+
+#### Kotlin
+```kotlin
+override fun onAdLoaded(maxAd: MaxAd)
+{
+  println( "AppLovin Exchange DSP Name: " + maxAd.getDspName() )
+}
+```
+
+## Impression-Level User Revenue <Abbr>API</Abbr>
+
+Starting in <Abbr>SDK</Abbr> version 10.3.0, you can access <Glossary>impression</Glossary>-level user revenue data on the client side.
+You can use this data to compare different sources and campaigns.
+You can also access this data by using the MAX [User Revenue <Abbr>API</Abbr>](link-missing).
+<Glossary>MMPs</Glossary> who want to access this data should reference the instructions provided at [the Impression-Level User Revenue <Abbr>API</Abbr> for <Abbr>MMP</Abbr>s page](link-missing).
+
+<AdRevenueAttribution />
+
+You can retrieve the revenue amount in all ad lifecycle <Glossary>callbacks [postback]</Glossary> by creating a `MaxAdRevenueListener`, implementing its `onAdRevenuePaid()` method, and passing that listener to `setRevenueListener()`.
+The following example shows how to implement such an “ad revenue paid” callback:
+
+#### Java
+```java
+@Override
+void onAdRevenuePaid(final MaxAd ad)
+{
+  double revenue = ad.getRevenue(); // In USD
+
+  // Miscellaneous data
+  String countryCode = AppLovinSdk.getInstance( context ).getConfiguration().getCountryCode(); // "US" for the United States, etc - Note: Do not confuse this with currency code which is "USD"
+  String networkName = ad.getNetworkName(); // Display name of the network that showed the ad
+  String adUnitId = ad.getAdUnitId(); // The MAX Ad Unit ID
+  MaxAdFormat adFormat = ad.getFormat(); // The ad format of the ad (e.g. BANNER, MREC, INTERSTITIAL, REWARDED)
+  String placement = ad.getPlacement(); // The placement this ad's postbacks are tied to
+  String networkPlacement = ad.getNetworkPlacement(); // The placement ID from the network that showed the ad
+}
+```
+
+#### Kotlin
+```kotlin
+override fun onAdRevenuePaid(ad: MaxAd)
+{
+  val revenue = ad.revenue // In USD
+
+  // Miscellaneous data
+  val countryCode = AppLovinSdk.getInstance( context ).configuration.countryCode // "US" for the United States, etc - Note: Do not confuse this with currency code which is "USD"
+  val networkName = ad.networkName // Display name of the network that showed the ad
+  val adUnitId = ad.adUnitId // The MAX Ad Unit ID
+  val adFormat = ad.format // The ad format of the ad (e.g. BANNER, MREC, INTERSTITIAL, REWARDED)
+  val placement = ad.placement // The placement this ad's postbacks are tied to
+  val networkPlacement = ad.networkPlacement // The placement ID from the network that showed the ad
+}
+```
+
+<Callout type="note">
+The value of `ad.getRevenue()`/`ad.revenue` may be `-1`in the case of an error.
+</Callout>
+
+You can also retrieve a precision evaluation for the revenue value, as shown in the following example:
+
+#### Java
+```java
+String revenuePrecision = ad.getRevenuePrecision();
+```
+
+#### Kotlin
+```kotlin
+val revenuePrecision = ad.revenuePrecision
+```
+
+This precision is one of the following values:
+
+`"publisher_defined"`
+: revenue is the price assigned by the publisher
+
+`"exact"`
+: revenue is the resulting price of a real-time auction
+
+`"estimated"`
+: the revenue amount is based on Auto <Glossary>CPM</Glossary> or <Abbr>FB</Abbr> Bidding estimates
+
+`"undefined"`
+: no revenue amount is defined and there is not enough data to estimate
+
+`""`
+: revenue and precision are not valid (for example, in test mode)
+
+## Establishing Ad Request Callbacks
+
+You can listen for when an ad request is made by setting a `MaxAdRequestListener`, implementing its `onAdRequestStarted()` method, and passing that listener to `setRequestListener()`.
+The following example shows how to implement such an “ad request started” callback:
+
+#### Java
+```java
+@Override
+public void onAdRequestStarted(final String adUnitId)
+{
+  // Ad request started here
+}
+````
+
+#### Kotlin
+```kotlin
+override fun onAdRequestStarted(adUnitId: String)
+{
+  // Ad request started here
+}
+```
+
+## Selective Init
+
+Starting in <Abbr>SDK</Abbr> version 10.0.0, you can initialize the <Abbr>SDK</Abbr> with specific ad units.
+If you do so, the <Abbr>SDK</Abbr> only initializes those networks that you have configured for the ad units you specify.
+If you do not specify any ad units, the <Abbr>SDK</Abbr> assumes the current session needs all of your ad units and so it initializes all networks that you have configured for them.
+The following example shows how you implement this feature:
+
+#### Java
+```java
+AppLovinSdkSettings settings = new AppLovinSdkSettings( context );
+List&lt;String&gt; adUnitIds = new ArrayList&lt;&gt;();
+adUnitIds.add( "<var>ad_unit_id_1</var>" );
+adUnitIds.add( "<var>ad_unit_id_2</var>" );
+settings.setInitializationAdUnitIds( adUnitIds );
+
+AppLovinSdk sdk = AppLovinSdk.getInstance( settings, context );
+sdk.setMediationProvider( "max" );
+sdk.initializeSdk( new AppLovinSdk.SdkInitializationListener() {
+  @Override
+  public void onSdkInitialized(final AppLovinSdkConfiguration config) {
+    ⋮
+  }
+} );
+```
+
+#### Kotlin
+```kotlin
+val settings = AppLovinSdkSettings( context )
+settings.initializationAdUnitIds = arrayListOf( "<var>ad_unit_id_1</var>", "<var>ad_unit_id_2</var>" )
+
+val sdk = AppLovinSdk.getInstance( settings, context );
+sdk.mediationProvider = "max"
+sdk.initializeSdk({ config -&gt;
+  ⋮
+})
+```
+
+<Callout type="warning">
+When you use selective init, any ad units that you do not explicitly specify are excluded from serving ads for the current session.
+</Callout>
+
+<WaterfallInformationAPI />
+
+This <Abbr>API</Abbr> is supported as of <Glossary>Android</Glossary> <Abbr>SDK</Abbr> version 10.3.5.
+
+#### AdLoadState Values
+
+<AdLoadStateValues />
+
+#### Example
+
+##### Java
+```java
+@Override
+public void onAdLoaded(final MaxAd ad)
+{
+  MaxAdWaterfallInfo waterfall = ad.getWaterfall();
+  if ( waterfall == null ) return;
+  System.out.println( "Waterfall Name: " + waterfall.getName() + " and Test Name: " + waterfall.getTestName() );
+  System.out.println( "Waterfall latency was: " + waterfall.getLatencyMillis() + " milliseconds" );
+
+  String waterfallInfoStr;
+  for ( MaxNetworkResponseInfo networkResponse : waterfall.getNetworkResponses() )
+  {
+    waterfallInfoStr = "Network -&gt; " + networkResponse.getMediatedNetwork() +
+            "\n...adLoadState: " + networkResponse.getAdLoadState() +
+            "\n...latency: " + networkResponse.getLatencyMillis() + " milliseconds" +
+            "\n...credentials: " + networkResponse.getCredentials();
+    if ( networkResponse.getError() != null )
+    {
+      waterfallInfoStr += "\n...error: " + networkResponse.getError();
+    }
+    System.out.println( waterfallInfoStr );
+  }
+}
+
+@Override
+public void onAdLoadFailed(final String adUnitId, final MaxError error)
+{
+  MaxAdWaterfallInfo waterfall = error.getWaterfall();
+  if ( waterfall == null ) return;
+  System.out.println( "Waterfall Name: " + waterfall.getName() + " and Test Name: " + waterfall.getTestName() );
+  System.out.println( "Waterfall latency was: " + waterfall.getLatencyMillis() + " milliseconds" );
+
+  for ( MaxNetworkResponseInfo networkResponse : waterfall.getNetworkResponses() )
+  {
+    System.out.println( "Network -&gt; " + networkResponse.getMediatedNetwork() +
+                        "...latency: " + networkResponse.getLatencyMillis() +
+                        "...credentials: " + networkResponse.getCredentials() + " milliseconds" +
+                        "...error: " + networkResponse.getError() );
+  }
+}
+```
+
+##### Kotlin
+```kotlin
+override fun onAdLoaded(ad: MaxAd?) {
+  val waterfall = ad?.waterfall ?: return
+  println( "Waterfall Name: " + waterfall.name + " and Test Name: " + waterfall.testName )
+  println( "Waterfall latency was: " + waterfall.latencyMillis + " milliseconds" )
+
+  var waterfallInfoStr: String
+  for ( networkResponse in waterfall.networkResponses ) {
+    waterfallInfoStr = "Network -&gt; ${ networkResponse.mediatedNetwork }" +
+          "\n...adLoadState: ${ networkResponse.adLoadState }" +
+          "\n...latency: ${ networkResponse.latencyMillis } milliseconds" +
+          "\n...credentials: ${ networkResponse.credentials }"
+    if ( networkResponse.error != null ) {
+      waterfallInfoStr += "\n...error: ${ networkResponse.error }"
+    }
+    println( waterfallInfoStr )
+  }
+}
+
+override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {
+  val waterfall = error?.waterfall ?: return
+  println( "Waterfall Name: " + waterfall.name + " and Test Name: " + waterfall.testName )
+  println( "Waterfall latency was: " + waterfall.latencyMillis + " milliseconds" )
+
+  for ( networkResponse in waterfall.networkResponses ) {
+    println( "Network -&gt; ${ networkResponse.mediatedNetwork }" +
+             "...latency: ${ networkResponse.latencyMillis } milliseconds" +
+             "...credentials: ${ networkResponse.credentials }" +
+             "...error: ${ networkResponse.error }" )
+  }
+}
+```
+
+#### Output
+```plaintext
+Waterfall Name: Default Waterfall and Test Name: Control
+Waterfall latency was: 6668 milliseconds
+Network -&gt; MaxMediatedNetworkInfo{name=ironSource, adapterClassName=com.applovin.mediation.adapters.IronSourceMediationAdapter, adapterVersion=7.1.10.1.0, sdkVersion=7.1.10.1}
+    ...adLoadState: FAILED_TO_LOAD
+    ...latency: 1542 milliseconds
+    ...credentials: Bundle[{app_key=88a0872d, placement_id=0}]
+    ...error: MaxAdapterError{errorCode=-5200, errorMessage="Unspecified Error", thirdPartySdkErrorCode=510, thirdPartySdkErrorMessage="Load failed - Failed to load Interstitial ad"}
+
+Network -&gt; MaxMediatedNetworkInfo{name=Mintegral, adapterClassName=com.applovin.mediation.adapters.MintegralMediationAdapter, adapterVersion=15.7.61.0, sdkVersion=MAL_15.7.61}
+    ...adLoadState: AD_LOADED
+    ...latency: 4676 milliseconds
+    ...credentials: Bundle[{app_id=118244, app_key=57205cd060e7e051e5bcccaae6bd2b64, placement_id=515486}]
+
+Network -&gt; MaxMediatedNetworkInfo{name=ironSource, adapterClassName=com.applovin.mediation.adapters.IronSourceMediationAdapter, adapterVersion=7.1.10.1.0, sdkVersion=7.1.10.1}
+    ...adLoadState: AD_LOAD_NOT_ATTEMPTED
+    ...latency: -1 milliseconds
+    ...credentials: Bundle[{app_key=88a0872d, placement_id=1171359}]
+```
+
+<Callout type="note">
+If the waterfall was empty, `MaxError.getWaterfall()` will return `null` and so you will not be able to interrogate the waterfall properties.
+However, you can still retrieve the ad load latency for an empty waterfall by means of the `getRequestLatencyMillis()` method:
+
+#### Java
+```java
+@Override
+public void onAdLoaded(final MaxAd ad)
+{
+  System.out.println("Successful ad load latency: " + ad.getRequestLatencyMillis() + " ms");
+}
+
+@Override
+public void onAdLoadFailed(final String adUnitId, final MaxError error)
+{
+  System.out.println("Failed ad load latency: " + error.getRequestLatencyMillis() + " ms");
+}
+```
+
+#### Kotlin
+```kotlin
+override fun onAdLoaded(ad: MaxAd)
+{
+  println( "Successful ad load latency: " + ad.getRequestLatencyMillis() + " ms" )
+}
+
+override fun onAdLoadFailed(adUnitId: String, error: MaxError)
+{
+  println( "Failed ad load latency: " + error.getRequestLatencyMillis() + " ms" )
+}
+```
+</Callout>
+
+## Customize Banner / <Abbr>MREC</Abbr> Ad Refresh
+
+You can customize <Glossary>banner</Glossary> and <Glossary>MREC</Glossary> ad refresh intervals directly in your integration, just as you can configure them in the Ad Unit <Abbr>UI</Abbr>.
+The minimum and maximum refresh intervals allowed are 10 seconds and 120 seconds, respectively.
+Values outside of these limits are ignored.
+The following code samples show you how to customize these refresh intervals:
+
+#### Java
+```java
+// Where adView is an instance of MaxAdView
+adView.setExtraParameter( "ad_refresh_seconds", <var>ad-refresh-rate</var> );
+```
+
+#### Kotlin
+```kotlin
+// Where adView is an instance of MaxAdView
+adView.setExtraParameter( "ad_refresh_seconds", <var>ad-refresh-rate</var> )
+```

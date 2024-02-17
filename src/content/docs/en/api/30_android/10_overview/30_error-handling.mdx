@@ -1,0 +1,81 @@
+---
+title: "Error Handling"
+description: "Your ad display delegate or callback interface will receive an error code if an ad failed to load or failed to display."
+slug: en/max/android/overview/error-handling
+---
+
+Your ad display delegate or <Glossary>callback [postback]</Glossary> interface will receive a call if an ad failed to load or failed to display.
+This call will be accompanied by an error code.
+This page describes the error codes you may see.
+
+## Error Object and MAX Error Codes
+### Error Object
+
+The error that you receive in your callback is a first-class error object that implements `MaxError`.
+This object has the following methods:
+
+`getCode()`
+: Returns the error code, which you can find in the table below.
+
+`getMessage()`
+: Returns a human-readable message that describes the error.
+
+`getMediatedNetworkErrorCode()`
+: Returns the <Glossary>mediated</Glossary> <Glossary>network</Glossary>’s error code for the error.
+  Available for errors returned in ad display failure callbacks only.
+
+`getMediatedNetworkErrorMessage()`
+: Returns the mediated network’s error message for the error.
+  Defaults to an empty string.
+  Available for errors returned in ad display failure callbacks only.
+
+`getWaterfall()`
+: Allows you to see the information about the current <Glossary>waterfall</Glossary> for an ad that has loaded or failed to load.
+  The network responses provide the ad load state, <Glossary>latency</Glossary>, credentials, and mediated network information for each ad in the waterfall.
+  If an ad in the waterfall fails to load, the network response provides error information.
+  You can find out more about this method in [Advanced Settings: Waterfall Information <Abbr>API</Abbr>](advanced-settings#waterfall-information-api).
+
+### MAX Error Codes
+| Code  | Constant | Description | <u>L</u>oad / <u>D</u>isplay |
+| ----- | -------- | ----------- | ---------------------------- |
+| −1    | `MaxErrorCode.UNSPECIFIED` | The system is in an unexpected state. This error code represents an error that could not be categorized into one of the other defined errors. See the message field in the error object for more details. | L/D |
+| 204   | `MaxErrorCode.NO_FILL` | No ads are currently eligible for your device (no fill). MAX returned no eligible ads from any mediated networks for this app/device. | L |
+| −5001 | `MaxErrorCode.AD_LOAD_FAILED` | The ad failed to load due to no networks being able to fill. MAX returned eligible ads from mediated networks, but all ads failed to load. See the `adLoadFailureInfo` field in the error object for more details. | L |
+| −1000 | `MaxErrorCode.NETWORK_ERROR` | The ad request failed due to a generic network error. See the message field in the error object for more details. | L |
+| −1001 | `MaxErrorCode.NETWORK_TIMEOUT` | The ad request timed out due to a slow internet connection. | L |
+| −1009 | `MaxErrorCode.NO_NETWORK` | The ad request failed because the device is not connected to the internet. | L |
+| −23   | `MaxErrorCode.FULLSCREEN_AD_ALREADY_SHOWING` | You are attempting to show a fullscreen ad (<Glossary>interstitial</Glossary> or <Glossary>rewarded</Glossary>) while another fullscreen ad was still showing. | D |
+| −24   | `MaxErrorCode.FULLSCREEN_AD_NOT_READY` | You are attempting to show a fullscreen ad before it has been loaded. | D |
+| −5201 | `MaxErrorCode.ERROR_CODE_INVALID_LOAD_STATE` | The internal state of the <Glossary>SDK</Glossary> is invalid. There are various ways this can occur. | L |
+| −5205 | `MaxAdapterError.AD_NOT_READY` | The adapter did not have an ad ready when attempting to display. | L |
+| −5209 | `MaxAdapterError.INTERNAL_ERROR` | Unspecified internal error. | L |
+| −5601 | `MaxErrorCode.NO_ACTIVITY` | The <Abbr>SDK</Abbr> failed to load an ad because it could not find the top `Activity`. | L |
+| −5602 | `MaxErrorCode.DONT_KEEP_ACTIVITIES_ENABLED` | The <Abbr>SDK</Abbr> failed to display an ad because the user has the “Don’t Keep Activities” developer setting enabled. | D |
+
+## Error Codes from Various Networks
+
+To better understand the error codes that various ad networks return, see the error documentation pages published by those networks:
+
+- [BidMachine](https://github.com/bidmachine/BidMachine-Android-SDK/blob/71b885e49357f5e8fd42ef3cc30291134f2d2525/bidmachine/src/main/java/io/bidmachine/utils/BMError.java#L7) 
+- [Chartboost](https://answers.chartboost.com/en-us/articles/204377039) 
+- [DT Exchange](https://developer.fyber.com/hc/en-us/articles/360011618158-SDK-init#callback-completion-error-codes-0-2) 
+- [Google bidding and Google AdMob](https://developers.google.com/android/reference/com/google/android/gms/ads/AdRequest#ERROR_CODE_INTERNAL_ERROR) 
+- [InMobi](https://support.inmobi.com/monetize/best-practices/advertiser-reporting-api-guide-v1.0/#page__error-codes) 
+- [ironSource](https://developers.ironsrc.com/ironsource-mobile/Android/supersonic-sdk-error-codes/) 
+- [Line](https://developers.line.biz/en/docs/android-sdk/handling-errors/) 
+- [Maio](https://github.com/imobile-maio/maio-Android-SDK/wiki/API-Reference-(EN)#failnotificationreason-enum-1) 
+- [Meta Audience Network](https://developers.facebook.com/docs/audience-network/setting-up/test/checklist-errors/) 
+- [Mintegral](https://adv-new.mintegral.com/doc/en/appendix/error) 
+- [MoPub](https://developers.mopub.com/publishers/reference/android/MoPubErrorCode/) 
+- [Nend — banner ads](https://github.com/fan-ADN/nendSDK-Android/wiki/Implementation-for-banner-ads#content-of-enum-nenderror) 
+- [Nend — icon ads](https://github.com/fan-ADN/nendSDK-Android/wiki/Implementation-for-icon-ads#receiving-error-notification) 
+- [Nend — video ads](https://github.com/fan-ADN/nendSDK-Android/wiki/Implementation-for-video-ads#acquire-error-information) 
+- [Nend — native ads](https://github.com/fan-ADN/nendSDK-Android/wiki/Implementation-for-native-ads) 
+- [Ogury — interstitial ads](https://ogury-ltd.gitbook.io/android/ad-formats/interstitial-ad#error-codes) 
+- [Ogury — opt-in video ads](https://ogury-ltd.gitbook.io/android/ad-formats/opt-in-video-ad#error-codes) 
+- [Ogury — banner ads](https://ogury-ltd.gitbook.io/android/ad-formats/banner-ad#error-codes) 
+- [Pangle](https://www.pangleglobal.com/help/doc/6034a6a6511c57004360ff1c) 
+- [Tencent](https://intl.cloud.tencent.com/jp/document/product/1024/30722) 
+- [Unity Ads](https://unityads.unity3d.com/help/android/api-android) 
+- [Vungle](https://vungle.github.io/vungle-android-sdk/javadoc/) 
+- [Yandex](https://yandex.com/dev/direct/doc/dg-v4/reference/ErrorCodes.html)

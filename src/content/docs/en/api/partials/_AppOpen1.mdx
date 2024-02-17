@@ -1,0 +1,28 @@
+Cold start
+: creating new session of the app on device
+  - the app is not in device memory
+  - splash/loading screen required
+
+Soft launch
+: bringing the app from background to foreground, turning the phone on when the app is in foreground mode
+  - the app is suspended in memory
+  - splash/loading screen required
+
+<Callout type="note">
+  Fire<Abbr>OS</Abbr> Applications are not supported.
+</Callout>
+
+## Best Practices
+
+- Use a splash/loading screen before the “app open” ad shows, regardless of the placement with the app.
+  - Include a call-out to the user that they will see an ad within the Splash/Loading screen.
+    - Example: “Watch an ad from their sponsor while the app loads.”
+  - The key is to ensure the user is not exposed to actual app content before the ad is shown.
+    The sequence should be splash/loading screen ⇒ app open ad ⇒ app content.
+- Ensure that AppLovin’s <Glossary>SDK</Glossary> is initialized before you load an app open ad.
+- When an app open ad is not loaded (i.e. on cold start), load all other ad formats later to avoid parallel loading with the app open ad.
+  - Loading multiple ad formats in parallel is not good for the device’s resources or ad demand <Abbr>SDK</Abbr>s.
+- To avoid over-exposure to App Open Ads, AppLovin suggests that you consider the following strategies:
+  - Use a frequency cap that you manage outside of AppLovin so that you have full control over when the ads will serve.
+  - Implement a cool down period (i.e. don’t show an ad on soft launch for some period of time before you show one again, or show on every other soft launch) based on app user behavior.
+  - Wait until new users open the app and use it a few times before you show the first App Open Ad.

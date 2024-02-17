@@ -1,0 +1,264 @@
+---
+title: "Rewarded Ads"
+description: "This page shows you how to load and show a rewarded ad, and how to use server-to-server rewarded callbacks."
+slug: en/max/android/ad-formats/rewarded-ads
+---
+import WhatRewarded from "@content/en/api/partials/_WhatRewarded.mdx";
+import S2SRewardedCallbacks from "@content/en/api/partials/_S2SRewardedCallbacks.mdx";
+import SettingReward from "@content/en/api/partials/_SettingReward.mdx";
+
+<WhatRewarded />
+
+## Loading a Rewarded Ad
+
+To load a <Glossary>rewarded ad</Glossary>, get an instance of a `MaxRewardedAd` object that corresponds to your rewarded ad unit and then call its `loadAd()` method.
+Implement `MaxRewardedAdListener` so that you are notified when your ad is ready and of other ad-related events.
+
+#### Java
+```java
+public class ExampleActivity extends Activity
+        implements MaxRewardedAdListener
+{
+  private MaxRewardedAd rewardedAd;
+  private int           retryAttempt;
+
+  void createRewardedAd()
+  {
+    rewardedAd = MaxRewardedAd.getInstance( "<var>ad_unit_ID</var>", this );
+    rewardedAd.setListener( this );
+
+    rewardedAd.loadAd();
+  }
+
+  // MAX Ad Listener
+  @Override
+  public void onAdLoaded(final MaxAd maxAd)
+  {
+    // Rewarded ad is ready to be shown. rewardedAd.isReady() will now return 'true'
+
+    // Reset retry attempt
+    retryAttempt = 0;
+  }
+
+  @Override
+  public void onAdLoadFailed(final String adUnitId, final MaxError error)
+  {
+    // Rewarded ad failed to load
+    // AppLovin recommends that you retry with exponentially higher delays up to a maximum delay (in this case 64 seconds)
+
+    retryAttempt++;
+    long delayMillis = TimeUnit.SECONDS.toMillis( (long) Math.pow( 2, Math.min( 6, retryAttempt ) ) );
+
+    new Handler().postDelayed( new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        rewardedAd.loadAd();
+      }
+    }, delayMillis );
+  }
+
+  @Override
+  public void onAdDisplayFailed(final MaxAd maxAd, final MaxError error)
+  {
+    // Rewarded ad failed to display. AppLovin recommends that you load the next ad.
+    rewardedAd.loadAd();
+  }
+
+  @Override
+  public void onAdDisplayed(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdClicked(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdHidden(final MaxAd maxAd)
+  {
+    // rewarded ad is hidden. Pre-load the next ad
+    rewardedAd.loadAd();
+  }
+
+  @Override
+  public void onRewardedVideoStarted(final MaxAd maxAd) {} // deprecated
+
+  @Override
+  public void onRewardedVideoCompleted(final MaxAd maxAd) {} // deprecated
+
+  @Override
+  public void onUserRewarded(final MaxAd maxAd, final MaxReward maxReward)
+  {
+    // Rewarded ad was displayed and user should receive the reward
+  }
+}
+```
+
+#### Kotlin
+```kotlin
+class ExampleActivity : Activity(), MaxRewardedAdListener
+{
+  private lateinit var rewardedAd: MaxRewardedAd
+  private var retryAttempt = 0.0
+
+  fun createRewardedAd()
+  {
+    rewardedAd = MaxRewardedAd.getInstance( "<var>ad_unit_ID</var>", this )
+    rewardedAd.setListener( this )
+
+    rewardedAd.loadAd()
+  }
+
+  // MAX Ad Listener
+  override fun onAdLoaded(maxAd: MaxAd)
+  {
+    // Rewarded ad is ready to be shown. rewardedAd.isReady() will now return 'true'
+
+    // Reset retry attempt
+    retryAttempt = 0.0
+  }
+
+  override fun onAdLoadFailed(adUnitId: String?, error: MaxError?)
+  {
+    // Rewarded ad failed to load
+    // AppLovin recommends that you retry with exponentially higher delays up to a maximum delay (in this case 64 seconds)
+
+    retryAttempt++
+    val delayMillis = TimeUnit.SECONDS.toMillis( Math.pow( 2.0, Math.min( 6.0, retryAttempt ) ).toLong() )
+
+    Handler().postDelayed( { rewardedAd.loadAd() }, delayMillis )
+  }
+
+  override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?)
+  {
+    // Rewarded ad failed to display. AppLovin recommends that you load the next ad.
+    rewardedAd.loadAd()
+  }
+
+  override fun onAdDisplayed(maxAd: MaxAd) {}
+
+  override fun onAdClicked(maxAd: MaxAd) {}
+
+  override fun onAdHidden(maxAd: MaxAd)
+  {
+    // rewarded ad is hidden. Pre-load the next ad
+    rewardedAd.loadAd()
+  }
+
+  override fun onRewardedVideoStarted(maxAd: MaxAd) {} // deprecated
+
+  override fun onRewardedVideoCompleted(maxAd: MaxAd) {} // deprecated
+
+  override fun onUserRewarded(maxAd: MaxAd, maxReward: MaxReward)
+  {
+    // Rewarded ad was displayed and user should receive the reward
+  }
+}
+```
+  
+## Showing a Rewarded Ad
+
+To show a rewarded ad, call `showAd()` on the `MaxRewardedAd` object you created.
+
+#### Java
+```java
+if ( rewardedAd.isReady() )
+{
+  rewardedAd.showAd();
+}
+```
+
+#### Kotlin
+```kotlin
+if ( rewardedAd.isReady() )
+{
+  rewardedAd.showAd();
+}
+```
+  
+## Accessing the Amount and Currency for a Rewarded Ad
+
+To access the reward amount and currency, override the `onUserRewarded` callback:
+
+```java
+@Override
+public void onUserRewarded(final MaxAd ad, final MaxReward reward)
+{
+  System.out.println( "Rewarded user: " + reward.getAmount() + " " + reward.getLabel() );
+}
+```
+
+<S2SRewardedCallbacks />
+
+| Name | Description | Example |
+| ---- | ----------- | ------- |
+| `{AD_UNIT_ID}` | MAX Ad Unit <Abbr>ID</Abbr> (16 hex characters) | `9ad0816ac071552a` | 
+| `{AD_UNIT_NAME}` | Ad Unit name (<Abbr>URL</Abbr>-encoded) | `My%20App%20Banners` | 
+| `{AD_UNIT_TEST_NAME}` | Name of the ad unit test, <Abbr>URL</Abbr>-encoded | `Control` | 
+| `{ALL_REVENUE}` | Estimated revenue, including <Abbr>FB</Abbr> Bidding estimates | `0.0121, 5.74466e-05` | 
+| `{CC}` | Two-letter country code of the user | `gb` |
+| `{CURRENCY}` | The type of currency you choose to award the user (<Abbr>URL</Abbr>-encoded). You set this in the Ad Unit edit page for each Ad Unit. | `coins` | 
+| `{CUSTOM_DATA}` | Custom data passed in from the integration (<Abbr>URL</Abbr>-encoded). AppLovin recommends that you keep the size of the string under 8192 characters. | `my%20custom%20data` | 
+| `{DEVICE_TYPE}` | User’s device type. | `Tablet` | 
+| `{EVENT_ID}` | Unique event <Abbr>ID</Abbr>, 40 hex characters | `8dc948013d71f04264b8e5c1c61933154b226e08` | 
+| `{EVENT_TOKEN}` | `sha1( <var>EVENT_ID</var> + <var>Your_Event_Key</var> )` | `e000949f6d851c1f34adae08e6ef1076ba43cf31` | 
+| `{EVENT_TOKEN_ALL}` | `sha256( <var>All macros alphabetically, <Abbr>URL</Abbr>-encoded</var> + <var>Your_Event_Key</var> )` <Callout type="note">If `EVENT_TOKEN` is one of your macros, it is omitted from the “All macros alphabetically” string.</Callout> | `eba615583ed59bc679a495ec58439f4b82b5460d822348eff6be5f218702a97a` | 
+| `{FORMAT}` | Ad Unit format | <Glossary>`reward` [rewarded video ads]</Glossary>, <Glossary>`banner` [banner ads]</Glossary>, <Glossary>`inter` [interstitial ads]</Glossary> | 
+| `{IDFA}` | <Glossary>iOS</Glossary> <Glossary>IDFA</Glossary> or <Glossary>Google Advertising <Abbr>ID</Abbr> [gaid]</Glossary> | `860635ea-65bc-eaed-d355-1b5283b30b94` | 
+| `{IDFV}` | <Glossary>Identifier for Vendor</Glossary> | `4CD1C3C4-3FD7-00F5-1635-7BC6D9387E60` | 
+| `{IP}` | User’s <Abbr>IP</Abbr> address (<Abbr>IPv6</Abbr> values are <Abbr>URL</Abbr>-encoded) | `162.1.1.1`, `fe80%3A%3A1ff%3Afe23%3A4567%3A890a%0A` | 
+| `{NETWORK}` | Name of the <Glossary>ad network</Glossary> that served the impression. Names should match the names used in the ManagementAPI. | `APPLOVIN_NETWORK` | 
+| `{NETWORK_PLACEMENT}` | Placement name of the external ad network | `ca-app-pub-12345678%2F0987654321` | 
+| `{PACKAGE_NAME}` | App Package Name (<Glossary>Android</Glossary>) or Bundle <Abbr>ID</Abbr> (iOS). <Abbr>URL</Abbr>-encoded. | `com.test.app` | 
+| `{PLACEMENT}` | Publisher-defined MAX ad placement name (<Abbr>URL</Abbr>-encoded) | `Launch%20Screen` | 
+| `{PLATFORM}` | Platform | `android`, `ios` | 
+| `{PRECISION}` | Information on how precise the revenue value is. Options are: <dl><dt>`publisher_defined`</dt><dd>if revenue is the price assigned to the line item by the publisher</dd><dt>`exact`</dt><dd>if revenue is the resulting price of a <Glossary>real-time auction [rtb]</Glossary></dd><dt>`estimated`</dt><dd>if the revenue amount is based on Auto <Glossary>CPM</Glossary> or <Abbr>FB</Abbr> Bidding estimates</dd><dt>`undefined`</dt><dd>if no line item amount is defined and there is not enough data to estimate</dd></dl> | `exact` | 
+| `{REVENUE}` | Estimated revenue. Set to `0` when <Abbr>FB</Abbr> Bidding. | `0.0121`, `5.74466e-05` | 
+| `{TS}` | Timestamp of impression (integer, seconds since epoch) | `1546300800` | 
+| `{USER_ID}` | Publisher-defined, <Abbr>URL</Abbr>-encoded, user <Abbr>ID</Abbr>; maximum length is 8192 characters | `7634657898` | 
+| `{WATERFALL_NAME}` | The name of the Ad Unit <Glossary>waterfall [waterfall]</Glossary> | `LAT` | 
+
+<SettingReward />
+
+#### Setting an Internal User <Abbr>ID</Abbr>
+
+If you want to tag users with your own internal User <Abbr>ID</Abbr>, do so with code like the following.
+The maximum size of the User <Abbr>ID</Abbr> string is 8192 characters.
+
+##### Java
+```java
+AppLovinSdk.getInstance( context ).setUserIdentifier( "<var>user-id</var>" );
+```
+
+##### Kotlin
+```kotlin
+AppLovinSdk.getInstance( context ).userIdentifier = "<var>user-id</var>"
+```
+  
+#### Custom Data
+
+Starting in <Abbr>SDK</Abbr> version 11.0.0, you can tag data/postbacks with custom string data.
+Do this with the code like the following.
+AppLovin recommends that you keep the size of the string under 8192 characters.
+
+<Callout type="note">
+You must set custom data before you load a banner or <Glossary>MREC</Glossary> ad.
+Otherwise that data will not appear in the postbacks associated with the ad.
+</Callout>
+
+##### Java
+```java
+adViewAd.setCustomData( "<var>custom data</var>" ); // banners
+adView.setCustomData( "<var>custom data</var>" ); // MRECs
+MaxInterstitialAd.showAd(<var>placement</var>, <var>custom data</var>); // interstitials
+MaxRewardedAd.showAd(<var>placement</var>, <var>custom data</var>); // rewarded ads
+nativeAdLoader.setCustomData( "<var>my custom data</var>" ); // native ads
+```
+
+##### Kotlin
+```kotlin
+adViewAd.setCustomData( "<var>custom data</var>" ) // banners
+adView.setCustomData( "<var>custom data</var>" ) // MRECs
+MaxInterstitialAd.showAd(<var>placement</var>, <var>custom data</var>) // interstitials
+MaxRewardedAd.showAd(<var>placement</var>, <var>custom data</var>) // rewarded ads
+nativeAdLoader.setCustomData( "<var>my custom data</var>" ) // native ads
+```

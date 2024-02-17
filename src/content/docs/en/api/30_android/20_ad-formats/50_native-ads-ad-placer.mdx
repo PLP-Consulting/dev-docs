@@ -1,0 +1,213 @@
+---
+title: "Native Ads (Ad Placer)"
+description: "Ad Placer is available starting in AppLovin MAX Android SDK version 11.4.0."
+slug: en/max/android/ad-formats/native-ads-ad-placer
+---
+
+Ad Placer is available starting in AppLovin MAX <Glossary>Android</Glossary> <Glossary>SDK</Glossary> version 11.4.0.
+<Glossary>Native ads</Glossary> let you <Glossary>monetize your app [mobile app monetization]</Glossary> in a way that’s consistent with its existing design.
+Native ads give you access to an ad’s individual assets so you can design the ad layout to be consistent with the look and feel of your app.
+The <Abbr>SDK</Abbr> automatically handles image caching and metrics tracking so you can focus on how, when, and where to display ads.
+
+### Ad Placer <Abbr>API</Abbr>
+
+This <Abbr>API</Abbr> automatically inserts native ads into your existing content stream using `RecyclerView`.
+To integrate this <Abbr>API</Abbr>, take the following high-level steps:
+
+- Set up native ad layout.
+- Create ad placer settings.
+- Set up ad placer.
+- Configure ad rendering settings.
+- Optionally, set listener.
+
+Per AppLovin’s policy, your ad must contain the Privacy Information icon.
+This icon links to an important privacy notice.
+You can bind to it via `MaxNativeAdViewBinder.Builder#setOptionsContentViewGroupId(…)`.
+
+### 1. Set Up Native Ad Layout
+
+Ad placer supports either template or manual native ad layouts.
+See the “Native (Tempates)” and “Native (Manual)” tabs above for instructions on how to configure your ad units, as well as any required setup.
+See [Configure Ad Rendering Settings](#configure-ad-rendering-settings) below for more information on setting up the ad placer to support your layout.
+
+<Callout type="note">
+Please ensure you follow each network’s guidance and bind their required ad assets as they may invalidate your impressions otherwise.
+</Callout>
+
+### 2. Create Ad Placer Settings
+
+Create a `MaxAdPlacerSettings` object with your ad unit identifier.
+This object configures your ad placer and provides positioning information for ads in your feed.
+
+#### Java
+```java
+MaxAdPlacerSettings settings = new MaxAdPlacerSettings( "<var>ad_unit_ID</var>" );
+```
+
+#### Kotlin
+```kotlin
+val settings = MaxAdPlacerSettings( "<var>ad_unit_ID</var>" )
+```
+
+#### Configure Ad Positions
+
+Ad placer positions ads in your feed based on at least one of the following:
+
+1. a list of fixed index paths that indicate where to place ads
+1. a repeating interval at which to regularly insert ads
+   * Your ad placer inserts repeating ads after the last fixed position.
+     If you do not set any fixed positions, your ad placer adds repeating ads after the first position in the stream.
+     This value must be greater than or equal to 2; any value less than that disables it.
+
+Configure ad positions by modifying `MaxAdPlacerSettings`:
+
+1. To add a new fixed ad position, for example at row 1:
+   * `settings.addFixedPosition( 3 );` (Java)
+   * `settings.addFixedPosition( 3 )` (Kotlin)
+1. To remove existing fixed positions:
+   * `settings.resetFixedPositions();` (Java) 
+   * `settings.resetFixedPositions()` (Kotlin)
+1. To change the repeating interval; for example, to insert ads at every fifth position in the feed:
+   * `settings.setRepeatingInterval( 5 );` (Java) 
+   * `settings.repeatingInterval = 5` (Kotlin)
+
+#### Additional Settings
+
+You can configure your ad placer by adjusting additional settings in `MaxAdPlacerSettings`:
+
+`maxAdCount`
+: Set this to the maximum number of ads in a stream (default=256).
+  If a stream contains multiple sections, this determines the maximum number of ads per ad section.
+
+`maxPreloadedAdCount`
+: Set this to the maximum number of ads to preload for placement in a stream (default=4).
+
+### 3. Set Up Ad Placer
+
+Choose one of these two options when you set up your ad placer:
+
+1. If your feed is based on a `RecyclerView`, use `MaxRecyclerAdapter`.
+   The helper class wraps the original adapter to automatically render and insert ads into the feed.
+   You can access the underlying ad placer by calling `getAdPlacer()`.
+1. If your feed uses some other custom <Abbr>UI</Abbr> component you may prefer to subclass or to directly use `MaxAdPlacer` in your implementation.
+
+#### Using MaxRecyclerAdapter
+
+To set up your ad placer with `MaxRecyclerAdapter` follow these instructions:
+
+1. Initialize `MaxRecyclerAdapter` with your settings, original adapter, and activity:
+   * `adAdapter = new MaxRecyclerAdapter( settings, adapter, this );` (Java) 
+   * `adAdapter = MaxRecyclerAdapter( settings, adapter, this )` (Kotlin)
+1. Set your recycler view’s adapter to the instantiated `MaxRecyclerAdapter`:
+   * `recyclerView.setAdapter( adAdapter );` (Java) 
+   * `recyclerView.adapter = adAdapter` (Kotlin)
+1. Update your code to implement the following:
+   * Whenever you add or delete items from your stream, call the appropriate methods from your adapter to notify the ad placer of updates to your stream:
+     * `notifyItemInserted()`
+     * `notifyItemRemoved()`
+     * `notifyItemsInserted()`
+     * `notifyItemsRemoved()`
+   * If you register any data observers on your original adapter, register them on the `MaxRecyclerAdapter` instead so that they receive the adjusted position of content items after ad insertion.
+   * If any other parts of your code depend on a content item’s position before ad insertion, convert the position to its original position by calling `adAdapter.getOriginalPosition()`.
+1. Call `loadAds()` to start loading ads:
+   * `adAdapter.loadAds();` (Java) 
+   * `adAdapter.loadAds()` (Kotlin)
+
+The following code shows how you load ads into a recycler view by using `MaxRecyclerAdapter`:
+
+##### Java
+```java
+@Override
+public void onCreate(Bundle savedInstanceState)
+{
+  super.onCreate( savedInstanceState );
+  // Create your own recycler view and original adapter
+  ⋮
+
+  // Configure ad adapter
+  MaxAdPlacerSettings settings = new MaxAdPlacerSettings( "<var>ad_unit_ID</var>" );
+  settings.setRepeatingInterval( 5 );
+  adAdapter = new MaxRecyclerAdapter( settings, originalAdapter, this );
+
+  // Optionally, register listener
+  adAdapter.setListener( this );
+
+  // Configure recycler view and load ads
+  recyclerView.setAdapter( adAdapter );
+  adAdapter.loadAds();
+}
+
+@Override
+public void onDestroy()
+{
+  adAdapter.destroy();
+  super.onDestroy();
+}
+```
+
+##### Kotlin
+```kotlin
+override fun onCreate(savedInstanceState: Bundle?)
+{
+  super.onCreate( savedInstanceState )
+  // Create your own recycler view and original adapter
+  ⋮
+
+  // Configure ad adapter
+  val settings = MaxAdPlacerSettings( "<var>ad_unit_ID</var>" )
+  settings.repeatingInterval = 5
+  adAdapter = MaxRecyclerAdapter( settings, originalAdapter, this )
+
+  // Optionally, register listener
+  adAdapter.listener = this
+
+  // Configure recycler view and load ads
+  recycler.adapter = adAdapter
+  adAdapter.loadAds()
+}
+
+override fun onDestroy()
+{
+  adAdapter.destroy()
+  super.onDestroy()
+}
+```
+
+### 4. Configure Ad Rendering Settings
+#### Templates
+
+If you use a default template, the ad view will automatically size to 360×120 for “Small” and 360×300 for “Medium” templates.
+
+You can customize the rendered ad size by calling `setAdSize` on the ad placer before you load ads.
+For example, to set the ad size with a width of 300 and height of 200:
+
+##### Java
+```java
+adAdapter.getAdPlacer().setAdSize( 300, 200 );
+```
+
+##### Kotlin
+```kotlin
+adAdapter.adPlacer.setAdSize( 300, 200 )
+```
+
+You may also pass a value of −1 (`MATCH_PARENT`) for the width or height to have the ad view fill the corresponding dimension of its parent view.
+
+#### Manual
+
+If you use a manual layout, you must call `setNativeAdViewBinder` on the ad placer before you load ads.
+Always set the ad size when you use manual templates, for optimal rendering.
+
+<Callout type="note">
+When you use `MaxRecyclerAdapter`, if the width of the desired ad size exceeds the width of its parent item view, the ad placer will resize to fit the width of the item while preserving the height (for “Small” templates) or the aspect ratio (for “Medium” templates).
+For manual templates, the dimensions will not be resized to fit.
+</Callout>
+
+### 5. Optionally Set Listener
+
+The ad placer supports an optional listener so you can be notified of events:
+
+- `onAdLoaded()`
+- `onAdRemoved()`
+- `onAdClicked()`
+- `onAdRevenuePaid()`

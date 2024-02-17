@@ -1,0 +1,373 @@
+---
+title: "Native Ads (Manual)"
+description: "Use this API if you have custom views and you want to manually load native ad assets into those views."
+slug: en/max/android/ad-formats/native-ads-manual
+---
+
+<Glossary>Native ads</Glossary> let you <Glossary>monetize your app [mobile app monetization]</Glossary> in a way that’s consistent with its existing design.
+The AppLovin MAX <Glossary>SDK</Glossary> version 11.0.0 gives you access to an ad’s individual assets so you can design the ad layout to be consistent with the look and feel of your app.
+The <Abbr>SDK</Abbr> automatically handles image caching and metrics tracking so you can focus on how, when, and where to display ads.
+
+### Manual <Abbr>API</Abbr>
+
+Use this <Abbr>API</Abbr> if you have custom views and you want to manually load native ad assets into those views.
+This integration method involves three high-level steps:
+
+1. Bind <Abbr>UI</Abbr> Components.
+1. Load the Native Ad.
+1. Destroy the Native Ad.
+
+To use the manual <Abbr>API</Abbr>, select the <UILabel>Manual</UILabel> template in the [<UILabel>Create New Ad Unit</UILabel>](https://dash.applovin.com/o/mediation/ad_units/create/) screen:
+
+![Template: ☐ Small, ☐ Medium, ☒ Manual](/images/native-manual.png)
+
+#### Bind <Abbr>UI</Abbr> Components
+
+You can bind custom <Abbr>UI</Abbr> components to the MAX <Abbr>SDK</Abbr> and render native ad assets into those components.
+This example demonstrates this with custom views created using the Layout Editor and unique view <Abbr>ID</Abbr>s, but you could also use this method if you create your views programmatically.
+
+Per AppLovin’s policy, your ad must contain the Privacy Information icon.
+This icon links to an important privacy notice.
+You can bind to it via `MaxNativeAdViewBinder.Builder#setOptionsContentViewGroupId(…)`.
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="https://schemas.android.com/apk/res/android"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+
+  <ImageView
+    android:id="@+id/icon_image_view"
+  … />
+  <LinearLayout
+    android:id="@+id/ad_options_view"
+  … />
+  <TextView
+    android:id="@+id/title_text_view"
+  … />
+  <FrameLayout
+    android:id="@+id/star_rating_view"
+  … />
+  <TextView
+    android:id="@+id/advertiser_textView"
+  … />
+  <TextView
+    android:id="@+id/body_text_view"
+  … />
+  <FrameLayout
+    android:id="@+id/media_view_container"
+  … />
+  <Button
+    android:id="@+id/cta_button"
+  … />
+</androidx.constraintlayout.widget.ConstraintLayout>
+```
+
+Next, bind the subviews using unique view <Abbr>ID</Abbr>s with an instance of `MaxNativeAdViewBinder`.
+AppLovin does not guarantee a network will return certain assets.
+
+#### Java
+```java
+public class ExampleActivity
+        extends Activity
+        implements MaxAdRevenueListener
+{
+  ⋮
+  private MaxNativeAdView createNativeAdView()
+  {
+    MaxNativeAdViewBinder binder = new MaxNativeAdViewBinder.Builder( R.layout.native_custom_ad_view )
+            .setTitleTextViewId( R.id.title_text_view )
+            .setBodyTextViewId( R.id.body_text_view )
+            .setStarRatingContentViewGroupId( R.id.star_rating_view )
+            .setAdvertiserTextViewId( R.id.advertiser_textView )
+            .setIconImageViewId( R.id.icon_image_view )
+            .setMediaContentViewGroupId( R.id.media_view_container )
+            .setOptionsContentViewGroupId( R.id.options_view )
+            .setCallToActionButtonId( R.id.cta_button )
+            .build();
+
+    return new MaxNativeAdView( binder, this );
+  }
+  ⋮
+}
+```
+
+#### Kotlin
+```kotlin
+class ExampleActivity : Activity(), MaxAdRevenueListener
+{
+  ⋮
+  private fun createNativeAdView(): MaxNativeAdView
+  {
+    val binder: MaxNativeAdViewBinder =
+        MaxNativeAdViewBinder.Builder(R.layout.native_custom_ad_view)
+            .setTitleTextViewId(R.id.title_text_view)
+            .setBodyTextViewId(R.id.body_text_view)
+            .setStarRatingContentViewGroupId(R.id.star_rating_view )
+            .setAdvertiserTextViewId(R.id.advertiser_textView)
+            .setIconImageViewId(R.id.icon_image_view)
+            .setMediaContentViewGroupId(R.id.media_view_container)
+            .setOptionsContentViewGroupId(R.id.options_view)
+            .setCallToActionButtonId(R.id.cta_button)
+            .build()
+      return MaxNativeAdView(binder, this)
+  }
+  ⋮
+}
+```
+
+<Callout type="note">
+Please ensure you follow each network’s guidance and bind their required ad assets as they may invalidate your impressions otherwise.
+</Callout>
+
+#### Load the Native Ad
+##### Load a Pre-Rendered Ad
+
+To load a pre-rendered native ad, instantiate a `MaxNativeAdLoader` corresponding to your Ad Unit <Abbr>ID</Abbr> and call its `loadAd(MaxNativeAdView)` method.
+Implement and set the `MaxNativeAdLoadListener` so that you are notified when your native ad’s load state changes.
+
+##### Load and Render Ad Separately
+
+To load a native ad, instantiate a `MaxNativeAdLoader` corresponding to your Ad Unit <Abbr>ID</Abbr> and call its `loadAd()` method.
+Implement and set the `MaxNativeAdLoadListener` so that you are notified when your native ad’s load state changes.
+Then use the `MaxAd` returned in `onNativeAdLoaded` to render the ad view by calling `MaxNativeAdLoader.render(MaxNativeAdView, MaxAd)`.
+
+<Callout type="note">
+Native ads are expected to be shown within the ad expiration window of four hours.
+<Glossary>Impressions [impressions]</Glossary> associated with ads shown outside of this window will be invalidated.
+</Callout>
+
+#### Destroy the Native Ad
+
+Once you are no longer using a native ad, you must clean up its resources by calling the `destroy()` method.
+If you do not do so, the performance of your app will degrade over time.
+Below is an example of how you load and destroy a native ad, after you have bound the <Abbr>UI</Abbr> components from the previous step.
+
+###### Java
+```java
+public class ExampleActivity
+        extends Activity
+        implements MaxAdRevenueListener
+{
+  private ViewGroup         nativeAdContainerView;
+  private MaxNativeAdLoader nativeAdLoader;
+  private MaxAd             loadedNativeAd;
+
+  ⋮
+
+  private void createNativeAdLoader()
+  {
+    nativeAdLoader = new MaxNativeAdLoader( "YOUR_AD_UNIT_ID", this );
+    nativeAdLoader.setRevenueListener( this );
+    nativeAdLoader.setNativeAdListener( new NativeAdListener() );
+  }
+
+  private void loadNativeAd()
+  {
+    nativeAdLoader.loadAd( createNativeAdView() );
+  }
+
+  @Override
+  public void onAdRevenuePaid(final MaxAd ad) { }
+
+  private class NativeAdListener
+          extends MaxNativeAdListener
+  {
+    @Override
+    public void onNativeAdLoaded(final MaxNativeAdView nativeAdView, final MaxAd nativeAd)
+    {
+      // Clean up any pre-existing native ad to prevent memory leaks.
+      if ( loadedNativeAd != null )
+      {
+        nativeAdLoader.destroy( loadedNativeAd );
+      }
+
+      // Save ad for cleanup.
+      loadedNativeAd = nativeAd;
+
+      nativeAdContainerView.removeAllViews();
+      nativeAdContainerView.addView( nativeAdView );
+    }
+
+    @Override
+    public void onNativeAdLoadFailed(final String adUnitId, final MaxError error)
+    {
+      // Native ad load failed.
+      // AppLovin recommends retrying with exponentially higher delays up to a maximum delay.
+    }
+
+    @Override
+    public void onNativeAdClicked(final MaxAd nativeAd) { }
+  }
+}
+```
+
+##### Kotlin
+```kotlin
+class ExampleActivity : Activity(), MaxAdRevenueListener
+{
+  private val nativeAdContainerView: ViewGroup? = null
+  private var nativeAdLoader: MaxNativeAdLoader? = null
+  private var loadedNativeAd: MaxAd? = null
+
+  ⋮
+
+  private fun createNativeAdLoader()
+  {
+    nativeAdLoader = MaxNativeAdLoader("YOUR_AD_UNIT_ID", this)
+    nativeAdLoader.setRevenueListener(this)
+    nativeAdLoader.setNativeAdListener(NativeAdListener())
+  }
+
+  private fun loadNativeAd()
+  {
+    nativeAdLoader.loadAd(createNativeAdView())
+  }
+
+  override fun onAdRevenuePaid(ad: MaxAd) {}
+
+  private inner class NativeAdListener : MaxNativeAdListener()
+  {
+    override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, nativeAd: MaxAd)
+    {
+      // Clean up any pre-existing native ad to prevent memory leaks.
+      if (loadedNativeAd != null)
+      {
+        nativeAdLoader.destroy(loadedNativeAd)
+      }
+
+      // Save ad for cleanup.
+      loadedNativeAd = nativeAd
+      nativeAdContainerView.removeAllViews()
+      nativeAdContainerView.addView(nativeAdView)
+    }
+
+    override fun onNativeAdLoadFailed(adUnitId: String, error: MaxError)
+    {
+      // Native ad load failed.
+      // AppLovin recommends retrying with exponentially higher delays up to a maximum delay.
+    }
+
+    override fun onNativeAdClicked(nativeAd: MaxAd) {}
+  }
+}
+```
+
+### Asset Sizes
+
+AppLovin recommends that you incorporate as many of the native elements as appropriate in the context of what the rest of your app looks like, such as the Title and Media View or Icon.
+Giving the user more information helps them decide whether they want to click on the ad.
+
+For <Glossary>AppLovin Exchange</Glossary> demand, the maximum numbers of characters allowed for Title, Description, and <Abbr>CTA</Abbr> are as follows:
+
+| Asset | Maximum Character Count |
+| ----- | ----------------------- |
+| Title | 25 characters |
+| Description | 100 characters. You can add an ellipsis (`…`) after 99 characters, as the 100th character. |
+| <Abbr>CTA</Abbr> | 15 characters |
+
+For <Abbr>SDK</Abbr>-mediated networks, the maximum limits are set by the network itself.
+
+#### How to Get the Media Content Aspect Ratio
+
+The following code snippet shows you how to get the media content aspect ratio of your native ad:
+
+##### Java
+```java
+@Override
+public void onNativeAdLoaded(final MaxNativeAdView adView, final MaxAd ad)
+{
+  MaxNativeAd nativeAd = ad.getNativeAd();
+  if ( nativeAd != null )
+  {
+    float aspectRatio = nativeAd.getMediaContentAspectRatio();
+  }
+}
+```
+
+##### Kotlin
+```kotlin
+override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, ad: MaxAd) {
+  val nativeAd = ad.nativeAd
+  if (nativeAd != null) {
+    val aspectRatio = nativeAd.mediaContentAspectRatio
+  }
+}
+```
+
+<Callout type="note">
+Some networks do not provide media content aspect ratios, in which case the value will be zero.
+</Callout>
+
+### Supported Adapter Versions
+
+| Ad Network | Adapter Version |
+| ---------- | --------------- |
+| BidMachine | 1.9.4.1 |
+| Google Ad Manager | 20.5.0.2 |
+| Google bidding and Google AdMob | 20.5.0.2 |
+| InMobi | 10.0.5.3 |
+| LINE | 2021.5.11.9 |
+| Meta Audience Network | 6.8.0.3 |
+| Mintegral | 15.8.1.1 |
+| myTarget | 5.14.4.2 |
+| Pangle | 4.1.1.5.2 |
+| Smaato | 21.6.7.1 |
+| Yandex | 5.3.0.1 |
+
+### Star Rating
+
+As of the AppLovin MAX <Abbr>SDK</Abbr> v11.7.0, you can access and render the star rating for the advertised app.
+The value, if available, is a floating point number in the range of [0.0, 5.0].
+
+The MAX <Abbr>SDK</Abbr> automatically renders the stars in the container view that you designate as the star rating container.
+If the network does not provide the star rating, or the star rating is &lt;&#xA0;3, the <Abbr>SDK</Abbr> leaves the star rating container view empty.
+You are responsible for adjusting your layout accordingly.
+
+To retrieve the star rating for the current ad:
+
+#### Java
+```
+@Override
+public void onNativeAdLoaded(final MaxNativeAdView adView, final MaxAd ad)
+{
+  MaxNativeAd nativeAd = ad.getNativeAd();
+  if ( nativeAd != null )
+  {
+    Double starRating = nativeAd.getStarRating();
+    if ( starRating == null || starRating < 3 )
+    {
+      // Star rating not available, or < 3 - hide star rating container view
+      return;
+    }
+
+    // Star rating available and >= 3 - show star rating container view
+  }
+}
+```
+
+#### Kotlin
+```kotlin
+override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, ad: MaxAd) {
+  val nativeAd = ad.nativeAd
+  if (nativeAd != null) {
+    val starRating = nativeAd.starRating
+    if (starRating == null || starRating < 3) {
+      // Star rating not available, or < 3 - hide star rating container view
+      return
+    }
+
+    // Star rating available and >= 3 - show star rating container view
+  }
+}
+```
+
+#### Supported Adapter Versions (Star Rating)
+
+| Ad Network | Adapter Version |
+| ---------- | --------------- |
+| Google Ad Manager | 20.5.0.2 |
+| Google bidding and Google AdMob | 20.5.0.2 |
+| InMobi     | 10.1.2.3 |
+| Mintegral  | 16.3.41.1 |
+| Yahoo      | 2.2.0.7 |

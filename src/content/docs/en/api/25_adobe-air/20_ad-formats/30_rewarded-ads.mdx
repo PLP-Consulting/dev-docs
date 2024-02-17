@@ -1,0 +1,157 @@
+---
+title: "Rewarded Ads"
+description: "This page shows you how to load and show a rewarded ad, and how to use server-to-server rewarded callbacks."
+slug: en/max/adobe-air/ad-formats/rewarded-ads
+---
+import WhatRewarded from "@content/en/api/partials/_WhatRewarded.mdx";
+import S2SRewardedCallbacks from "@content/en/api/partials/_S2SRewardedCallbacks.mdx";
+import SettingReward from "@content/en/api/partials/_SettingReward.mdx";
+
+<WhatRewarded />
+
+## Loading a Rewarded Ad
+
+The following code shows you how to attach listeners and load the first rewarded ad:
+
+```actionscript-3
+var rewardedAdUnitId:String = "<var>ad_unit_ID</var>";
+var retryAttempt:Number;
+
+private function initializeRewardedAds():void
+{
+  // Attach event callbacks
+  AppLovinMAXEvents.setRewardedAdLoadedEvent(onRewardedAdLoaded);
+  AppLovinMAXEvents.setRewardedAdLoadFailedEvent(onRewardedAdFailedToLoad);
+  AppLovinMAXEvents.setRewardedAdDisplayedEvent(onRewardedAdDisplayed);
+  AppLovinMAXEvents.setRewardedAdFailedToDisplayEvent(onRewardedAdFailedToDisplay);
+  AppLovinMAXEvents.setRewardedAdClickedEvent(onRewardedAdClicked);
+  AppLovinMAXEvents.setRewardedAdReceivedRewardEvent(onRewardedAdReceivedReward);
+  AppLovinMAXEvents.setRewardedAdHiddenEvent(onRewardedAdHidden);
+
+  // Load the first rewarded ad
+  loadRewardedAd();
+}
+
+private function loadRewardedAd():void
+{
+  AppLovinMAX.loadRewardedAd(rewardedAdUnitId);
+}
+
+private function onRewardedAdLoaded(adEventInfo:AdEventInfo):void
+{
+  // Rewarded ad is ready for you to show. MaxSdk.IsRewardedAdReady(adUnitId) now returns 'true'.
+
+  // Reset retry attempt
+  retryAttempt = 0;
+}
+
+private function onRewardedAdFailedToLoad(adEventInfo:AdEventInfo):void
+{
+  // Rewarded ad failed to load
+  // AppLovin recommends that you retry with exponentially higher delays, up to a maximum delay (in this case 64 seconds).
+
+  retryAttempt++;
+  var retryDelay:Number = Math.pow(2, Math.min(6, retryAttempt));
+
+  var timer:Timer = new Timer(retryDelay, 1);
+  timer.addEventListener(TimerEvent.TIMER, loadInterstitial);
+  timer.start();
+}
+
+private function onRewardedAdDisplayed(adEventInfo:AdEventInfo):void {}
+
+private function onRewardedAdFailedToDisplay(adEventInfo:AdEventInfo):void
+{
+  // Rewarded ad failed to display. AppLovin recommends that you load the next ad.
+  loadRewardedAd();
+}
+
+private function onRewardedAdClicked(adEventInfo:AdEventInfo):void {}
+
+private function onRewardedAdReceivedReward(adEventInfo:AdEventInfo, reward:AppLovinMAXReward):void
+{
+  // The rewarded ad displayed and the user should receive the reward.
+}
+
+private function onRewardedAdHidden(adEventInfo:AdEventInfo):void
+{
+  // Rewarded ad is hidden. Pre-load the next ad
+  loadRewardedAd();
+}
+```
+
+## Showing a Rewarded Ad
+
+To show a rewarded ad, call `ShowRewardedAd()`:
+
+```actionscript-3
+if (AppLovinMAX.isRewardedAdReady(rewardedAdUnitId))
+{
+  AppLovinMAX.showRewardedAd(rewardedAdUnitId);
+}
+```
+
+<S2SRewardedCallbacks />
+
+| Name | Description | Example |
+| ---- | ----------- | ------- |
+| `{AD_UNIT_ID}` | MAX Ad Unit <Abbr>ID</Abbr> (16 hex characters) | `9ad0816ac071552a` |
+| `{AD_UNIT_NAME}` | Ad Unit name (<Abbr>URL</Abbr>-encoded) | `My%20App%20Banners` |
+| `{AD_UNIT_TEST_NAME}` | Name of the ad unit test, <Abbr>URL</Abbr>-encoded | `Control` |
+| `{ALL_REVENUE}` | Estimated revenue, including <Abbr>FB</Abbr> Bidding estimates | `0.0121, 5.74466e-05` |
+| `{CC}` | Two-letter country code of the user | `gb` |
+| `{CURRENCY}` | The type of currency you choose to award the user (<Abbr>URL</Abbr>-encoded). You set this in the Ad Unit edit page for each Ad Unit. | `coins` |
+| `{CUSTOM_DATA}` | Custom data passed in from the integration (<Abbr>URL</Abbr>-encoded). AppLovin recommends that you keep the size of the string under 8192 characters. | `my%20custom%20data` |
+| `{DEVICE_TYPE}` | User’s device type. | `Tablet` |
+| `{EVENT_ID}` | Unique event <Abbr>ID</Abbr>, 40 hex characters | `8dc948013d71f04264b8e5c1c61933154b226e08` |
+| `{EVENT_TOKEN}` | `sha1( <var>EVENT_ID</var> + <var>Your_Event_Key</var> )` | `e000949f6d851c1f34adae08e6ef1076ba43cf31` |
+| `{EVENT_TOKEN_ALL}` | `sha256( <var>All macros alphabetically, <Abbr>URL</Abbr>-decoded</var> + <var>Your_Event_Key</var> )`<Callout type="note">If `EVENT_TOKEN` is one of your macros, it is omitted from the “All macros alphabetically” string.</Callout> | `eba615583ed59bc679a495ec58439f4b82b5460d822348eff6be5f218702a97a` |
+| `{FORMAT}` | Ad Unit format | <Glossary>`reward` [rewarded video ads]</Glossary>, <Glossary>`banner` [banner ads]</Glossary>, <Glossary>`inter` [interstitial ads]</Glossary> |
+| `{IDFA}` | <Glossary>iOS</Glossary> <Glossary>IDFA</Glossary> or <Glossary>Google Advertising <Abbr>ID</Abbr> [gaid]</Glossary> | `860635ea-65bc-eaed-d355-1b5283b30b94` |
+| `{IDFV}` | <Glossary>Identifier for Vendor</Glossary> | `4CD1C3C4-3FD7-00F5-1635-7BC6D9387E60` |
+| `{IP}` | User’s <Abbr>IP</Abbr> address (<Abbr>IPv6</Abbr> values are <Abbr>URL</Abbr>-encoded) | `162.1.1.1`, `fe80%3A%3A1ff%3Afe23%3A4567%3A890a%0A` |
+| `{NETWORK}` | Name of the <Glossary>ad network</Glossary> that served the impression. Names should match the names used in the Management API. | `APPLOVIN_NETWORK` |
+| `{NETWORK_PLACEMENT}` | Placement name of the external ad network | `ca-app-pub-12345678%2F0987654321` | 
+| `{PACKAGE_NAME}` | App Package Name (<Glossary>Android</Glossary>) or Bundle <Abbr>ID</Abbr> (<Abbr>iOS</Abbr>). <Abbr>URL</Abbr>-encoded. | `com.test.app` |
+| `{PLACEMENT}` | Publisher-defined MAX ad placement name (<Abbr>URL</Abbr>-encoded) | `Launch%20Screen` |
+| `{PLATFORM}` | Platform | `android`, `ios` |
+| `{PRECISION}` | Information on how precise the revenue value is. Options are: <dl>`publisher_defined`:if revenue is the price assigned to the line item by the publisher`exact`:if revenue is the resulting price of a <Glossary>real-time auction [rtb]</Glossary>`estimated`:if the revenue amount is based on Auto <Glossary>CPM</Glossary> or <Abbr>FB</Abbr> Bidding estimates`undefined`:if no line item amount is defined and there is not enough data to estimate</dl> | `exact` |
+| `{REVENUE}` | Estimated revenue. Set to `0` when <Abbr>FB</Abbr> Bidding. | `0.0121`, `5.74466e-05` |
+| `{TS}` | Timestamp of impression (integer, seconds since epoch) | `1546300800` | 
+| `{USER_ID}` | Publisher-defined, <Abbr>URL</Abbr>-encoded, user <Abbr>ID</Abbr>; maximum length is 8192 characters | `7634657898` |
+| `{WATERFALL_NAME}` | The name of the Ad Unit <Glossary>waterfall</Glossary> | `LAT` |
+
+<SettingReward />
+
+#### Setting an Ad Placement Name
+
+##### Banners
+```actionscript-3
+AppLovinMAX.createBanner(<var>ad-unit-id</var>, AdViewPosition.BOTTOM_CENTER);
+AppLovinMAX.setBannerPlacement(<var>ad-unit-id</var>, <var>placement</var>);
+```
+ 
+##### <Abbr>MRECs</Abbr>
+```actionscript-3
+AppLovinMAX.createMRec(<var>ad-unit-id</var>, AdViewPosition.CENTERED);
+AppLovinMAX.setMRecPlacement(<var>ad-unit-id</var>, <var>placement</var>);
+```
+
+##### Interstitials
+```actionscript-3
+AppLovinMAX.showInterstitial(<var>ad-unit-id</var>, <var>placement</var>);
+```
+
+##### Rewarded Ads
+```actionscript-3
+AppLovinMAX.showRewardedAd(<var>ad-unit-id</var>, <var>placement</var>);
+```
+  
+#### Setting an Internal User <Abbr>ID</Abbr>
+
+If you want to tag users with your own internal User <Abbr>ID</Abbr>, do so with code like the following.
+The maximum size of the User <Abbr>ID</Abbr> string is 8192 characters.
+
+```actionscript-3
+AppLovinMAX.setUserId("<var>user-id</var>");
+```

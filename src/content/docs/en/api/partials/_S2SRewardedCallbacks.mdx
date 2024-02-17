@@ -1,0 +1,55 @@
+## <Abbr>S2S</Abbr> Rewarded Callbacks
+
+To learn how to receive <Glossary>callbacks [postback]</Glossary> to your currency server, see [the MAX <Abbr>S2S</Abbr> Rewarded Callback <Abbr>API</Abbr> guide](hidden-page) and update the <Abbr>S2S</Abbr> Rewarded Callback <Abbr>URL</Abbr> in your <UILabel>Edit Ad Unit</UILabel> page.
+
+<Glossary>Impression</Glossary>-level revenue data helps you better understand your users, calculate <Abbr>ROI</Abbr> precisely, and build accurate <Glossary>LTV</Glossary> models.
+MAX gives you revenue information associated with each impression, as well as information about the demand source and the <Glossary>creative</Glossary> served for supported <Glossary>networks</Glossary>.
+
+You can either process the data directly yourself, or work with any of our supported <Glossary>analytics providers [mmp]</Glossary>, which are listed in [the “<Abbr>MMP</Abbr> Integration: MAX to <Abbr>MMP</Abbr>” section](#mmp) of this page.
+
+### Direct Integration: MAX to You
+
+There are three ways you can get <Glossary>user-level [user-level attribution]</Glossary> revenue data:
+
+User Revenue <Abbr>API</Abbr>
+: Use this <Abbr>API</Abbr> to retrieve user-level revenue data on a daily basis.
+  You can retrieve this data aggregated for a particular user or with one row per impression.
+  Data is available eight hours after <Abbr>UTC</Abbr> day end.
+  Read more about it on [the User Revenue <Abbr>API</Abbr> documentation page](../../reporting-apis/user-ad-revenue).
+
+Client-Side
+: Starting in <Abbr>SDK</Abbr> version 10.3.0+, you can access impression-level user revenue data on the client side in real-time.
+  You can find integration instructions in [the Advanced Settings page](../overview/advanced-settings).
+
+Server-to-Server
+: If you want to access real-time revenue data on the server side, you can provide an impression <Glossary>postback</Glossary> to track impression-level user ad revenue data.
+  Please contact your account team or [the support team](https://support.applovin.com/hc/en-us/requests/new) to enable this feature.
+  This feature and the macros that the impression postback supports are described in [the “Server-to-Server Impression Revenue <Abbr>API</Abbr>” section](#s2s) of this page.
+
+### <Abbr>MMP</Abbr> Integration: MAX to <Abbr>MMP</Abbr>
+
+MAX partners with various analytics solutions to help you easily access your data in a single dashboard.
+You can work with any of our supported partners such as [Adjust](https://www.adjust.com/), [GameAnalytics](https://gameanalytics.com/), [AppsFlyer](https://www.appsflyer.com/), or [Singular](https://www.singular.net/) to access impression-level ad revenue or aggregated ad revenue data.
+Please refer to the documentation pages maintained by those partners for more information.
+
+### Server-to-Server Impression Revenue <Abbr>API</Abbr>
+
+Please contact your account team or [the support team](https://support.applovin.com/hc/en-us/requests/new) to enable this feature.
+
+AppLovin can send (<Abbr>HTTP</Abbr> or <Abbr>HTTPS</Abbr>) `GET` requests, from its servers to an external endpoint that you define, whenever a MAX impression is recorded.
+AppLovin makes these postbacks soon after the impression, but they may be delayed by up to a few minutes.
+You can use an impression timestamp macro to reconcile any delay between the impression and the postback times.
+
+If the postback receives a non-200 response code, AppLovin will retry the postback up to three more times: twice right away and then once more about 60 seconds
+  later.
+The postback request will timeout if five seconds pass without a response.
+
+#### Example
+```plaintext
+https://myimpressionserver.com/impression?idfa={IDFA}&user_id={USER_ID}&event={EVENT_ID}&token={EVENT_TOKEN}
+```
+
+### Available Macros
+
+You can incorporate any of the macros in the following table into your postback <Abbr>URL</Abbr> (as in the example <Abbr>URL</Abbr> above).
+AppLovin’s servers will replace these macro names with accurate values at the time it makes the postback to your server.

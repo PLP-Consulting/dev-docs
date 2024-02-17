@@ -1,0 +1,201 @@
+---
+title: "App Open Ads"
+description: "App Open Ads are similar to interstitial ads but are shown when the user soft launches or cold starts the app."
+slug: en/max/android/ad-formats/app-open-ads
+---
+import AppOpen1 from "@content/en/api/partials/_AppOpen1.mdx";
+
+AppLovin <Abbr>SDK</Abbr> v11.5.0 introduces App Open Ad format.
+App Open Ads are similar to <Glossary>interstitial ads</Glossary> but are shown when the user soft launches or cold starts the app:
+
+<AppOpen1 />
+
+## Using an App Open Ad
+
+To ensure your app open ad is ready when your application is brought to the foreground, you need to preload a `MaxAppOpenAd`.
+Create a utility class and instantiate it within your `Application` class so that it can make ad requests before you need to show your ad.
+Create a method that shows an ad if ready, and call this method inside the `Lifecycle.Event.ON_START` lifecycle event.
+Your app then attempts to show an ad on app open, or loads an ad if one is not not preloaded.
+
+If you have a loading screen under the app open ad, and your loading screen completes loading before the ad is dismissed, you may want to dismiss your loading screen in the `onAdHidden()` method.
+
+## Listen for App Foregrounding Events
+
+To be notified of app foregrounding events, you need to register a `LifecycleObserver`.
+You may need to add a lifecycle library to your application-level `build.gradle` file:
+
+```groovy
+implementation("androidx.lifecycle:lifecycle-process:2.2.0")
+```
+
+## Cold Starts and Loading Screens
+
+The delay between when you request an ad and receive an ad to show can cause the user to briefly see your app before being surprised by an out-of-context ad.
+You should avoid this, as it is a bad user experience.
+The preferred way to handle cold starts is to use a loading screen to precede any initial app content, and to show the ad from the loading screen.
+If the app shows any of your app content after the loading screen, do not show the ad.
+If you have a loading screen under the app open ad, and your loading screen completes loading before the ad is dismissed, you may want to dismiss your loading screen in the `onAdHidden()` method.
+
+## Examples
+
+These code examples assume that app open ads are only shown on “soft lauch” when your app is suspended in memory, and do not include the splash/loading screen.
+The App Developer must handle the splash/loading screen—see [Best Practices](#bestpractices).
+
+### Java
+```java
+public class MyApplication extends Application
+{
+  private final ExampleAppOpenManager appOpenManager;
+
+  @Override
+  public void onCreate()
+  {
+    super.onCreate();
+
+    AppLovinSdk.initializeSdk( this, new AppLovinSdk.SdkInitializationListener()
+    {
+      @Override
+      public void onSdkInitialized(final AppLovinSdkConfiguration configuration)
+      {
+        appOpenManager = new ExampleAppOpenManager( this );
+      }
+    } );
+  }
+}
+
+public class ExampleAppOpenManager
+       implements LifecycleObserver, MaxAdListener
+{
+  private final MaxAppOpenAd appOpenAd;
+  private final Context context;
+
+  public AppOpenManager(final Context context)
+  {
+    ProcessLifecycleOwner.get().getLifecycle().addObserver( this );
+
+    this.context = context;
+
+    appOpenAd = new MaxAppOpenAd( "<var>ad_unit_ID</var>", context);
+    appOpenAd.setListener( this );
+    appOpenAd.loadAd();
+  }
+
+  private void showAdIfReady()
+  {
+    if ( appOpenAd == null || !AppLovinSdk.getInstance( context ).isInitialized() ) return;
+
+    if ( appOpenAd.isReady() )
+    {
+      appOpenAd.showAd( "<var>test_placement</var>" );
+    }
+    else
+    {
+      appOpenAd.loadAd();
+    }
+  }
+
+  @OnLifecycleEvent(Lifecycle.Event.ON_START)
+  public void onStart()
+  {
+    showAdIfReady();
+  }
+
+  @Override
+  public void onAdLoaded(final MaxAd ad) {}
+  @Override
+  public void onAdLoadFailed(final String adUnitId, final MaxError error) {}
+  @Override
+  public void onAdDisplayed(final MaxAd ad) {}
+  @Override
+  public void onAdClicked(final MaxAd ad) {}
+
+  @Override
+  public void onAdHidden(final MaxAd ad)
+  {
+    appOpenAd.loadAd();
+  }
+
+  @Override
+  public void onAdDisplayFailed(final MaxAd ad, final MaxError error)
+  {
+    appOpenAd.loadAd();
+  }
+}
+```
+
+### Kotlin
+```kotlin
+class MyApplication : Application()
+{
+  private lateinit var appOpenManager: ExampleAppOpenManager
+
+  override fun onCreate()
+  {
+    super.onCreate()
+
+    AppLovinSdk.getInstance( this ).initializeSdk({ configuration: AppLovinSdkConfiguration -&gt;
+    {
+      appOpenManager = ExampleAppOpenManager(applicationContext)
+    })
+  }
+}
+
+class ExampleAppOpenManager(applicationContext: Context?) : LifecycleObserver, MaxAdListener
+{
+  private lateinit var appOpenAd: MaxAppOpenAd
+  private lateinit var context: Context
+
+  init
+  {
+    ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+
+    context = applicationContext
+
+    appOpenAd = MaxAppOpenAd("<var>ad_unit_ID</var>", applicationContext!!)
+    appOpenAd.setListener(this)
+    appOpenAd.loadAd()
+  }
+
+  private fun showAdIfReady()
+  {
+    if (appOpenAd == null || !AppLovinSdk.getInstance(context).isInitialized) return
+
+    if (appOpenAd.isReady)
+    {
+      appOpenAd.showAd("<var>test_placement</var>")
+    }
+    else
+    {
+      appOpenAd.loadAd()
+    }
+  }
+
+  @OnLifecycleEvent(Lifecycle.Event.ON_START)
+  fun onStart()
+  {
+    showAdIfReady()
+  }
+
+  override fun onAdLoaded(ad: MaxAd) {}
+  override fun onAdLoadFailed(adUnitId: String, error: MaxError) {}
+  override fun onAdDisplayed(ad: MaxAd) {}
+  override fun onAdClicked(ad: MaxAd) {}
+
+  override fun onAdHidden(ad: MaxAd)
+  {
+    appOpenAd.loadAd()
+  }
+
+  override fun onAdDisplayFailed(ad: MaxAd, error: MaxError)
+  {
+    appOpenAd.loadAd()
+  }
+}
+``` 
+
+## Supported Adapter Versions
+| Ad Network | Minimum Adapter Version |
+| ---------- | ----------------------- |
+| Google bidding and Google AdMob | 22.2.0.2 |
+| Pangle     | 4.6.0.4.0 |
+| Vungle     | 6.12.0.2 |

@@ -1,0 +1,82 @@
+---
+title: "Interstitial Ads"
+description: "This page shows you how to load and then show and hide an interstitial ad."
+slug: en/max/adobe-air/ad-formats/interstitial-ads
+---
+
+The following sections show you how to load and then show an <Glossary>interstitial ad</Glossary>.
+
+## Loading an Interstitial Ad
+
+The following code shows you how to attach event listeners and load the first interstitial:
+
+```actionscript-3
+var interstitialAdUnitId:String = "<var>ad_unit_ID</var>";
+var retryAttempt:Number;
+
+public function initializeInterstitialAds():void
+{
+  // Attach event callbacks
+  AppLovinMAXEvents.setInterstitialLoadedEvent(onInterstitialLoaded);
+  AppLovinMAXEvents.setInterstitialLoadFailedEvent(onInterstitialLoadFailed);
+  AppLovinMAXEvents.setInterstitialDisplayedEvent(onInterstitialDisplayed);
+  AppLovinMAXEvents.setInterstitialFailedToDisplayEvent(onInterstitialFailedToDisplay);
+  AppLovinMAXEvents.setInterstitialClickedEvent(onInterstitialClicked);
+  AppLovinMAXEvents.setInterstitialHiddenEvent(onInterstitialHidden);
+
+  // Load the first interstitial
+  loadInterstitial();
+}
+
+private function loadInterstitial()
+{
+  AppLovinMAX.loadInterstitial(interstitialAdUnitId);
+}
+
+private function onInterstitialLoaded(adEventInfo:AdEventInfo):void
+{
+  // Interstitial ad is ready for you to show. AppLovinMAX.isInterstitialReady(adUnitId) now returns 'true'
+
+  // Reset retry attempt
+  retryAttempt = 0;
+}
+
+private function onInterstitialLoadFailed(adEventInfo:AdEventInfo):void
+{
+  // Interstitial ad failed to load
+  // AppLovin recommends that you retry with exponentially higher delays, up to a maximum delay (in this case 64 seconds)
+
+  retryAttempt++;
+  var retryDelay:Number = Math.pow(2, Math.min(6, retryAttempt));
+
+  var timer:Timer = new Timer(retryDelay, 1);
+  timer.addEventListener(TimerEvent.TIMER, loadInterstitial);
+  timer.start();
+}
+
+private function onInterstitialDisplayed(adEventInfo:AdEventInfo):void {}
+
+private function onInterstitialFailedToDisplay(adEventInfo:AdEventInfo):void
+{
+  // Interstitial ad failed to display. AppLovin recommends that you load the next ad.
+  loadInterstitial();
+}
+
+private static function onInterstitialClicked(adEventInfo:AdEventInfo):void {}
+
+private function onInterstitialHidden(adEventInfo:AdEventInfo):void
+{
+  // Interstitial ad is hidden. Pre-load the next ad.
+  loadInterstitial();
+}
+```
+
+## Showing an Interstitial Ad
+
+To show an interstitial ad, call `showInterstitial()`:
+
+```actionscript-3
+if (AppLovinMAX.isInterstitialReady(interstitialAdUnitId))
+{
+  AppLovinMAX.showInterstitial(interstitialAdUnitId)
+}

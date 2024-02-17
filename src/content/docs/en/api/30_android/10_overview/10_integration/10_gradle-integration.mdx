@@ -1,0 +1,192 @@
+---
+title: "Gradle Integration"
+description: "This page shows you how to download, configure, and initialize the AppLovin MAX SDK."
+slug: en/max/android/overview/integration/gradle-integration
+---
+import SdkKey from "@content/en/api/partials/_sdk-key.mdx";
+import AdReviewKey from "@content/en/api/partials/_AdReviewKey.mdx";
+import AppIds from "@content/en/api/partials/_app-ids.mdx";
+
+<Callout type="note">
+Effective March 1st, 2024, AppLovin AppDiscovery demand will require <Abbr>SDK</Abbr> versions 10.0.0 and above.
+AppLovin Exchange demand and MAX mediation functionality are not impacted.
+Update to the latest AppLovin <Abbr>SDK</Abbr>s to benefit from the latest features and avoid potential revenue impact.
+</Callout>
+
+This page shows you how to download, configure, and initialize the AppLovin MAX <Glossary>SDK</Glossary>.
+
+<Callout type="note">
+As of version 12.0.0, the AppLovin MAX <Abbr>SDK</Abbr> requires Java 8.
+</Callout>
+
+## Download the Latest <Abbr>SDK</Abbr>
+
+You can download the <Abbr>SDK</Abbr> through Gradle as a dependency.
+If you prefer to integrate manually, follow [the Manual Download for MAX Mediation Networks instructions](manual-download-for-max-mediation-networks).
+
+### Gradle (Recommended)
+
+Add the following to your app-level `build.gradle` file:
+
+#### Groovy
+```groovy
+repositories {
+  google()
+  mavenCentral()
+  ⋮
+}
+dependencies {
+  implementation 'com.applovin:applovin-sdk:+'
+  ⋮
+}
+```
+
+#### Kotlin
+```kotlin
+repositories {
+  google()
+  mavenCentral()
+  ⋮
+}
+dependencies {
+  implementation("com.applovin:applovin-sdk:+")
+  ⋮
+}
+```
+ 
+<Callout type="note">
+The <Abbr>SDK</Abbr> collects the <Glossary>Google Advertising <Abbr>ID</Abbr> [gaid]</Glossary>, which requires the <Glossary>Android</Glossary> Advertising <Abbr>ID</Abbr> (<Abbr>AAID</Abbr>) module (`com.google.android.gms:play-services-ads-identifier`).
+</Callout>
+
+<Callout type="note">
+The `com.google.android.gms.permission.AD_ID` permission is included by default starting in version 11.4.5 of AppLovin Android <Abbr>SDK</Abbr>.
+</Callout>
+
+<Callout type="tip">
+If you want to receive release updates, subscribe to [the AppLovin-MAX-SDK-Android GitHub repository](https://github.com/AppLovin/AppLovin-MAX-SDK-Android).
+</Callout>
+
+<Callout type="note">
+The AppLovin <Abbr>SDK</Abbr> requires that you set `minSdkVersion` to 16 or above.
+</Callout>
+
+## Add the <Abbr>SDK</Abbr> Key
+
+Add the following `<meta-data>` element to your `AndroidManifest.xml`, inside the `<application>` element:
+
+```xml
+<meta-data android:name="applovin.sdk.key"
+       android:value="<var>sdk-key</var>"/>
+```
+
+<SdkKey />
+
+## Enable Ad Review
+
+<Callout type="related">
+[“How to Build Superior User Experience with MAX’s Ad Review”](https://www.applovin.com/blog/build-superior-user-experience-with-max-ad-review/) from AppLovin’s Blog.
+</Callout>
+
+To enable the [MAX Ad Review](https://support.applovin.com/hc/en-us/articles/11361231354765) service, add the following to your `build.gradle` files:
+
+### Additions to Root-Level `build.gradle` File
+
+#### Groovy
+```groovy
+buildscript {
+  repositories {
+    maven { url 'https://artifacts.applovin.com/android' }
+  }
+  dependencies {
+    classpath "com.applovin.quality:AppLovinQualityServiceGradlePlugin:+"
+  }
+}
+```
+
+#### Kotlin
+```kotlin
+buildscript {
+  repositories {
+    maven { url = uri("https://artifacts.applovin.com/android") }
+  }
+  dependencies {
+    classpath ("com.applovin.quality:AppLovinQualityServiceGradlePlugin:+")
+  }
+}
+```
+
+### Additions to App-Level `build.gradle` File
+
+#### Groovy
+```groovy
+apply plugin: 'applovin-quality-service'
+applovin {
+  apiKey "<var>ad-review-key</var>"
+}
+```
+
+#### Kotlin
+```kotlin
+plugins {
+  id("applovin-quality-service")
+}
+applovin {
+  apiKey = "<var>ad-review-key</var>"
+}
+```
+
+<AdReviewKey />
+
+## Initialize the <Abbr>SDK</Abbr>
+
+Initialize the <Abbr>SDK</Abbr> by calling the `initializeSdk()` method, passing that method a context.
+Do this as soon as possible after your app starts, for example in the `onCreate()` method of your launch `Activity`.
+
+Ad assets that are fully cached result in a better user experience.
+Therefore, always initialize the AppLovin <Abbr>SDK</Abbr> on startup so as to give <Glossary>mediated</Glossary> <Glossary>networks</Glossary> the maximum amount of time to cache ads.
+This is especially important with video ads.
+
+<AppIds />
+
+<Callout type="related">
+See [Advanced Settings: “Selective Init”](../advanced-settings#selective-init) to learn how to initialize only those networks that apply to specific ad units.
+</Callout>
+
+### Java
+```java
+public class MainActivity extends Activity
+{
+  protected void onCreate(Bundle savedInstanceState)
+  {
+    // Make sure to set the mediation provider value to "max" to ensure proper functionality
+    AppLovinSdk.getInstance( context ).setMediationProvider( "max" );
+    AppLovinSdk.initializeSdk( context, new AppLovinSdk.SdkInitializationListener() {
+      @Override
+      public void onSdkInitialized(final AppLovinSdkConfiguration configuration)
+      {
+        // AppLovin SDK is initialized, start loading ads
+      }
+    } );
+  }
+}
+```
+
+### Kotlin
+```kotlin
+class MainActivity : Activity()
+{
+  override fun onCreate(savedInstanceState: Bundle?)
+  {
+    // Make sure to set the mediation provider value to "max" to ensure proper functionality
+    AppLovinSdk.getInstance( context ).setMediationProvider( "max" )
+    AppLovinSdk.getInstance( context ).initializeSdk({ configuration: AppLovinSdkConfiguration -&gt;
+      // AppLovin SDK is initialized, start loading ads
+    })
+  }
+}
+```
+ 
+## ProGuard Rules
+
+If you use ProGuard, note that the AppLovin MAX <Abbr>SDK</Abbr> and adapters come bundled with the required ProGuard rules in the <Abbr>AAR</Abbr>s.
+Therefore, you do not need to add any additional ProGuard rules to your project.

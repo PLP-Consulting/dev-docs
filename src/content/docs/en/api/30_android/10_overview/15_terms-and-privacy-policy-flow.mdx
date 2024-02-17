@@ -1,0 +1,331 @@
+---
+title: "Terms and Privacy Policy Flow"
+description: "This page explains how you can use the MAX Terms Flow to prompt acceptance of your Terms of Use and Privacy Policy."
+slug: en/max/android/overview/terms-and-privacy-policy-flow
+---
+import Terms1 from "@content/en/api/partials/_Terms1.mdx";
+import TermsFlowchart from "@content/en/api/partials/_TermsFlowchart.mdx";
+import Terms2 from "@content/en/api/partials/_Terms2.mdx";
+import EnablingGoogleUMP from "@content/en/api/partials/_EnablingGoogleUMP.mdx";
+import TestingUMPIntegration from "@content/en/api/partials/_TestingUMPIntegration.mdx";
+
+<Terms1 />
+
+AppLovin MAX <Glossary>SDK</Glossary> v12.0.0, when used with Google <Abbr>UMP</Abbr>, complies with <Abbr>TCF</Abbr> v2 in that the MAX <Abbr>SDK</Abbr> can ingest the consent string and <Abbr>AC</Abbr> string and forward the <Abbr>TCF</Abbr> v2 Consent strings / states to the mediated networks as described in [<Abbr>TCF</Abbr> v2 Consent](privacy#tcf-v2-consent).
+
+If you do not use Google <Abbr>UMP</Abbr> as your <Abbr>CMP</Abbr>, either through AppLovin’s automated flow or otherwise, you must ensure that the <Abbr>CMP</Abbr> you choose supports all of the mediated networks you integrate.
+
+If you do not use a <Abbr>CMP</Abbr>, you must continue to set AppLovin’s <Abbr>SDK</Abbr>’s binary consent flags as described in [Consent and Age Related Flags in <Abbr>GDPR</Abbr> and Other Regions](privacy#consent-and-agerelated-flags-in-gdpr-and-other-regions).
+
+<TermsFlowchart />
+
+1. MAX <Abbr>SDK</Abbr> initializes.
+1. Regional Compliance Check: AppLovin determines whether the user is located in a <Abbr>GDPR</Abbr> region.
+   If the user is in a <Abbr>GDPR</Abbr> region, the MAX <Abbr>SDK</Abbr> presents Google <Abbr>UMP</Abbr>.
+   If the user is not in a <Abbr>GDPR</Abbr> region, MAX <Abbr>SDK</Abbr> a subsequent check is made to ascertain whether the user is age-restricted.
+1. Age Verification: If the user is not age-restricted under <Abbr>COPPA</Abbr> as determined via the `setIsAgeRestrictedUser` <Abbr>API</Abbr>, MAX <Abbr>SDK</Abbr> presents the user with a Terms of Service and Privacy Policy prompt.
+   Steps 2 and 3 ensure that users are informed about data collection and usage and have the option to consent or decline.
+1. (<Abbr>iOS</Abbr> only)
+1. MAX <Abbr>SDK</Abbr> calls your initialization completion callback to signal that you can start loading ads.
+
+<Terms2 />
+
+<EnablingGoogleUMP />
+
+#### Enabling MAX Consent Flow
+
+First, add the dependency for the Google User Messaging Platform <Abbr>SDK</Abbr> to your module’s app-level Gradle file, normally `app/build.gradle`:
+
+##### Groovy
+```groovy
+dependencies {
+  implementation 'com.google.android.ump:user-messaging-platform:2.1.0'
+}
+```
+
+##### Kotlin
+```kotlin
+dependencies {
+  implementation("com.google.android.ump:user-messaging-platform:2.1.0")
+}
+```
+
+Then you can enable the MAX Terms and Privacy Policy Flow programmatically or by adding a settings file to application resources.
+The sections below explain both of these methods.
+
+##### Programmatically
+
+To enable the MAX Terms and Privacy Policy Flow programmatically, set several properties of the <Abbr>SDK</Abbr>’s `settings` object before you initialize the <Abbr>SDK</Abbr>, as in the code sample below:
+
+###### Java
+```java
+package com.applovin.apps.test;
+
+import android.net.Uri;
+
+import com.applovin.sdk.AppLovinMediationProvider;
+import com.applovin.sdk.AppLovinSdk;
+import com.applovin.sdk.AppLovinSdkSettings;
+
+public class MyApplication
+       extends Application
+{
+  @Override
+  public void onCreate()
+  {
+    super.onCreate();
+
+    AppLovinSdkSettings settings = new AppLovinSdkSettings( this );
+    settings.<span class="pl-kos"></span><span class="pl-en x x-first x-last">getTermsAndPrivacyPolicyFlowSettings</span><span class="pl-kos"></span>().setEnabled( true );
+    settings.<span class="pl-kos"></span><span class="pl-en x x-first x-last">getTermsAndPrivacyPolicyFlowSettings</span><span class="pl-kos"></span>().setPrivacyPolicyUri( Uri.parse( "<var>https://your_company_name.com/privacy_policy</var>" ) );
+    // Terms of Service URL is optional
+    settings.<span class="pl-kos"></span><span class="pl-en x x-first x-last">getTermsAndPrivacyPolicyFlowSettings</span><span class="pl-kos"></span>().setTermsOfServiceUri( Uri.parse( "<var>https://your_company_name.com/terms_of_service</var>" ) );
+
+    AppLovinSdk sdk = AppLovinSdk.getInstance( settings, this );
+    // Set the mediation provider value to "max" to ensure proper functionality
+    sdk.setMediationProvider( AppLovinMediationProvider.MAX );
+    sdk.initializeSdk( config -&gt; {
+      ⋮
+    } );
+  }
+}
+```
+
+###### Kotlin
+
+```kotlin
+package com.applovin.apps.test
+
+import android.net.Uri
+import com.applovin.sdk.AppLovinMediationProvider
+import com.applovin.sdk.AppLovinSdk
+import com.applovin.sdk.AppLovinSdkSettings
+
+class MyApplication : Application()
+{
+  override fun onCreate()
+  {
+    super.onCreate()
+
+    val settings = AppLovinSdkSettings(this)
+    settings.termsAndPrivacyPolicyFlowSettings.isEnabled = true
+    settings.termsAndPrivacyPolicyFlowSettings.privacyPolicyUri = Uri.parse("<var>https://your_company_name.com/privacy_policy</var>")
+
+    // Terms of Service URL is optional
+    settings.termsAndPrivacyPolicyFlowSettings.termsOfServiceUri = Uri.parse("<var>https://your_company_name.com/terms_of_service</var>")
+
+    val sdk = AppLovinSdk.getInstance(settings, this)
+    // Set the mediation provider value to "max" to ensure proper functionality
+    sdk.mediationProvider = "max"
+    sdk.initializeSdk { config -&gt;
+      ⋮
+    }
+  }
+}
+```
+
+##### applovin_settings.json
+
+To enable MAX’s Terms and Privacy Policy Flow via Android resources:
+
+1. Create a JSON file named `applovin_settings.json` in your raw resource directory.
+1. Within this file create a new JSON object with the key `consent_flow_settings`.
+1. Within this `consent_flow_settings` object, add the following key-value pairs:
+   1. One with the key `consent_flow_enabled` and the value `true`.
+   1. Another with the key `consent_flow_privacy_policy` and the value of your Privacy Policy URL.
+   1. Optionally, another with the key `consent_flow_terms_of_service` and the value of your Terms of Service URL.
+
+The final result should look similar to this:
+```json
+{
+  "consent_flow_settings": {
+    "consent_flow_enabled": true,
+    "consent_flow_terms_of_service": "<var>https://your_company_name.com/terms_of_service</var>",
+    "consent_flow_privacy_policy": "<var>https://your_company_name.com/privacy_policy</var>"
+  }
+}
+```
+
+##### Integration
+
+The <Abbr>SDK</Abbr> presents the consent flow when you initialize the <Abbr>SDK</Abbr>.
+When the user completes the flow, the <Abbr>SDK</Abbr> calls your initialization-completion callback.
+
+<Callout type="warning">
+You must wait until the user finishes the consent flow before you initialize third-party <Abbr>SDK</Abbr>s (such as <Glossary>MMPs</Glossary> or analytics <Abbr>SDK</Abbr>s).
+For this reason, initialize such <Abbr>SDK</Abbr>s from within your initialization-completion callback.
+If you were to initialize these third-party <Abbr>SDK</Abbr>s before the user completes the consent flow, these third-party <Abbr>SDK</Abbr>s would not be able to access relevant identifiers, and you would suffer a material impact on measurement, reporting, and ad revenue.
+
+Do not initialize MAX mediated network <Abbr>SDK</Abbr>s in your initialization callback.
+MAX performs this initialization automatically.
+</Callout>
+
+If you set the user <Abbr>ID</Abbr> in your <Abbr>MMP</Abbr> integration, set it where you set the AppLovin user <Abbr>ID</Abbr>.
+The code snippets below use Adjust as an example.
+Please refer to Adjust’s documentation for more information on [how to initialize Adjust](https://github.com/adjust/android_sdk#basic-setup) and [set the user <Abbr>ID</Abbr>](https://github.com/adjust/android_sdk#session-callback-parameters).
+
+###### Java
+```java
+package com.applovin.apps.test;
+
+import com.adjust.sdk.Adjust;
+import com.adjust.sdk.AdjustConfig;
+import com.adjust.sdk.LogLevel;
+import com.applovin.sdk.AppLovinSdk;
+import com.applovin.sdk.AppLovinSdkConfiguration;
+
+import lombok.val;
+
+public class MyApplication
+       extends Application
+{
+  @Override
+  public void onCreate()
+  {
+    super.onCreate();
+
+    // Initialize AppLovinSDK
+    val sdk = AppLovinSdk.getInstance( this );
+    sdk.setMediationProvider( "max" );
+    sdk.setUserIdentifier( "<var>USER_ID</var>" );
+
+    sdk.initializeSdk( (AppLovinSdkConfiguration config) - {
+
+      // Initialize other 3rd-party SDKs - do not initialize mediated advertising SDKs, MAX will automatically do that for you. Not following this step will result in noticeable integration issues
+
+      // Initialize the Adjust SDK inside the AppLovin SDK's initialization callback
+      AdjustConfig adjustConfig = new AdjustConfig( this, "<var>Your Adjust App Token</var>", AdjustConfig.ENVIRONMENT_SANDBOX or AdjustConfig.ENVIRONMENT_PRODUCTION );
+      Adjust.onCreate( adjustConfig );
+
+      // Start loading ads
+    } );
+    ⋮
+  }
+}```
+
+###### Kotlin
+```kotlin
+package com.applovin.apps.test
+
+import com.adjust.sdk.Adjust
+import com.adjust.sdk.AdjustConfig
+import com.applovin.sdk.AppLovinMediationProvider
+import com.applovin.sdk.AppLovinSdk
+
+class MyApplication : Application()
+{
+  override fun onCreate()
+  {
+    super.onCreate()
+
+    // Initialize AppLovinSDK
+    val sdk = AppLovinSdk.getInstance( this )
+    sdk.mediationProvider = "max"
+    sdk.userIdentifier = "<var>USER_ID</var>"
+
+    sdk.initializeSdk { config -
+      // Initialize other 3rd-party SDKs - do not initialize mediated advertising SDKs, MAX will automatically do that for you. Not following this step will result in noticeable integration issues
+
+      // Initialize the Adjust SDK inside the AppLovin SDK's initialization callback
+      val adjustConfig = AdjustConfig( this, "<var>Your Adjust App Token</var>", AdjustConfig.ENVIRONMENT_SANDBOX or AdjustConfig.ENVIRONMENT_PRODUCTION )
+      Adjust.onCreate(adjustConfig )
+
+      // Start loading ads
+    }
+  }
+}
+```
+
+##### Show <Abbr>GDPR</Abbr> Flow to Existing Users
+
+AppLovin recommends that you allow existing users in <Abbr>GDPR</Abbr> regions to reenter the <Abbr>GDPR</Abbr> flow.
+Typically, users do this in your app’s <UILabel>Settings</UILabel> section via an option to <UILabel>Manage Existing Privacy Settings</UILabel>.
+In order to determine if a user is within a <Abbr>GDPR</Abbr> region so that you can conditionally show that settings option, you can use the <Abbr>SDK</Abbr> <Abbr>API</Abbr> `AppLovinSdkConfiguration.getConsentFlowUserGeography()` (the user is in <Abbr>GDPR</Abbr> region when `getConsentFlowUserGeography()` returns `ConsentFlowUserGeography.GDPR`).
+
+When the user clicks <UILabel>Manage Existing Privacy Settings</UILabel> (or its equivalent), call `AppLovinCmpService.showCmpForExistingUser()`.
+Note that this resets the user’s existing consent information.
+
+###### Java
+```java
+package com.applovin.apps.test;
+
+import android.app.Activity;
+
+import com.applovin.sdk.AppLovinSdk;
+import com.applovin.sdk.AppLovinCmpService;
+
+public class MyActivity
+       extends Activity
+{
+  private void showAppLovinConsentFlow()
+  {
+    AppLovinCmpService cmpService = AppLovinSdk.getInstance( this ).getCmpService();
+
+    cmpService.showCmpForExistingUser( this, new AppLovinCmpService.OnCompletedListener()
+    {
+      @Override
+      public void onCompleted(final AppLovinCmpError error)
+      {
+        if ( null == error )
+        {
+          // The CMP alert was shown successfully.
+        }
+      }
+    } );
+  }
+}
+```
+
+###### Kotlin
+```kotlin
+package com.applovin.apps.test
+
+import android.app.Activity
+
+import com.applovin.sdk.AppLovinSdk
+
+public class MyActivity : Activity()
+{
+  private fun showAppLovinConsentFlow()
+  {
+    val cmpService = AppLovinSdk.getInstance(this).cmpService
+    cmpService.showCmpForExistingUser(this) { error -&gt;
+      if (null == error)
+      {
+        // The CMP alert was shown successfully.
+      }
+    }
+  }
+}
+```
+
+##### Testing
+
+If you want to test the Google <Abbr>CMP</Abbr> outside the <Abbr>GDPR</Abbr> region, you can do so by setting the debug user geography as shown below.
+
+###### Programmatically
+
+To set the debug user geography to `GDPR` use code like the following:
+
+####### Java
+```java
+AppLovinSdkSettings settings = new AppLovinSdkSettings( this );<br>⋮<br>settings.<span class="pl-kos"></span><span class="pl-en x x-first x-last">getTermsAndPrivacyPolicyFlowSettings</span><span class="pl-kos"></span>().setDebugUserGeography( AppLovinSdkConfiguration.ConsentFlowUserGeography.GDPR );
+```
+####### Kotlin
+```kotlin
+val settings = AppLovinSdkSettings(this)<br>⋮<br>settings.termsAndPrivacyPolicyFlowSettings.debugUserGeography = AppLovinSdkConfiguration.ConsentFlowUserGeography.GDPR
+```
+
+###### applovin_settings.json
+
+To set the debug user geography, add the `consent_flow_debug_user_geography` key with value `gdpr` under the `consent_flow_settings` object:
+```json
+{
+  "consent_flow_settings": {
+    ⋮
+    "consent_flow_debug_user_geography": "gdpr"
+  }
+}
+```
+
+<TestingUMPIntegration />

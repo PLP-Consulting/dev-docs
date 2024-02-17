@@ -1,0 +1,84 @@
+---
+title: "Banner & MREC Ads"
+description: "This page shows you how to load and then show and hide a banner or MREC ad."
+slug: en/max/adobe-air/ad-formats/banner-and-mrec-ads
+---
+
+The following sections show you how to load and then show and hide a <Glossary>banner</Glossary> or <Glossary>MREC</Glossary> ad.
+
+<Callout type="related">
+[“Why mobile banners ads persist in a video and playable world”](https://www.applovin.com/blog/mobile-banner-ads-popularity/) from AppLovin’s Blog.
+</Callout>
+
+## Loading a Banner or <Abbr>MREC</Abbr>
+
+To load a banner or <Abbr>MREC</Abbr>, call `createBanner()` or `createMRec()`, passing that method your Ad Unit <Abbr>ID</Abbr> and desired ad view position:
+
+### Banners
+
+```actionscript-3
+var adUnitId:String = "<var>ad_unit_ID</var>";
+
+public function initializeAd():void
+{
+  AppLovinMAX.createBanner(adUnitId, AdViewPosition.BOTTOM_CENTER);
+
+  // In the case of banner ads, also set the background or background color.
+  // The background color is of type uint representing the hex color code of the required color.
+  // For example, to set a white background, set the background color to 0xFFFFFF.
+  AppLovinMAX.setBannerBackgroundColor(adUnitId, <var>background_color</var>);
+}
+```
+
+### <Abbr>MRECs</Abbr>
+
+```actionscript-3
+var adUnitId:String = "<var>ad_unit_ID</var>";
+
+public function initializeAd():void
+{
+  AppLovinMAX.createMRec(adUnitId, AdViewPosition.CENTERED);
+}
+```
+  
+The complete list of position options are:
+
+- `TOP_LEFT`
+- `TOP_CENTER`
+- `TOP_RIGHT`
+- `CENTER_LEFT`
+- `CENTERED`
+- `CENTER_RIGHT`
+- `BOTTOM_LEFT`
+- `BOTTOM_CENTER`
+- `BOTTOM_RIGHT`
+  
+Banners are automatically sized to 320×50 on phones or 728×90 on tablets.
+<Abbr>MREC</Abbr>s are sized to 300×250 on both phones and tablets.
+You can call the utility method `AppLovinMAX.isTablet()` to help with view sizing adjustments.
+
+## Showing and Hiding a Banner or <Abbr>MREC</Abbr>
+
+To show a banner or <Abbr>MREC</Abbr>, call `showBanner()` or `showMRec()`:
+
+### Banners
+```actionscript-3
+AppLovinMAX.showBanner(adUnitId);
+```
+
+### <Abbr>MRECs</Abbr>
+```actionscript-3
+AppLovinMAX.showMRec(adUnitId);
+```
+  
+To hide a banner or <Abbr>MREC</Abbr>, call `hideBanner()` or `hideMRec()`:
+
+### Banners
+```actionscript-3
+AppLovinMAX.hideBanner(adUnitId);
+```
+  
+### <Abbr>MRECs</Abbr>
+```actionscript-3
+AppLovinMAX.hideMRec(adUnitId);
+```

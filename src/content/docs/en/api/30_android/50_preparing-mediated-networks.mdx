@@ -1,0 +1,68 @@
+---
+title: "Preparing Mediated Networks"
+description: "You can download and integrate the MAX mediation adapters into your app in multiple ways."
+slug: en/max/android/preparing-mediated-networks
+---
+import Solely from "@content/en/api/partials/_Solely.mdx";
+import CMP from "@content/en/api/partials/_CMP.mdx";
+import PangleDeadlock from "@content/en/api/partials/_PangleDeadlock.mdx";
+
+<Solely />
+
+<CMP />
+
+You can download and integrate the MAX <Glossary>mediation</Glossary> adapters into your app in multiple ways:
+
+Gradle
+: AppLovin recommends that you integrate adapters this way.
+  AppLovin’s adapters’ <Abbr>POM</Abbr> files automatically integrate the mediated <Glossary>network</Glossary>’s <Abbr>SDK</Abbr> along with its dependencies.
+  
+Open Source Adapters
+: If you require more flexibility in the integration, you can integrate AppLovin’s open source adapters.
+  <Glossary>Android</Glossary> <Abbr>SDK</Abbr> v11.0.0 is required in order to compile.
+  You are responsible for integrating the mediated <Abbr>SDK</Abbr>s and any dependencies they require.
+  You can find these adapters in [the AppLovn-MAX-SDK-Android GitHub repository](https://github.com/AppLovin/AppLovin-MAX-SDK-Android).
+  
+Manual Integration
+: Read [the manual integration instructions](missing-link) if you want to integrate the adapter artifacts, mediated <Abbr>SDK</Abbr>s, and their dependencies manually.
+  
+<Callout type="warning">
+Do not change the adapter’s name or package name.
+If you do so, the MAX <Abbr>SDK</Abbr> will not be able to recognize the adapter and ads will not load.
+</Callout>
+
+<PangleDeadlock />
+
+## Gradle
+
+Choose which mediated ad networks you want to integrate by checking the boxes below, and this page will display instructions specific to those networks.
+Then copy the customized Gradle script below to your app-level `build.gradle`.
+
+<div id="extrasGenerator" class="plist-checks-wrap">
+  <label for="Amazon">Amazon<input id="Amazon" name="Amazon" type="checkbox" /></label>
+  <label for="BidMachine">BidMachine<input id="BidMachine" name="BidMachine" type="checkbox" /></label>
+  <label for="Chartboost">Chartboost<input id="Chartboost" name="Chartboost" type="checkbox" /></label>
+  <label for="DT_Exchange"><Abbr>DT</Abbr> Exchange<input id="DT_Exchange" name="DT_Exchange" type="checkbox" /></label>
+  <label for="Google_Ad_Manager">Google Ad Manager<input id="Google_Ad_Manager" name="Google_Ad_Manager" type="checkbox" /></label>
+  <label for="Google_AdMob">Google bidding and Google AdMob<input id="Google_AdMob" name="Google_AdMob" type="checkbox" /></label>
+  <label for="HyprMX">HyprMX<input id="HyprMX" name="HyprMX" type="checkbox" /></label>
+  <label for="InMobi">InMobi<input id="InMobi" name="InMobi" type="checkbox" /></label>
+  <label for="IronSource">IronSource<input id="IronSource" name="IronSource" type="checkbox" /></label>
+  <label for="Liftoff_Monetize">Liftoff Monetize<input id="Liftoff_Monetize" name="Liftoff_Monetize" type="checkbox" /></label>
+  <label for="LINE">LINE<input id="LINE" name="LINE" type="checkbox" /></label>
+  <label for="Maio">Maio<input id="Maio" name="Maio" type="checkbox" /></label>
+  <label for="Meta_Audience_Network">Meta Audience Network<input id="Meta_Audience_Network" name="Meta_Audience_Network" type="checkbox" /></label>
+  <label for="Mintegral">Mintegral<input id="Mintegral" name="Mintegral" type="checkbox" /></label>
+  <label for="MobileFuse">MobileFuse<input id="MobileFuse" name="MobileFuse" type="checkbox" /></label>
+  <label for="myTarget">myTarget<input id="myTarget" name="myTarget" type="checkbox" /></label>
+  <label for="Nend">Nend<input id="Nend" name="Nend" type="checkbox" /></label>
+  <label for="Ogury">Ogury<input id="Ogury" name="Ogury" type="checkbox" /></label>
+  <label for="Pangle">Pangle<input id="Pangle" name="Pangle" type="checkbox" /></label>
+  <label for="Smaato">Smaato<input id="Smaato" name="Smaato" type="checkbox" /></label>
+  <label for="Tencent">Tencent<input id="Tencent" name="Tencent" type="checkbox" /></label>
+  <label for="Unity_Ads">Unity Ads<input id="Unity_Ads" name="Unity_Ads" type="checkbox" /></label>
+  <label for="Verve">Verve<input id="Verve" name="Verve" type="checkbox" /></label>
+  <label for="Yandex">Yandex<input id="Yandex" name="Yandex" type="checkbox" /></label>
+</div>
+
+# Missing subsections and JS logic here

@@ -1,0 +1,186 @@
+---
+title: "Native Ads (Templates)"
+description: "The easiest way to integrate native ads into your app is to use the templates <Abbr>API</Abbr>."
+slug: en/max/android/ad-formats/native-ads-templates
+---
+
+<Glossary>Native ads</Glossary> let you <Glossary>monetize your app [mobile app monetization]</Glossary> in a way that’s consistent with its existing design.
+The AppLovin MAX <Abbr>SDK</Abbr> version 11.0.0 gives you access to an ad’s individual assets so you can design the ad layout to be consistent with the look and feel of your app.
+The <Abbr>SDK</Abbr> automatically handles image caching and metrics tracking so you can focus on how, when, and where to display ads.
+
+### Templates <Abbr>API</Abbr>
+
+The easiest way to integrate native ads into your app is to use the templates <Abbr>API</Abbr>.
+The AppLovin MAX <Abbr>SDK</Abbr> allows you to load an `android.view.View` with the assets of the native ads pre-populated for you.
+To use the templates <Abbr>API</Abbr>, select either a “Small” (360×120 <Abbr>dp</Abbr>) or “Medium” (300×250 <Abbr>dp</Abbr>) size template in the [<UILabel>Create New Ad Unit</UILabel>](https://dash.applovin.com/o/mediation/ad_units/create/) screen.
+The media view for “Small” templates will fill one third of the template’s width, and span the template’s height.
+The media view for “Medium” templates will span the media content’s width and height while preserving the content’s aspect ratio.
+Please make sure to set a height for the native ad’s container view in order for the media content to render properly.
+Select the size that best suits your needs.
+The <Abbr>SDK</Abbr> automatically handles the view layouts for you.
+
+![Small: Test Ad: Flood-It! Flood-It App for free! Free Popular… Install. Medium: Test Ad: Flood-It! Flood-It App for free! Free Popular Casual Game. Install.](/images/native-templates.png)
+
+### Loading a Native Ad
+
+To load a native ad, instantiate a `MaxNativeAdLoader` corresponding to your ad unit and call its `loadAd()` method.
+Implement `MaxNativeAdLoadListener` so that you are notified when your native ad is ready, and implement `MaxAdListener` to be notified of other ad-related events.
+
+<Callout type="note">
+Remember to clean up unused instances of unused native ads by calling the `destroy()` method.
+</Callout>
+
+<Callout type="note">
+Native ads are expected to be shown within the ad expiration window of four hours.
+<Glossary>Impressions</Glossary> associated with ads shown outside of this window will be invalidated.
+</Callout>
+
+#### Java
+```java
+public class ExampleActivity extends Activity
+{
+  private MaxNativeAdLoader nativeAdLoader;
+  private MaxAd             nativeAd;
+
+  void createNativeAd()
+  {
+    FrameLayout nativeAdContainer = findViewById( R.id.native_ad_layout );
+
+    nativeAdLoader = new MaxNativeAdLoader( "<var>ad_unit_ID</var>", this );
+    nativeAdLoader.setNativeAdListener( new MaxNativeAdListener()
+    {
+      @Override
+      public void onNativeAdLoaded(final MaxNativeAdView nativeAdView, final MaxAd ad)
+      {
+        // Clean up any pre-existing native ad to prevent memory leaks.
+        if ( nativeAd != null )
+        {
+          nativeAdLoader.destroy( nativeAd );
+        }
+
+        // Save ad for cleanup.
+        nativeAd = ad;
+
+        // Add ad view to view.
+        nativeAdContainer.removeAllViews();
+        nativeAdContainer.addView( nativeAdView );
+      }
+
+      @Override
+      public void onNativeAdLoadFailed(final String adUnitId, final MaxError error)
+      {
+        // AppLovin recommends that you retry with exponentially higher delays up to a maximum delay
+      }
+
+      @Override
+      public void onNativeAdClicked(final MaxAd ad)
+      {
+        // Optional click callback
+      }
+    } );
+
+    nativeAdLoader.loadAd();
+  }
+}```
+
+#### Kotlin
+```kotlin
+class ExampleActivity : Activity()
+{
+  private lateinit var nativeAdLoader: MaxNativeAdLoader
+  private var nativeAd: MaxAd? = null
+
+  fun createNativeAd()
+  {
+    val nativeAdContainer = findViewById(R.id.native_ad_layout)
+    nativeAdLoader = MaxNativeAdLoader( "<var>ad_unit_ID</var>", this )
+    nativeAdLoader.setNativeAdListener(object : MaxNativeAdListener() {
+
+      override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, ad: MaxAd)
+      {
+        // Clean up any pre-existing native ad to prevent memory leaks.
+        if ( nativeAd != null )
+        {
+          nativeAdLoader.destroy( nativeAd )
+        }
+
+        // Save ad for cleanup.
+        nativeAd = ad
+
+        // Add ad view to view.
+        nativeAdContainer.removeAllViews()
+        nativeAdContainer.addView( nativeAdView )
+      }
+
+      override fun onNativeAdLoadFailed(adUnitId: String, error: MaxError)
+      {
+        // AppLovin recommends that you retry with exponentially higher delays up to a maximum delay
+      }
+
+      override fun onNativeAdClicked(ad: MaxAd)
+      {
+        // Optional click callback
+      }
+    })
+    nativeAdLoader.loadAd()
+  }
+}
+```
+
+### Asset Sizes
+
+For <Glossary>AppLovin Exchange</Glossary> demand, the maximum numbers of characters allowed for Title, Description, and <Abbr>CTA</Abbr> are as follows:
+
+| Asset | Maximum Character Count |
+| ----- | ----------------------- |
+| Title | 25 characters |
+| Description | 100 characters. You can add an ellipsis (`…`) after 99 characters, as the 100th character. |
+| <Abbr>CTA</Abbr> | 15 characters |
+
+For <Glossary>SDK</Glossary>-mediated networks, the maximum limits are set by the network itself.
+
+#### How to Get the Media Content Aspect Ratio
+
+The following code snippet shows you how to get the media content aspect ratio of your native ad:
+
+##### Java
+```java
+@Override
+public void onNativeAdLoaded(final MaxNativeAdView adView, final MaxAd ad)
+{
+  MaxNativeAd nativeAd = ad.getNativeAd();
+  if ( nativeAd != null )
+  {
+    float aspectRatio = nativeAd.getMediaContentAspectRatio();
+  }
+}
+```
+
+##### Kotlin
+```kotlin
+override fun onNativeAdLoaded(nativeAdView: MaxNativeAdView?, ad: MaxAd) {
+  val nativeAd = ad.nativeAd
+  if (nativeAd != null) {
+    val aspectRatio = nativeAd.mediaContentAspectRatio
+  }
+}
+```
+
+<Callout type="note">
+Some networks do not provide media content aspect ratios, in which case the value will be zero.
+</Callout>
+
+### Supported Adapter Versions
+| Ad Network | Adapter Version |
+| ---------- | --------------- |
+| BidMachine | 1.9.4.1 |
+| Google Ad Manager | 20.5.0.2 |
+| Google bidding and Google AdMob | 20.5.0.2 |
+| InMobi | 10.0.5.3 |
+| LINE | 2021.5.11.9 |
+| Meta Audience Network | 6.8.0.3 |
+| Mintegral | 15.8.1.1 |
+| myTarget | 5.14.4.2 |
+| Pangle | 4.1.1.5.2 |
+| Smaato | 21.6.7.1 |
+| Yandex | 5.3.0.1 |

@@ -1,0 +1,782 @@
+---
+title: "Manual Download for MAX Mediation Networks"
+description: "This page shows you how to download, configure, and initialize the AppLovin MAX SDK."
+slug: en/max/android/overview/integration/manual-download-for-max-mediation-networks
+---
+import SdkKey from "@content/en/api/partials/_sdk-key.mdx";
+import AdReviewKey from "@content/en/api/partials/_AdReviewKey.mdx";
+import AppIds from "@content/en/api/partials/_app-ids.mdx";
+
+## Getting Started
+
+To receive release updates, subscribe to [the AppLovin-MAX-SDK-Android GitHub repository](https://github.com/AppLovin/AppLovin-MAX-SDK-Android).
+
+## Download the Latest Android <Glossary>SDK</Glossary>
+
+### DOWNLOAD LINK MISSING
+
+## Add the <Abbr>SDK</Abbr> to the Project
+
+Unzip the downloaded file, then drag and drop the `aar` file to the `libs` folder in your project.
+(If your project does not have a `libs` folder, you can create one inside the `app` folder.)
+
+## Gradle
+
+Add the following to your `build.gradle` file:
+
+### Groovy
+```groovy
+repositories {
+  google()
+  mavenCentral()
+  flatDir {
+    dirs 'libs'
+  }
+  ⋮
+}
+dependencies {
+  implementation 'com.applovin:applovin-sdk:x.y.z@aar'
+  ⋮
+}
+```
+
+### Kotlin
+```kotlin
+repositories {
+  google()
+  mavenCentral()
+  flatDir {
+    dirs("libs")
+  }
+  ⋮
+}
+dependencies {
+  implementation("com.applovin:applovin-sdk:x.y.z@aar")
+  ⋮
+}
+```
+ 
+## Add the <Abbr>SDK</Abbr> Key
+
+Add the following line into your `AndroidManifest.xml`.
+This needs to go inside the `application` tag:
+
+```xml
+<meta-data android:name="applovin.sdk.key"
+           android:value="<var>your-SDK-key</var>"/>
+```
+
+<SdkKey />
+
+## Enable Ad Review
+
+To enable the [MAX Ad Review](../testing-networks/max-ad-review) service, add the following to your `build.gradle` files:
+
+### Additions to Root-Level `build.gradle` File
+
+#### Groovy
+```groovy
+buildscript {
+  repositories {
+    maven { url 'https://artifacts.applovin.com/android' }
+  }
+  dependencies {
+    classpath "com.applovin.quality:AppLovinQualityServiceGradlePlugin:+"
+  }
+}
+```
+
+#### Kotlin
+  
+```kotlin
+buildscript {
+  repositories {
+    maven { url = uri("https://artifacts.applovin.com/android") }
+  }
+  dependencies {
+    classpath ("com.applovin.quality:AppLovinQualityServiceGradlePlugin:+")
+  }
+}
+```
+ 
+### Additions to App-Level `build.gradle` File
+
+#### Groovy
+```groovy
+apply plugin: 'applovin-quality-service'
+applovin {
+    apiKey "<var>your-ad-review-key</var>"
+}
+```
+
+#### Kotlin
+```kotlin
+plugins {
+    id("applovin-quality-service")
+}
+applovin {
+    apiKey = "<var>your-ad-review-key</var>"
+}
+```
+
+<AdReviewKey />
+
+## Initialize the <Abbr>SDK</Abbr>
+
+Initialize the <Abbr>SDK</Abbr> by calling the `initializeSdk()` method, passing that method a context.
+Do this as soon as possible after your app starts, for example in the `onCreate()` method of your launch `Activity`.
+
+### Java
+```java
+public class MainActivity extends Activity
+{
+  protected void onCreate(Bundle savedInstanceState)
+  {
+    // Set the mediation provider value to "max" to ensure proper functionality.
+    AppLovinSdk.getInstance( this ).setMediationProvider( "max" );
+    AppLovinSdk.initializeSdk( this, new AppLovinSdk.SdkInitializationListener() {
+      @Override
+      public void onSdkInitialized(final AppLovinSdkConfiguration configuration)
+      {
+        // AppLovin SDK is initialized, start loading ads
+      }
+    } );
+  }
+}
+```
+
+### Kotlin
+```kotlin
+class MainActivity : Activity()
+{
+  override fun onCreate(savedInstanceState: Bundle?)
+  {
+    // Set the mediation provider value to "max" to ensure proper functionality.
+    AppLovinSdk.getInstance( this ).setMediationProvider( "max" )
+    AppLovinSdk.getInstance( this ).initializeSdk({ configuration: AppLovinSdkConfiguration ->
+      // AppLovin SDK is initialized, start loading ads
+    })
+  }
+}
+```
+
+## Interstitial Ads
+### Loading an Interstitial Ad
+
+To load an <Glossary>interstitial ad</Glossary>, instantiate a `MaxInterstitialAd` object with your ad unit and call `loadAd()`.
+Implement `MaxAdListener` so you can be notified when your ad is ready and of other ad-related events.
+
+#### Java
+```java
+public class ExampleActivity extends Activity
+        implements MaxAdListener
+{
+  private MaxInterstitialAd interstitialAd;
+  private int retryAttempt;
+
+  void createInterstitialAd()
+  {
+    interstitialAd = new MaxInterstitialAd( "<var>ad-unit-ID</var>", this );
+    interstitialAd.setListener( this );
+
+    // Load the first ad
+    interstitialAd.loadAd();
+  }
+
+  // MAX Ad Listener
+  @Override
+  public void onAdLoaded(final MaxAd maxAd)
+  {
+    // Interstitial ad is ready to be shown. interstitialAd.isReady() will now return 'true'
+
+    // Reset retry attempt
+    retryAttempt = 0;
+  }
+
+  @Override
+  public void onAdLoadFailed(final String adUnitId, final MaxError error)
+  {
+    // Interstitial ad failed to load
+    // AppLovin recommends that you retry with exponentially higher delays up to a maximum delay (in this case 64 seconds)
+
+    retryAttempt++;
+    long delayMillis = TimeUnit.SECONDS.toMillis( (long) Math.pow( 2, Math.min( 6, retryAttempt ) ) );
+
+    new Handler().postDelayed( new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        interstitialAd.loadAd();
+      }
+    }, delayMillis );
+  }
+
+  @Override
+  public void onAdDisplayFailed(final MaxAd maxAd, final MaxError error)
+  {
+    // Interstitial ad failed to display. AppLovin recommends that you load the next ad
+    interstitialAd.loadAd();
+  }
+
+  @Override
+  public void onAdDisplayed(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdClicked(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdHidden(final MaxAd maxAd)
+  {
+    // Interstitial ad is hidden. Pre-load the next ad
+    interstitialAd.loadAd();
+  }
+}
+```
+
+#### Kotlin
+```kotlin
+class ExampleActivity : Activity(), MaxAdListener
+{
+  private lateinit var interstitialAd: MaxInterstitialAd
+  private var retryAttempt = 0.0
+
+  fun createInterstitialAd()
+  {
+    interstitialAd = MaxInterstitialAd( "<var>ad-unit-ID</var>", this )
+    interstitialAd.setListener( this )
+
+    // Load the first ad
+    interstitialAd.loadAd()
+  }
+
+  // MAX Ad Listener
+  override fun onAdLoaded(maxAd: MaxAd)
+  {
+    // Interstitial ad is ready to be shown. interstitialAd.isReady() will now return 'true'
+
+    // Reset retry attempt
+    retryAttempt = 0.0
+  }
+
+  override fun onAdLoadFailed(adUnitId: String?, error: MaxError?)
+  {
+    // Interstitial ad failed to load
+    // AppLovin recommends that you retry with exponentially higher delays up to a maximum delay (in this case 64 seconds)
+
+    retryAttempt++
+    val delayMillis = TimeUnit.SECONDS.toMillis( Math.pow( 2.0, Math.min( 6.0, retryAttempt ) ).toLong() )
+
+    Handler().postDelayed( { interstitialAd.loadAd() }, delayMillis )
+  }
+
+  override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?)
+  {
+    // Interstitial ad failed to display. AppLovin recommends that you load the next ad
+    interstitialAd.loadAd()
+  }
+
+  override fun onAdDisplayed(maxAd: MaxAd) {}
+
+  override fun onAdClicked(maxAd: MaxAd) {}
+
+  override fun onAdHidden(maxAd: MaxAd)
+  {
+    // Interstitial ad is hidden. Pre-load the next ad
+    interstitialAd.loadAd()
+  }
+}</pre>
+  
+</ul>
+### Showing an Interstitial Ad
+
+  To show an interstitial ad, call `showAd()` on the
+  `MaxInterstitialAd` object created above.
+
+<ul class="js-tabs">
+  <li data-title="Java">
+    <pre class="java">if ( interstitialAd.isReady() )
+{
+  interstitialAd.showAd();
+}</pre>
+  
+  <li data-title="Kotlin">
+    <pre class="kotlin">if ( interstitialAd.isReady )
+{
+  interstitialAd.showAd()
+}
+```
+ 
+## Rewarded Ads
+### Loading a Rewarded Ad
+
+To load a <Glossary>rewarded ad</Glossary>, retrieve a `MaxRewardedAd` object with your rewarded ad unit and call `loadAd()` on it.
+Implement `MaxRewardedAdListener` so you can be notified when your ad is ready and of other ad-related events.
+
+#### Java
+```java
+public class ExampleActivity extends Activity
+        implements MaxRewardedAdListener
+{
+  private MaxRewardedAd rewardedAd;
+  private int           retryAttempt;
+
+  void createRewardedAd()
+  {
+    rewardedAd = MaxRewardedAd.getInstance( "<var>ad-unit-ID</var>", this );
+    rewardedAd.setListener( this );
+
+    rewardedAd.loadAd();
+  }
+
+  // MAX Ad Listener
+  @Override
+  public void onAdLoaded(final MaxAd maxAd)
+  {
+    // Rewarded ad is ready to be shown. rewardedAd.isReady() will now return 'true'
+
+    // Reset retry attempt
+    retryAttempt = 0;
+  }
+
+  @Override
+  public void onAdLoadFailed(final String adUnitId, final int errorCode)
+  {
+    // Rewarded ad failed to load
+    // AppLovin recommends that you retry with exponentially higher delays up to a maximum delay (in this case 64 seconds)
+
+    retryAttempt++;
+    long delayMillis = TimeUnit.SECONDS.toMillis( (long) Math.pow( 2, Math.min( 6, retryAttempt ) ) );
+
+    new Handler().postDelayed( new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        rewardedAd.loadAd();
+      }
+    }, delayMillis );
+  }
+
+  @Override
+  public void onAdDisplayFailed(final MaxAd maxAd, final MaxError error)
+  {
+    // Rewarded ad failed to display. AppLovin recommends that you load the next ad
+    rewardedAd.loadAd();
+  }
+
+  @Override
+  public void onAdDisplayed(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdClicked(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdHidden(final MaxAd maxAd)
+  {
+    // rewarded ad is hidden. Pre-load the next ad
+    rewardedAd.loadAd();
+  }
+
+  @Override
+  public void onRewardedVideoStarted(final MaxAd maxAd) {} // deprecated
+
+  @Override
+  public void onRewardedVideoCompleted(final MaxAd maxAd) {} // deprecated
+
+  @Override
+  public void onUserRewarded(final MaxAd maxAd, final MaxReward maxReward)
+  {
+    // Rewarded ad was displayed and user should receive the reward
+  }
+}
+```
+
+#### Kotlin
+```kotlin
+class ExampleActivity : Activity(), MaxRewardedAdListener
+{
+  private lateinit var rewardedAd: MaxRewardedAd
+  private var retryAttempt = 0.0
+
+  fun createRewardedAd()
+  {
+    rewardedAd = MaxRewardedAd.getInstance( "<var>ad-unit-ID</var>", this )
+    rewardedAd.setListener( this )
+
+    rewardedAd.loadAd()
+  }
+
+  // MAX Ad Listener
+  override fun onAdLoaded(maxAd: MaxAd)
+  {
+    // Rewarded ad is ready to be shown. rewardedAd.isReady() will now return 'true'
+
+    // Reset retry attempt
+    retryAttempt = 0.0
+  }
+
+  override fun onAdLoadFailed(adUnitId: String?, error: MaxError?)
+  {
+    // Rewarded ad failed to load
+    // AppLovin recommends that you retry with exponentially higher delays up to a maximum delay (in this case 64 seconds)
+
+    retryAttempt++
+    val delayMillis = TimeUnit.SECONDS.toMillis( Math.pow( 2.0, Math.min( 6.0, retryAttempt ) ).toLong() )
+
+    Handler().postDelayed( { rewardedAd.loadAd() }, delayMillis )
+  }
+
+  override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?)
+  {
+    // Rewarded ad failed to display. AppLovin recommends that you load the next ad
+    rewardedAd.loadAd()
+  }
+
+  override fun onAdDisplayed(maxAd: MaxAd) {}
+
+  override fun onAdClicked(maxAd: MaxAd) {}
+
+  override fun onAdHidden(maxAd: MaxAd)
+  {
+    // rewarded ad is hidden. Pre-load the next ad
+    rewardedAd.loadAd()
+  }
+
+  override fun onRewardedVideoStarted(maxAd: MaxAd) {} // deprecated
+
+  override fun onRewardedVideoCompleted(maxAd: MaxAd) {} // deprecated
+
+  override fun onUserRewarded(maxAd: MaxAd, maxReward: MaxReward)
+  {
+    // Rewarded ad was displayed and user should receive the reward
+  }
+}
+```
+
+### Showing a Rewarded Ad
+
+To show a rewarded ad, call `showAd()` on the `MaxRewardedAd` object you created above.
+
+#### Java
+```java
+if ( rewardedAd.isReady() )
+{
+  rewardedAd.showAd();
+}</pre>
+  
+  <li data-title="Kotlin">
+    <pre class="kotlin">if ( rewardedAd.isReady() )
+{
+  rewardedAd.showAd();
+}
+```
+ 
+## Banners &amp; <Abbr>MREC</Abbr>s
+
+### Loading and Showing Banners &amp; <Abbr>MREC</Abbr>s Programmatically
+
+To load a <Glossary>banner ad</Glossary> or <Glossary>MREC</Glossary>, create a `MaxAdView` object with your ad unit and call `loadAd()`.
+To show, add the `MaxAdView` object as a subview of your view hierarchy.
+Implement `MaxAdViewAdListener` so you can be notified when your ad is ready and of other ad-related events.
+
+#### Banners (Java)
+```java
+public class ExampleActivity extends Activity
+        implements MaxAdViewAdListener
+{
+  private MaxAdView adView;
+
+  void createBannerAd()
+  {
+    adView = new MaxAdView( "<var>ad-unit-ID</var>", this );
+    adView.setListener( this );
+
+    // Stretch to the width of the screen for banners to be fully functional
+    int width = ViewGroup.LayoutParams.MATCH_PARENT;
+
+    // Banner height on phones and tablets is 50 and 90, respectively
+    int heightPx = getResources().getDimensionPixelSize( R.dimen.banner_height );
+
+    adView.setLayoutParams( new FrameLayout.LayoutParams( width, heightPx ) );
+
+    // Set background or background color for banners to be fully functional
+    adView.setBackgroundColor( ... );
+
+    ViewGroup rootView = findViewById( android.R.id.content );
+    rootView.addView( adView );
+
+    // Load the ad
+    adView.loadAd();
+  }
+
+  // MAX Ad Listener
+  @Override
+  public void onAdLoaded(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdLoadFailed(final String adUnitId, final int errorCode) {}
+
+  @Override
+  public void onAdDisplayFailed(final MaxAd maxAd, final MaxError error) {}
+
+  @Override
+  public void onAdClicked(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdExpanded(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdCollapsed(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdDisplayed(final MaxAd maxAd) { /* use this for impression tracking */ }
+
+  @Override
+  public void onAdHidden(final MaxAd maxAd) { /* DO NOT USE - THIS IS RESERVED FOR FULLSCREEN ADS ONLY AND WILL BE REMOVED IN A FUTURE SDK RELEASE */ }
+}
+```
+
+#### Banners (Kotlin)
+```kotlin
+class ExampleActivity : Activity(), MaxAdViewAdListener
+{
+  private var adView: MaxAdView? = null
+
+  fun createBannerAd()
+  {
+    adView = MaxAdView("<var>ad-unit-ID</var>", this)
+    adView?.setListener(this)
+
+    // Stretch to the width of the screen for banners to be fully functional
+    val width = ViewGroup.LayoutParams.MATCH_PARENT
+
+    // Banner height on phones and tablets is 50 and 90, respectively
+    val heightPx = resources.getDimensionPixelSize(R.dimen.banner_height)
+
+    adView?.layoutParams = FrameLayout.LayoutParams(width, heightPx)
+
+    // Set background or background color for banners to be fully functional
+    adView?.setBackgroundColor(...)
+
+    val rootView = findViewById<ViewGroup>(android.R.id.content)
+    rootView.addView(adView)
+
+    // Load the ad
+    adView?.loadAd()
+  }
+
+  // MAX Ad Listener
+  override fun onAdLoaded(maxAd: MaxAd) {}
+
+  override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {}
+
+  override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {}
+
+  override fun onAdClicked(maxAd: MaxAd) {}
+
+  override fun onAdExpanded(maxAd: MaxAd) {}
+
+  override fun onAdCollapsed(maxAd: MaxAd) {}
+
+  override fun onAdDisplayed(maxAd: MaxAd) { /* use this for impression tracking */ }
+
+  override fun onAdHidden(maxAd: MaxAd) { /* DO NOT USE - THIS IS RESERVED FOR FULLSCREEN ADS ONLY AND WILL BE REMOVED IN A FUTURE SDK RELEASE */ }
+}
+```
+
+#### MRECs (Java)
+```java
+public class ExampleActivity extends Activity
+        implements MaxAdViewAdListener
+{
+  private MaxAdView adView;
+
+  void createMrecAd
+  {
+    adView = new MaxAdView( "<var>ad-unit-ID</var>", MaxAdFormat.MREC, this );
+    adView.setListener( this );
+
+    // MREC width and height are 300 and 250 respectively, on phones and tablets
+    int widthPx = AppLovinSdkUtils.dpToPx( this, 300 );
+    int heightPx = AppLovinSdkUtils.dpToPx( this, 250 );
+
+    adView.setLayoutParams( new FrameLayout.LayoutParams( widthPx, heightPx ) );
+
+    // Set background or background color for MRECs to be fully functional
+    adView.setBackgroundColor( ... );
+
+    ViewGroup rootView = findViewById( android.R.id.content );
+    rootView.addView( adView );
+
+    // Load the ad
+    adView.loadAd();
+  }
+
+  // MAX Ad Listener
+  @Override
+  public void onAdLoaded(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdLoadFailed(final String adUnitId, final int errorCode) {}
+
+  @Override
+  public void onAdDisplayFailed(final MaxAd maxAd, final MaxError error) {}
+
+  @Override
+  public void onAdClicked(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdExpanded(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdCollapsed(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdDisplayed(final MaxAd maxAd) { /* use this for impression tracking */ }
+
+  @Override
+  public void onAdHidden(final MaxAd maxAd) { /* DO NOT USE - THIS IS RESERVED FOR FULLSCREEN ADS ONLY AND WILL BE REMOVED IN A FUTURE SDK RELEASE */ }
+}
+```
+
+#### MRECs (Kotlin)
+```kotlin
+class ExampleActivity : Activity(), MaxAdViewAdListener
+{
+  private var adView: MaxAdView? = null
+
+  fun createMrecAd
+  {
+    adView = MaxAdView("<var>ad-unit-ID</var>", MaxAdFormat.MREC, this)
+    adView?.setListener(this)
+
+    // MREC width and height are 300 and 250 respectively, on phones and tablets
+    val widthPx = AppLovinSdkUtils.dpToPx(this, 300)
+    val heightPx = AppLovinSdkUtils.dpToPx(this, 250)
+
+    adView?.layoutParams = FrameLayout.LayoutParams(widthPx, heightPx)
+
+    // Set background or background color for MRECs to be fully functional
+    adView?.setBackgroundColor(...)
+
+    val rootView = findViewById<ViewGroup>(android.R.id.content)
+    rootView.addView(adView)
+
+    // Load the ad
+    adView?.loadAd()
+  }
+
+  // MAX Ad Listener
+  override fun onAdLoaded(maxAd: MaxAd) {}
+
+  override fun onAdLoadFailed(adUnitId: String?, error: MaxError?) {}
+
+  override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?) {}
+
+  override fun onAdClicked(maxAd: MaxAd) {}
+
+  override fun onAdExpanded(maxAd: MaxAd) {}
+
+  override fun onAdCollapsed(maxAd: MaxAd) {}
+
+  override fun onAdDisplayed(maxAd: MaxAd) { /* use this for impression tracking */ }
+
+  override fun onAdHidden(maxAd: MaxAd) { /* DO NOT USE - THIS IS RESERVED FOR FULLSCREEN ADS ONLY AND WILL BE REMOVED IN A FUTURE SDK RELEASE */ }
+}
+```
+
+### Loading and Showing Banners or <Abbr>MREC</Abbr>s in Layout Editor
+
+Alternatively, you can add MAX banners or <Abbr>MREC</Abbr>s to your view layout <Abbr>XML</Abbr>.
+Ensure that your ads are fully functional by setting a background or background color (`android:background`).
+In the case of banners, stretch the width (`android:layout_width`) to the width of the screen.
+In the case of <Abbr>MREC</Abbr>s, set the `android:adFormat` accordingly:
+
+#### Banners
+```xml
+<com.applovin.mediation.ads.MaxAdView
+  xmlns:maxads="http://schemas.applovin.com/android/1.0"
+  maxads:adUnitId="<var>ad-unit-ID</var>"
+  android:background="@color/banner_background_color"
+  android:layout_width="match_parent"
+  android:layout_height="@dimen/banner_height" />
+```
+
+#### MRECs
+```xml
+<com.applovin.mediation.ads.MaxAdView
+  xmlns:maxads="http://schemas.applovin.com/android/1.0"
+  maxads:adUnitId="<var>ad-unit-ID</var>"
+  maxads:adFormat="MREC"
+  android:background="@color/mrec_background_color"
+  android:layout_width="300dp"
+  android:layout_height="250dp" />
+```
+
+Declare the base banner height of 50<Abbr>dp</Abbr> in `res/values/attrs.xml`:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="banner_height">50dp</dimen>
+</resources>
+```
+
+Declare the tablet banner height of 90<Abbr>dp</Abbr> in `res/values-sw600dp/attrs.xml`:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <dimen name="banner_height">90dp</dimen>
+</resources>
+```
+
+To hide a banner or <Abbr>MREC</Abbr> ad, call the following:
+
+#### Java
+```java
+adView.setVisibility( View.GONE );
+adView.stopAutoRefresh();
+```
+  
+#### Kotlin
+```kotlin
+adView.visibility = View.GONE
+adView.stopAutoRefresh()
+```
+
+To show a banner or <Abbr>MREC</Abbr> ad, call the following:
+
+#### Java
+```java
+adView.setVisibility( View.VISIBLE );
+adView.startAutoRefresh();
+```
+  
+#### Kotlin
+```kotlin
+adView.visibility = View.VISIBLE
+adView.startAutoRefresh()
+```
+
+## Preparing Mediated Networks
+
+Select the ad networks to integrate.
+Then follow the specific instructions.
+
+<div id="extrasGenerator" class="plist-checks-wrap">
+  <label for="AdColony">AdColony<input id="AdColony" name="AdColony" type="checkbox" /></label>
+  <label for="Amazon">Amazon<input id="Amazon" name="Amazon" type="checkbox" /></label>
+  <label for="Google_Ad_Manager">Google Ad Manager<input id="Google_Ad_Manager" name="Google_Ad_Manager" type="checkbox" /></label>
+  <label for="Google_AdMob">Google AdMob<input id="Google_AdMob" name="Google_AdMob" type="checkbox" /></label>
+  <label for="InMobi">InMobi<input id="InMobi" name="InMobi" type="checkbox" /></label>
+  <label for="Liftoff_Monetize">Liftoff Monetize<input id="Liftoff_Monetize" name="Liftoff_Monetize" type="checkbox" /></label>
+  <label for="Meta_Audience_Network">Meta Audience Network<input id="Meta_Audience_Network" name="Meta_Audience_Network" type="checkbox" /></label>
+  <label for="Mintegral">Mintegral<input id="Mintegral" name="Mintegral" type="checkbox" /></label>
+  <label for="myTarget">myTarget<input id="myTarget" name="myTarget" type="checkbox" /></label>
+  <label for="Nend">Nend<input id="Nend" name="Nend" type="checkbox" /></label>
+  <label for="Pangle">Pangle<input id="Pangle" name="Pangle" type="checkbox" /></label>
+</div>
+
+### SUBSECTIONS & JS LOGIC MISSING

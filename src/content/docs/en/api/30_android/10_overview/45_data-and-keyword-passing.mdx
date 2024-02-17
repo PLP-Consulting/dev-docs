@@ -1,0 +1,198 @@
+---
+title: "Data and Keyword Passing"
+description: "AppLovin provides an option for developers to send demographic or interest-based targeting data in designated fields."
+slug: en/max/android/overview/data-and-keyword-passing
+---
+import DataKeywordPassing1 from "@content/en/api/partials/_DataKeywordPassing1.mdx";
+
+<DataKeywordPassing1 />
+
+Starting with <Glossary>SDK</Glossary> version 11.0.0, AppLovin provides an option for developers to send additional data.
+Developers should send any demographic or interest-based targeting data in the fields designated for such data, as described below.
+
+## Data Fields
+
+Set values for the following fields to pass personal data (for demographic or interest-based targeting):
+
+| Field | Description |
+| ----- | ----------- |
+| `email` | The user’s email address. AppLovin hashes this value before it reaches its ad server. |
+| `gender` | The user’s gender |
+| `interests` | A list of the user’s interests |
+| `maximumAdContentRating` | The maximum ad content rating shown to the user. The levels are based on <Abbr>IQG</Abbr> Media Ratings: 1 = All Audiences, 2 = Everyone Over 12, 3 = Mature Audiences |
+| `phoneNumber` | The user’s phone number. AppLovin hashes this value before it reaches its ad server. |
+| `yearOfBirth` | The user’s year of birth |
+
+This data is limited to use by publishers for the publishers’ own direct ad serving.
+AppLovin does not retain this data or pass it downstream to advertising partners.
+
+Set values for the following fields to pass impersonal data (for contextual targeting):
+
+| Field | Description |
+| ----- | ----------- |
+| `keywords` | A list of keywords related to your application |
+
+Here is an example of how to set the user’s email address and the keywords that describe your application:
+
+### Java
+```java
+ApplovinSdk.getInstance( this ).getTargetingData().setEmail( "user@email.com" );
+AppLovinSdk.getInstance( this ).getTargetingData().setKeywords( Arrays.asList( "fruit:apple", "fruit:banana", "fruit:orange" ) );
+```
+
+### Kotlin
+```kotlin
+AppLovinSdk.getInstance( this ).targetingData.email = "user@email.com"
+AppLovinSdk.getInstance( this ).targetingData.keywords = listOf( "fruit:apple", "fruit:banana", "fruit:orange" )
+```
+
+Once you set any of these fields, the <Abbr>SDK</Abbr> includes them each time you request an AppLovin ad.
+You can clear these fields at any time, and the <Abbr>SDK</Abbr> then removes them before the next time you request an AppLovin ad.
+You can clear most fields by setting their values to `null`.
+To clear the `gender` value, set it to `AppLovinGender.UNKNOWN` or `null`.
+To clear the `maximumAdContentRating` value, set it to `AppLovinAdContentRating.NONE` or `null`.
+Also, you can clear all fields with the following snippet:
+
+### Java
+```java
+AppLovinSdk.getInstance( this ).getTargetingData().clearAll();
+```
+
+### Kotlin
+```kotlin
+AppLovinSdk.getInstance( this ).targetingData.clearAll()
+```
+
+## Location Passing
+
+Starting with <Abbr>SDK</Abbr> version 11.0.0, <em>only</em> if your application already has the relevant end-user permissions, the <Abbr>SDK</Abbr> will automatically collect from the device the latitude and longitude coordinates truncated to the hundredths decimal place.
+
+The truncation occurs on the device, which means that the full coordinates <em>do not</em> leave the device.
+
+The following code snippets show how you disable the <Abbr>SDK</Abbr> from automatically collecting location when your application has the relevant end-user permissions:
+
+### Java
+```java
+AppLovinSdk sdk = AppLovinSdk.getInstance( context );
+sdk.getSettings().setLocationCollectionEnabled( false );
+```
+
+### Kotlin
+```kotlin
+val sdk = AppLovinSdk.getInstance( context )
+sdk.settings.setLocationCollectionEnabled( false )
+```
+
+## Content <Abbr>URL</Abbr> Passing
+
+AppLovin recommends that you pass your App content <Abbr>URL</Abbr> when you make ad requests.
+The App content <Abbr>URL</Abbr> is passed in the bid request for buy-side contextualization or review and may be required for spend from some <Glossary>DSP</Glossary> buyers.
+
+The following code snippets show how you pass your App content <Abbr>URL</Abbr> when you make an ad request:
+
+### Java
+```java
+// Interstitial Ad
+interstitialAd = new MaxInterstitialAd( "<var>ad_unit_id</var>", this );
+interstitialAd.setExtraParameter( "content_url", "<var>value</var>" );
+
+// Rewarded Ad
+rewardedAd = MaxRewardedAd.getInstance( "<var>ad_unit_id</var>", this );
+rewardedAd.setExtraParameter( "content_url", "<var>value</var>" );
+
+// Banner Ad
+bannerAd = new MaxAdView( "<var>ad_unit_id</var>", this );
+bannerAd.setExtraParameter( "content_url", "<var>value</var>" );<br>
+
+// MRec Ad
+mrecAd = new MaxAdView( "<var>ad_unit_id</var>", MaxAdFormat.MREC, this );
+mrecAd.setExtraParameter( "content_url", "<var>value</var>" );<br>
+
+// Native Ad
+nativeAdLoader = new MaxNativeAdLoader( "<var>ad_unit_id</var>", this );
+nativeAdLoader.setExtraParameter( "content_url", "<var>value</var>" );
+```
+
+### Kotlin
+```kotlin
+// Interstitial Ad
+var interstitialAd = MaxInterstitialAd( "<var>ad_unit_id</var>", this )
+interstitialAd.setExtraParameter( "content_url", "<var>value</var>" )
+
+// Rewarded Ad
+var rewardedAd = MaxRewardedAd.getInstance( "<var>ad_unit_id</var>", this )
+rewardedAd.setExtraParameter( "content_url", "<var>value</var>" )
+
+// Banner Ad
+var bannerAd = MaxAdView( "<var>ad_unit_id</var>", this )
+bannerAd.setExtraParameter( "content_url", "<var>value</var>" )
+
+// MRec Ad
+var mrecAd = MaxAdView( "<var>ad_unit_id</var>", MaxAdFormat.MREC, this )
+mrecAd.setExtraParameter( "content_url", "<var>value</var>" )
+
+// Native Ad
+var nativeAdLoader = MaxNativeAdLoader( "<var>ad_unit_id</var>", this )
+nativeAdLoader.setExtraParameter( "content_url", "<var>value</var>" )
+```
+
+## Unified Identifiers
+
+MAX Publishers can pass [<Abbr>UID2</Abbr>](https://www.thetradedesk.com/us/about-us/industry-initiatives/unified-id-solution-2-0) tokens as an additional data point for buyers to use for targeting and accurately bidding on app inventory.
+The tokens will then be included in the bid stream sent to programmatic buyers.
+Publishers must handle the tokenization and then pass the token to AppLovin.
+See the code examples below for how to pass the tokens:
+
+### Java
+```java
+// App Open Ad
+appOpenAd = new MaxAppOpenAd( "<var>ad_unit_id</var>", this );
+appOpenAd.setExtraParameter( "uid2_token", "<var>value</var>" );
+
+// Banner Ad
+bannerAd = new MaxAdView( "<var>ad_unit_id</var>", this );
+bannerAd.setExtraParameter( "uid2_token", "<var>value</var>" );
+
+// Interstitial Ad
+interstitialAd = new MaxInterstitialAd( "<var>ad_unit_id</var>", this );
+interstitialAd.setExtraParameter( "uid2_token", "<var>value</var>" );
+
+// MRec Ad
+mrecAd = new MaxAdView( "<var>ad_unit_id</var>", MaxAdFormat.MREC, this );
+mrecAd.setExtraParameter( "uid2_token", "<var>value</var>" );
+
+// Native Ad
+nativeAdLoader = new MaxNativeAdLoader( "<var>ad_unit_id</var>", this );
+nativeAdLoader.setExtraParameter( "uid2_token", "<var>value</var>" );
+
+// Rewarded Ad
+rewardedAd = MaxRewardedAd.getInstance( "<var>ad_unit_id</var>", this );
+rewardedAd.setExtraParameter( "uid2_token", "<var>value</var>" );
+```
+
+### Kotlin
+```kotlin
+// App Open Ad
+var appOpenAd = MaxAppOpenAd( "<var>ad_unit_id</var>", this )
+appOpenAd.setExtraParameter( "uid2_token", "<var>value</var>" )
+
+// Banner Ad
+var bannerAd = MaxAdView( "<var>ad_unit_id</var>", this )
+bannerAd.setExtraParameter( "uid2_token", "<var>value</var>" )
+
+// Interstitial Ad
+var interstitialAd = MaxInterstitialAd( "<var>ad_unit_id</var>", this )
+interstitialAd.setExtraParameter( "uid2_token", "<var>value</var>" )
+
+// MRec Ad
+var mrecAd = MaxAdView( "<var>ad_unit_id</var>", MaxAdFormat.MREC, this )
+mrecAd.setExtraParameter( "uid2_token", "<var>value</var>" )
+
+// Native Ad
+var nativeAdLoader = MaxNativeAdLoader( "<var>ad_unit_id</var>", this )
+nativeAdLoader.setExtraParameter( "uid2_token", "<var>value</var>" )
+
+// Rewarded Ad
+var rewardedAd = MaxRewardedAd.getInstance( "<var>ad_unit_id</var>", this )
+rewardedAd.setExtraParameter( "uid2_token", "<var>value</var>" )
+```

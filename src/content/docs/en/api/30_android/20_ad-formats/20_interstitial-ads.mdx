@@ -1,0 +1,256 @@
+---
+title: "Interstitial Ads"
+description: "This page shows you how to load and then show and hide an interstitial ad."
+slug: en/max/android/ad-formats/interstitial-ads
+---
+## Loading an Interstitial Ad
+
+To load an <Glossary>interstitial ad</Glossary>, instantiate a `MaxInterstitialAd` object corresponding to your ad unit and call its `loadAd()` method.
+Implement `MaxAdListener` so that you are notified when your ad is ready and of other ad-related events.
+
+#### Java
+```java
+public class ExampleActivity extends Activity
+        implements MaxAdListener
+{
+  private MaxInterstitialAd interstitialAd;
+  private int retryAttempt;
+
+  void createInterstitialAd()
+  {
+    interstitialAd = new MaxInterstitialAd( "<var>ad_unit_ID</var>", this );
+    interstitialAd.setListener( this );
+
+    // Load the first ad
+    interstitialAd.loadAd();
+  }
+
+  // MAX Ad Listener
+  @Override
+  public void onAdLoaded(final MaxAd maxAd)
+  {
+    // Interstitial ad is ready to be shown. interstitialAd.isReady() will now return 'true'
+
+    // Reset retry attempt
+    retryAttempt = 0;
+  }
+
+  @Override
+  public void onAdLoadFailed(final String adUnitId, final MaxError error)
+  {
+    // Interstitial ad failed to load
+    // AppLovin recommends that you retry with exponentially higher delays up to a maximum delay (in this case 64 seconds)
+
+    retryAttempt++;
+    long delayMillis = TimeUnit.SECONDS.toMillis( (long) Math.pow( 2, Math.min( 6, retryAttempt ) ) );
+
+    new Handler().postDelayed( new Runnable()
+    {
+      @Override
+      public void run()
+      {
+        interstitialAd.loadAd();
+      }
+    }, delayMillis );
+  }
+
+  @Override
+  public void onAdDisplayFailed(final MaxAd maxAd, final MaxError error)
+  {
+    // Interstitial ad failed to display. AppLovin recommends that you load the next ad.
+    interstitialAd.loadAd();
+  }
+
+  @Override
+  public void onAdDisplayed(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdClicked(final MaxAd maxAd) {}
+
+  @Override
+  public void onAdHidden(final MaxAd maxAd)
+  {
+    // Interstitial ad is hidden. Pre-load the next ad
+    interstitialAd.loadAd();
+  }
+}
+```
+
+#### Kotlin
+```kotlin
+class ExampleActivity : Activity(), MaxAdListener
+{
+  private lateinit var interstitialAd: MaxInterstitialAd
+  private var retryAttempt = 0.0
+
+  fun createInterstitialAd()
+  {
+    interstitialAd = MaxInterstitialAd( "<var>ad_unit_ID</var>", this )
+    interstitialAd.setListener( this )
+
+    // Load the first ad
+    interstitialAd.loadAd()
+  }
+
+  // MAX Ad Listener
+  override fun onAdLoaded(maxAd: MaxAd)
+  {
+    // Interstitial ad is ready to be shown. interstitialAd.isReady() will now return 'true'
+
+    // Reset retry attempt
+    retryAttempt = 0.0
+  }
+
+  override fun onAdLoadFailed(adUnitId: String?, error: MaxError?)
+  {
+    // Interstitial ad failed to load
+    // AppLovin recommends that you retry with exponentially higher delays up to a maximum delay (in this case 64 seconds)
+
+    retryAttempt++
+    val delayMillis = TimeUnit.SECONDS.toMillis( Math.pow( 2.0, Math.min( 6.0, retryAttempt ) ).toLong() )
+
+    Handler().postDelayed( { interstitialAd.loadAd() }, delayMillis )
+  }
+
+  override fun onAdDisplayFailed(ad: MaxAd?, error: MaxError?)
+  {
+    // Interstitial ad failed to display. AppLovin recommends that you load the next ad.
+    interstitialAd.loadAd()
+  }
+
+  override fun onAdDisplayed(maxAd: MaxAd) {}
+
+  override fun onAdClicked(maxAd: MaxAd) {}
+
+  override fun onAdHidden(maxAd: MaxAd)
+  {
+    // Interstitial ad is hidden. Pre-load the next ad
+    interstitialAd.loadAd()
+  }
+}
+```
+
+## Showing an Interstitial Ad
+
+To show an interstitial ad, call `showAd()` on the `MaxInterstitialAd` object that you created.
+
+#### Java
+```java
+if ( interstitialAd.isReady() )
+{
+  interstitialAd.showAd();
+}
+```
+
+#### Kotlin
+```kotlin
+if ( interstitialAd.isReady )
+{
+  interstitialAd.showAd()
+}
+```
+
+## Lock Screen Ads
+
+The AppLovin MAX <Abbr>SDK</Abbr> version 11.0.0 provides <Abbr>API</Abbr>s with which you can display interstitial ads in the lock screen.
+Use cases for this integration include audio apps which, by their nature, appear on the lock screen already.
+
+### Loading a Lock Screen Ad
+
+You load an interstitial ad to display on the lock screen in a similar way to how you would normally load an interstitial ad, as described above.
+The only differences are that you need to set an extra parameter for the `MaxInterstitialAd`, and the `Activity` you pass in must implement the `LifecycleOwner` interface.
+
+#### Java
+```java
+⋮
+import androidx.lifecycle.LifecycleOwner;
+⋮
+
+public class ExampleActivity extends Activity
+        implements MaxAdListener, LifecycleOwner
+{
+  private FrameLayout adContainerView;
+  private MaxInterstitialAd interstitialAd;
+  private int retryAttempt;
+
+  void createInterstitialAd()
+  {
+    interstitialAd = new MaxInterstitialAd( "<var>ad_unit_ID</var>", this );
+    interstitialAd.setExtraParameter( "container_view_ads", "true" );
+    interstitialAd.setListener( this );
+
+    // Load the first ad
+    interstitialAd.loadAd();
+  }
+
+  // MAX Ad Listener
+  ⋮
+}
+```
+
+#### Kotlin
+```kotlin
+⋮
+import androidx.lifecycle.LifecycleOwner
+⋮
+
+class ExampleActivity : Activity(), MaxAdListener, LifecycleOwner
+{
+  private lateinit var adContainerView: FrameLayout
+  private lateinit var interstitialAd: MaxInterstitialAd
+  private var retryAttempt = 0.0
+
+  fun createInterstitialAd()
+  {
+    interstitialAd = MaxInterstitialAd( "<var>ad_unit_ID</var>", this )
+    interstitialAd.setExtraParameter( "container_view_ads", "true" )
+    interstitialAd.setListener( this )
+
+    // Load the first ad
+    interstitialAd.loadAd()
+  }
+
+  // MAX Ad Listener
+  ⋮
+}
+```
+
+### Showing a Lock Screen Ad
+
+To show the interstitial ad, call `showAd(…)` with the `ViewGroup` in the lock screen ad.
+
+#### Java
+```java
+if ( interstitialAd.isReady() )
+{
+  interstitialAd.showAd( adContainerView, getLifecycle() );
+}
+```
+
+#### Kotlin
+```kotlin
+if ( interstitialAd.isReady )
+{
+  interstitialAd.showAd( adContainerView, getLifecycle() )
+}
+```
+
+### Mediated Network Support
+
+The <Glossary>networks</Glossary> that support this feature are AppLovin Bidding and <Glossary>AppLovin Exchange</Glossary>.
+
+### Adding Custom Support to Adapters
+
+To add support into a custom adapter or one of our open source adapters, override the following `showInterstitialAd(…)` method.
+
+```java
+@Override
+public void showInterstitialAd(final MaxAdapterResponseParameters parameters,
+                               final ViewGroup containerView,
+                               final Lifecycle lifecycle,
+                               final Activity activity,
+                               final MaxInterstitialAdapterListener listener)
+{
+  ⋮
+}
+```
